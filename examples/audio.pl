@@ -117,8 +117,18 @@ if ($ARGV[0]) {
     $d = Device::Cdio::Device->new($ARGV[0]);
     exit(1) if !defined($d);
 } else {
-    $d = Device::Cdio::Device->new(-driver_id=>$perlcdio::DRIVER_DEVICE);
-    exit(1) if !defined($d);
+    my @drives = Device::Cdio::get_devices_with_cap($perlcdio::FS_AUDIO);
+    if ((defined(@drives) && @drives >= 1) {
+	$d = Device::Cdio::Device->new($drive[0]);
+	if !defined($d) {
+	    print "Sorry having trouble opening $drive[0]\n";
+	    exit(1);
+	}
+    } else {
+	print "Could not automatically find a CD-ROM with an audio CD in it\n";
+	print "Please specify a device name\n";
+	exit(1);
+    }
 }
 
 $device_name = $d->get_device();

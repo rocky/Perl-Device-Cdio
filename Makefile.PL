@@ -1,17 +1,5 @@
-use strict;
-use warnings;
-use ExtUtils::MakeMaker;
-
-WriteMakefile(
-    NAME                => 'Device::Cdio',
-    AUTHOR              => 'Rocky Bernstein <rocky@panix.com>',
-    VERSION_FROM        => 'lib/Device/Cdio.pm',
-    ABSTRACT_FROM       => 'lib/Device/Cdio.pm',
-    PL_FILES            => {},
-    PREREQ_PM => {
-        'Test::More' => 0,
-        'version'    => 0,
-    },
-    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Device-Cdio-*' },
-);
+#!/usr/bin/perl
+# $Id$
+use Module::Build::Compat;
+Module::Build::Compat->run_build_pl(args => \@ARGV);
+Module::Build::Compat->write_makefile();

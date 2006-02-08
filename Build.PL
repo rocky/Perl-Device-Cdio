@@ -1,15 +1,38 @@
+#!/usr/bin/perl -w
+# $Id$
+#    Copyright (C) 2006 Rocky Bernstein <rocky@panix.com>
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 use strict;
 use warnings;
 use Module::Build;
 use ExtUtils::PkgConfig;
+use Config;
 
-my $code = <<'EOC'
+my $code = <<'EOC';
 use Cwd;
 use File::Copy;
+
 sub process_swig_files {
     my $self = shift;
-    # locate and process swig files, and create something in blib/
-    $self->process_swig('perlcdio.swg');
+    my $p = $self->{properties};
+    return unless $p->{swig_source};
+    my $files_ref = $p->{swig_source};
+    foreach my $file (@$files_ref) {
+	$self->process_swig($file);
+    }
 }
 
 sub process_swig {
@@ -53,8 +76,8 @@ sub compile_swig {
     return $c_file if $self->up_to_date($file, $c_file);
     
     my @swig;
-    if (defined($cf->{swig})) {
-	@swig = $self->split_like_shell($cf->{cc});
+    if (defined($p->{swig})) {
+	@swig = $self->split_like_shell($p->{swig});
     } else {
 	@swig = ('swig');
     }
@@ -97,13 +120,139 @@ sub link_c {
   return $lib_file;
 }
 
-EOC
-    ;
+# From Base.pm but modified to put package cflags *after* 
+# installed c flags so warning-removal will have an effect.
 
+sub compile_c {
+  my ($self, $file) = @_;
+  my ($cf, $p) = ($self->{config}, $self->{properties}); # For convenience
+  
+  # File name, minus the suffix
+  (my $file_base = $file) =~ s/\.[^.]+$//;
+  my $obj_file = "$file_base$cf->{obj_ext}";
+  $self->add_to_cleanup($obj_file);
+  return $obj_file if $self->up_to_date($file, $obj_file);
+  
+  my @include_dirs = map {"-I$_"} (@{$p->{include_dirs}},
+				   File::Spec->catdir($cf->{installarchlib}, 'CORE'));
+  
+  my @extra_compiler_flags = $self->split_like_shell($p->{extra_compiler_flags});
+  my @cccdlflags = $self->split_like_shell($cf->{cccdlflags});
+  my @ccflags = $self->split_like_shell($cf->{ccflags});
+  my @optimize = $self->split_like_shell($cf->{optimize});
+  my @flags = (@include_dirs, @cccdlflags, '-c', @ccflags, @optimize, 
+	       @extra_compiler_flags, );
+  
+  my @cc = $self->split_like_shell($cf->{cc});
+  
+  $self->do_system(@cc, @flags, '-o', $obj_file, $file)
+    or die "error building $cf->{obj_ext} file from '$file'";
+
+  return $obj_file;
+}
+
+EOC
+
+
+sub try_compile {
+    my ($c, %args) = @_;
+
+    my $ok = 0;
+    my $tmp = "tmp$$";
+    local(*TMPC);
+
+    my $obj_ext = $Config{obj_ext} || ".o";
+    unlink("$tmp.c", "$tmp$obj_ext");
+
+    if (open(TMPC, ">", "$tmp.c")) {
+	print TMPC $c;
+	close(TMPC);
+
+	my $cccmd = $args{cccmd};
+	my $errornull;
+	my $ccflags = $Config{'ccflags'};
+        $ccflags .= " $args{ccflags}" if $args{ccflags};
+
+        if ($args{silent} ) {
+	    $errornull = "2>/dev/null" unless defined $errornull;
+	} else {
+	    $errornull = '';
+	}
+
+        $cccmd = "$Config{'cc'} -o $tmp $ccflags $tmp.c $errornull"
+	    unless defined $cccmd;
+
+	printf "cccmd = $cccmd\n" if $args{verbose};
+	my $res = system($cccmd);
+	$ok = defined($res) && $res == 0;
+
+	if ( !$ok ) {
+	    my $errno = $? >> 8;
+	    local $! = $errno;
+	    print "
+		
+*** The test compile of '$tmp.c' failed: status $?
+*** (the status means: errno = $errno or '$!')
+*** DO NOT PANIC: this just means that *some* you may get some innocuous
+*** compiler warnings.
+";
+	}
+	unlink("$tmp.c");
+
+    }
+    return $ok;
+}
+
+sub try_cflags ($) {
+    my ($ccflags) = @_;
+    my $c_prog = "int main () { return 0; }\n";
+    return " $ccflags"
+	if try_compile($c_prog, ccflags=>$ccflags);
+    return '';
+	
+}
 
 my %pkgcfg = ExtUtils::PkgConfig->find ('libcdio');
 
-# FIXME: add a test to make sure we are 0.76 or greater.
+use constant MIN_LIBCDIO_VERSION => 0.76;
+my $lv = $pkgcfg{'modversion'};
+if (exists($pkgcfg{'modversion'})) {
+    if ($pkgcfg{'modversion'} =~ m{\A((?:\d+)(?:\.\d+))}) {
+	if ($1 < MIN_LIBCDIO_VERSION) {
+	    printf "
+*** 
+*** You need to have libcdio %s or greater installed. (You have $lv).
+*** Get libcdio from http://www.gnu.org/software/libcdio/download.html
+", MIN_LIBCDIO_VERSION;
+	    exit 1;
+	} else {
+	    print "Good, I found libcdio version $lv insatalled.\n";
+	    
+	}
+    } else {
+	print "
+*** 
+*** Can't parse libcdio version $lv.
+*** Will continue and keep my fingers crossed for luck.
+";
+    }
+} else {
+    print "
+*** 
+*** Can't find libcdio configuration info. Is libcdio installed?
+*** Get libcdio from http://www.gnu.org/software/libcdio/download.html
+";
+    exit 1;
+}
+
+my $ccflags = $pkgcfg{cflags};
+
+## Swig produces a number of GCC warnings. Turn them off if we can.
+$ccflags .= try_cflags("-Wno-strict-aliasing");
+$ccflags .= try_cflags("-Wno-unused-function");
+$ccflags .= try_cflags("-Wno-unused-value");
+$ccflags .= try_cflags("-Wno-unused-function");
+$ccflags .= try_cflags("-Wno-unused-variable");
 
 my $class = Module::Build->subclass( code => $code );
 
@@ -113,7 +262,8 @@ my $builder = $class->new(
     dist_author         => 'Rocky Bernstein <rocky@panix.com>',
     dist_version_from   => 'lib/Device/Cdio.pm',
     extra_linker_flags  => $pkgcfg{libs},
-    ccflags             => $pkgcfg{cflags},
+    extra_compiler_flags=> $ccflags,
+    swig_source         => [ 'perlcdio.swg' ],
     requires => {
 	'ExtUtils::PkgConfig'     => '1.03',
         'Test::More'              => 0,

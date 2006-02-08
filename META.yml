@@ -3,7 +3,7 @@ name: Device-Cdio
 version: v0.0.1
 author:
   - Rocky Bernstein <rocky@panix.com>
-abstract: CD Input and control library
+abstract: ~
 license: gpl
 requires:
   ExtUtils::PkgConfig: 1.03

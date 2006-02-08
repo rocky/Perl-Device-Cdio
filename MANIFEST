@@ -7,6 +7,7 @@ Makefile.PL
 README
 audio.swg
 compat.swg
+configure
 data/cdda.bin
 data/cdda.cue
 data/cdda.toc
