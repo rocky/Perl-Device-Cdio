@@ -1,0 +1,9 @@
+CVS
+\.bak$
+^Build$
+^MANIFEST\.SKIP$
+^\.cvsignore
+^_build
+^blib
+~$
+perlcdio_wrap\..*$

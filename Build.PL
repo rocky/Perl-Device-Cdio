@@ -93,8 +93,10 @@ sub compile_swig {
 }
 
 # From Base.pm but modified for SWIG conventions.
-# Actually that's not all that true. We just pass a $obj_file parameter.
-# SWIG objects have a _wrap is added, but compile() knows that.
+# Actually that's not all that true. We just pass a $obj_file parameter
+# SWIG objects have a get created with _wrap added. For example
+# perlcdio.swg produces perlcdio_wrap.c, and perlcdio_wrap.o.
+# But the shared object is still perlcdio.so.
 # Also we modified the die to report the full file name.
 sub link_c {
   my ($self, $to, $file_base, $obj_file) = @_;
@@ -245,6 +247,21 @@ if (exists($pkgcfg{'modversion'})) {
     exit 1;
 }
 
+my @swig_version = `swig -version 2>&1`;
+if ($?) {
+    my $errno = $? >> 8;
+    print "
+*** Problems finding swig and/or getting SWIG version. 
+*** You need to have SWIG installed. 
+*** Get SWIG from http://www.swig.org
+"; 
+    print "*** Output was:
+	@swig_version
+" if @swig_version;
+    exit 2;
+}
+
+
 my $ccflags = $pkgcfg{cflags};
 
 ## Swig produces a number of GCC warnings. Turn them off if we can.
@@ -258,18 +275,18 @@ my $class = Module::Build->subclass( code => $code );
 
 my $builder = $class->new( 
     module_name         => 'Device::Cdio',
-    license             => 'gpl',
+    add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*'  ],
     dist_author         => 'Rocky Bernstein <rocky@panix.com>',
     dist_version_from   => 'lib/Device/Cdio.pm',
     extra_linker_flags  => $pkgcfg{libs},
     extra_compiler_flags=> $ccflags,
-    swig_source         => [ 'perlcdio.swg' ],
+    license             => 'gpl',
     requires => {
 	'ExtUtils::PkgConfig'     => '1.03',
         'Test::More'              => 0,
         'version'                 => 0,
     },
-    add_to_cleanup      => [ 'Device-Cdio-*' ],
+    swig_source         => [ 'perlcdio.swg' ],
 );
 
 $builder->add_build_element('swig');
