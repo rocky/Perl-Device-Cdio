@@ -7,3 +7,4 @@ CVS
 ^blib
 ~$
 perlcdio_wrap\..*$
+tmp\d+$
