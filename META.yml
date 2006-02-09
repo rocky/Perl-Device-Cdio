@@ -2,7 +2,7 @@
 name: Device-Cdio
 version: v0.0.1
 author:
-  - Rocky Bernstein <rocky@panix.com>
+  - Rocky Bernstein <rocky@cpan.org>
 abstract: CD Input and control library
 license: gpl
 requires:
