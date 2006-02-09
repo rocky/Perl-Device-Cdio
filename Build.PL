@@ -283,6 +283,7 @@ my $class = Module::Build->subclass( code => $code );
 my $builder = $class->new( 
     module_name         => 'Device::Cdio',
     add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*'  ],
+    dist_abstract       => 'CD Input and control library',
     dist_author         => 'Rocky Bernstein <rocky@panix.com>',
     dist_version_from   => 'lib/Device/Cdio.pm',
     extra_linker_flags  => $pkgcfg{libs},

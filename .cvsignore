@@ -10,3 +10,5 @@ cover_db
 perlcdio_wrap.c
 perlcdio_wrap.o
 pm_to_blib*
+tmp*
+
