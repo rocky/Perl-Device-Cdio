@@ -14,6 +14,8 @@ device_const.swg
 disc.swg
 examples/audio.pl
 examples/cdchange.pl
+examples/device.pl
+examples/drives.pl
 examples/eject.pl
 examples/README
 examples/tracks.pl

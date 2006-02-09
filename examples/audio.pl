@@ -21,17 +21,19 @@
 # Program to read CD blocks. See read-cd from the libcdio distribution
 # for a more complete program.
 
+use strict;
+
 BEGIN {
-    push @INC, ('../blib/lib', '../blib/arch', 'blib/lib', 'blib/arch');
+    chdir 'example' if -d 'example';
 }
+use lib '../lib';
+use blib;
 
 use Device::Cdio;
 use Device::Cdio::Device;
 use Device::Cdio::Track;
 
 use vars qw($0 $program $pause %opts);
-
-use strict;
 
 my $vcid ='$Id$';
 
@@ -43,7 +45,6 @@ sub init() {
   $opts{pause}=0;
   $opts{play}=0;
   $opts{resume}=0;
-  $opts{stop}=0;
   $opts{stop}=0;
 }
 
@@ -87,6 +88,7 @@ sub process_options() {
     (
      'help'           => \$help,
      'close'          => \$opts{close},
+     'eject'          => \$opts{eject},
      'version'        => \$opts{show_version},
      'P|pause'        => \$opts{pause},
      'play'           => \$opts{play},
@@ -108,8 +110,11 @@ my ($drc, $device_name);
 # Handle closing the CD-ROM tray if that was specified.
 if ($opts{close}) {
     $device_name = $opts{close};
-    $drc = Cdio::close_tray(-drive=>$opts{close});
-    printf "Error closing: %s\n", perlcdio::driver_errmsg($drc) if ($drc);
+    $drc = Device::Cdio::close_tray(-drive=>$opts{close});
+    if ($drc) {
+	printf "Error closing: %s\n", perlcdio::driver_errmsg($drc) ;
+	exit $drc;
+    }
 }
 
 my $d;
@@ -138,9 +143,9 @@ $device_name = $d->get_device();
 
 if ($opts{play}) {
     if ($d->get_disc_mode() ne 'CD-DA') {
-        printf("The disc on %s I found was not CD-DA, but %s\n",
-	       $device_name, $d->get_disc_mode());
-        print "I have bad feeling about trying to play this...";
+        printf "The disc on %s I found was not CD-DA, but CD is %s\n",
+	$device_name, $d->get_disc_mode();
+        print "I have bad feeling about trying to play this...\n";
     }
     my $start_lsn = $d->get_first_track()->get_lsn();
     my $end_lsn=$d->get_disc_last_lsn();
@@ -148,24 +153,28 @@ if ($opts{play}) {
     $drc = $d->audio_play_lsn($start_lsn, $end_lsn);
     printf "Error playing CD: %s\n", perlcdio::driver_errmsg($drc) if ($drc);
 
-#} elsif ($opts{track}) {
-#    if ($opts{track > $d->get_last_track().track}) {
-#	printf ("Requested track %d but CD only has %d tracks", 
-#		opts.track, $d->get_last_track().track);
-#	exit(2);
-#    }
-#        
-#    if ($opts{track < $d->get_first_track().track}) {
-#	printf("Requested track %d but first track on CD is %d" 
-#	       opts.track, $d->get_first_track().track);
-#	exit(2);
-#    }
-#    printf("Playing track %d on %s"  % opts.track, device_name);
-#    $start_lsn = $d->get_track(opts.track).get_lsn();
-#    $end_lsn = $d->get_track(opts.track+1).get_lsn();
-#    $drc = $d->audio_play_lsn(start_lsn, end_lsn);
-#    printf "Error closing: %s\n", perlcdio::driver_errmsg($drc) if ($drc);
-#        
+} elsif ($opts{track}) {
+    if ($d->get_disc_mode() ne 'CD-DA') {
+        printf "The disc on %s I found was not CD-DA, but CD is %s\n",
+	$device_name, $d->get_disc_mode();
+        print "I have bad feeling about trying to play this...\n";
+    }
+    if ($opts{track} > $d->get_last_track()->{track}) {
+	printf "Requested track %d but CD only has %d tracks\n", 
+		$opts{track}, $d->get_last_track()->{track};
+	exit(2);
+    }
+        
+    if ($opts{track} < $d->get_first_track()->{track}) {
+	printf "Requested track %d but first track on CD is %d\n",
+	       $opts{track}, $d->get_first_track()->{track};
+	exit(2);
+    }
+    printf("Playing track %d on %s\n", $opts{track}, $device_name);
+    my $start_lsn = $d->get_track($opts{track})->get_lsn();
+    my $end_lsn = $d->get_track($opts{track}+1)->get_lsn();
+    $drc = $d->audio_play_lsn($start_lsn, $end_lsn);
+    printf "Error closing: %s\n", perlcdio::driver_errmsg($drc) if ($drc);
 } elsif ($opts{pause}) {
     printf "Pausing playing in drive %s\n", $device_name;
     $drc = $d->audio_pause();
@@ -181,11 +190,12 @@ if ($opts{play}) {
 	   $device_name, perlcdio::driver_errmsg($drc)) 
 	if $drc;
 } elsif ($opts{eject}) {
-    print "Ejecting CD in drive %s\n", $device_name;
+    print "Ejecting CD in CD-ROM drive $device_name\n";
     $drc = $d->eject_media();
     printf("Eject failed on drive %s: %s\n", 
 	   $device_name, perlcdio::driver_errmsg($drc))
 	if $drc;
+    exit $drc;
 }
         
 $d->close();

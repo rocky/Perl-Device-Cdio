@@ -282,7 +282,6 @@ sub get_devices_with_cap {
     $any = 1 if !defined($any);
     # There's a bug in the swig code in that the input parameters
     # are left on the stack
-    print "cap: $cap, any $any\n";
     my @ret = perlcdio::get_devices_with_cap($cap, $any);
     shift @ret; shift @ret;
     return @ret;
@@ -438,7 +437,7 @@ sub convert_drive_cap_misc {
     my (@p) = @_;
     my($bitmask) = _rearrange(['BITMASK'], @p);
 
-    my %result={};
+    my %result=();
     $result{DRIVE_CAP_ERROR} = 1
 	if $bitmask & $perlcdio::DRIVE_CAP_ERROR;
     $result{DRIVE_CAP_UNKNOWN} = 1

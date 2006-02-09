@@ -1,8 +1,9 @@
 #!/usr/bin/perl -T
-# $id$
+# $Id$
 
 use strict;
 BEGIN {
+    chdir '..' if ! -d 't';
     push @INC, ('blib/lib', 'blib/arch');
 }
 

@@ -21,8 +21,10 @@
 # Program to Eject and close CD-ROM drive
 
 BEGIN {
-    push @INC, ('../blib/lib', '../blib/arch', 'blib/lib', 'blib/arch');
+    chdir 'example' if -d 'example';
 }
+use lib '../lib';
+use blib;
 
 use Device::Cdio;
 use Device::Cdio::Device;

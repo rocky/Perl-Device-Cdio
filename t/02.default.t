@@ -4,6 +4,12 @@
 # Test getting default device
 
 use strict;
+BEGIN {
+    chdir 't' if -d 't';
+}
+use lib '../lib';
+use blib;
+
 use Device::Cdio::Device;
 use Test::Simple tests => 3;
 

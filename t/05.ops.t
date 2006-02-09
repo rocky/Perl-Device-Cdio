@@ -6,6 +6,14 @@
 # we're just going to run operations and see that they
 # don't crash.
 
+use strict;
+
+BEGIN {
+    chdir 't' if -d 't';
+}
+use lib '../lib';
+use blib;
+
 use Device::Cdio;
 use Device::Cdio::Device;
 use Test::Simple tests => 6;

@@ -4,9 +4,13 @@
 #Test functioning of cdrdao image routines
 
 use strict;
+
 BEGIN {
-    push @INC, ('../blib/lib', '../blib/arch');
+    chdir 't' if -d 't';
 }
+use lib '../lib';
+use blib;
+
 use Device::Cdio::Device;
 use Test::Simple tests => 12;
 

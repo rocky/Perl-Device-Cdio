@@ -66,7 +66,7 @@ sub new {
       print "*** Expecting track to be an integer; got '$track'\n";
       return undef;
   } elsif ($track < 0 || $track > 200) {
-      print "*** Track number should e within 0 and 200; got '$track'\n";
+      print "*** Track number should be within 0 and 200; got '$track'\n";
       return undef;
   }
 

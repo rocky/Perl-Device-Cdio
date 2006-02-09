@@ -139,5 +139,6 @@
 %constant unsigned int FS_ANAL_CVD = CDIO_FS_ANAL_CVD;
 %constant unsigned int FS_ANAL_XISO = CDIO_FS_ANAL_XISO;
 %constant unsigned int FS_MATCH_ALL = CDIO_FS_MATCH_ALL;
+%constant unsigned int FS_UNKNOWN = CDIO_FS_UNKNOWN;
 
 %mutable;

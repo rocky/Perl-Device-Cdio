@@ -9,6 +9,8 @@ audio.pl      show mostly audio (analog) controls. Can be used to play
 cdchange.pl:  A program to test if a CD has been changed since the last
 	      change test.
 
+drives.pl:    A program list CD-ROMs and CD properties in the drives.
+
 eject.pl      A program eject a CD from a CD-ROM drive and then close the door
 	      again.
 

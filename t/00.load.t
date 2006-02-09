@@ -3,8 +3,10 @@
 
 use strict;
 BEGIN {
-    push @INC, '../blib/lib';
+    chdir 't' if -d 't';
 }
+use lib '../lib';
+use blib;
 
 use Test::More tests => 1;
 

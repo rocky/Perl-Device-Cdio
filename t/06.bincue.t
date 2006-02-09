@@ -3,10 +3,14 @@
 
 #Test functioning of BIN/CUE image routines
 
-BEGIN {
-    push @INC, ('../blib/lib', '../blib/arch', 'blib/lib', 'blib/arch');
-}
 use strict;
+
+BEGIN {
+    chdir 't' if -d 't';
+}
+use lib '../lib';
+use blib;
+
 use Device::Cdio::Device;
 use Test::Simple tests => 13;
 

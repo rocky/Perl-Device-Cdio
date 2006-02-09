@@ -61,7 +61,7 @@ sub _extra_args {
     if (@args != 0) {
 	my (undef, $file, $line, $called)= caller(1);
 	my $arg_count = @args;
-	print "$arg_count extraneous given\n";
+	print "$arg_count extraneous parameter given in call\n";
 	print "\tCalled $called from file $file at line $line\n";
 	return 1;
     }
@@ -101,7 +101,8 @@ sub _rearrange {
 	@param = %{$param[0]};
     } else {
 	return @param 
-	    unless (defined($param[0]) && substr($param[0],0,1) eq '-');
+	    unless (defined($param[0]) && substr($param[0],0,1) eq '-' 
+		    && $param[0] !~ m{\A-\d+});
     }
 
     # map parameters into positional indices
