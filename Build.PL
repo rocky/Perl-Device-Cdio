@@ -235,7 +235,7 @@ if (exists($pkgcfg{'modversion'})) {
 ", MIN_LIBCDIO_VERSION;
 	    exit 1;
 	} else {
-	    print "Good, I found libcdio version $lv insatalled.\n";
+	    print "Good, I found libcdio version $lv installed.\n";
 	    
 	}
     } else {
@@ -294,6 +294,7 @@ my $builder = $class->new(
         'Test::More'              => 0,
         'version'                 => 0,
     },
+    sign                => 1,
     swig_source         => [ 'perlcdio.swg' ],
 );
 

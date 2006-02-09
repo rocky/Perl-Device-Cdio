@@ -1,6 +1,7 @@
 CVS
 \.bak$
 ^Build$
+^Device-Cdio-v.*gz$
 ^MANIFEST\.SKIP$
 ^\.cvsignore
 ^_build

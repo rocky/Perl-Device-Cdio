@@ -730,3 +730,39 @@ __END__
 1;
 
 __END__
+
+=pod
+
+=head1 SEE ALSO
+
+L<Device::Cdio> for the top-level routines and L<Device::Cdio::Track>
+for track objects.
+
+L<perlcdio> is the lower-level interface to libcdio.
+
+L<http://www.gnu.org/software/libcdio> has documentation on
+libcdio including the a manual and the API via doxygen.
+
+=head1 AUTHORS
+
+Rocky Bernstein C<< <rocky at panix.com> >>.
+
+=head1 COPYRIGHT
+
+Copyright (C) 2006 Rocky Bernstein <rocky@panix.com>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+=cut
