@@ -120,6 +120,11 @@
 %constant unsigned int FS_EXT2 = CDIO_FS_EXT2;
 %constant unsigned int FS_ISO_HFS = CDIO_FS_ISO_HFS;
 %constant unsigned int FS_ISO_9660_INTERACTIVE = CDIO_FS_ISO_9660_INTERACTIVE;
+%constant unsigned int FS_3DO = CDIO_FS_3DO;
+%constant unsigned int FS_XISO = CDIO_FS_XISO;
+%constant unsigned int FS_UDFX = CDIO_FS_UDFX;
+%constant unsigned int FS_UDF = CDIO_FS_UDF;
+%constant unsigned int FS_ISO_UDF = CDIO_FS_ISO_UDF;
 
 %constant unsigned int FS_ANAL_XA = CDIO_FS_ANAL_XA;
 %constant unsigned int FS_ANAL_MULTISESSION = CDIO_FS_ANAL_MULTISESSION;
