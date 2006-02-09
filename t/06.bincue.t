@@ -43,7 +43,7 @@ ok(defined($model) && 'CDRWIN' eq $model, "get_hwinfo model");
 $result = Device::Cdio::is_device($cuefile);
 ok(!$result, "is_device(tocfile)");
 $result = $device->get_media_changed();
-ok(!$result, "binfile: get_media_changed");
+ok(!$result, "bincue: get_media_changed");
 if ($perlcdio::VERSION_NUM >= 77) {
     # There's a bug in libcdio 0.76 that causes these to crash
     $drc = $device->set_blocksize(2048);

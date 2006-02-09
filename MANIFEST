@@ -3,6 +3,7 @@ COPYING
 Changes
 MANIFEST
 META.yml # Will be created by "make dist"
+Makefile
 Makefile.PL
 README
 audio.swg

@@ -142,7 +142,14 @@ sub compile_c {
   my @cccdlflags = $self->split_like_shell($cf->{cccdlflags});
   my @ccflags = $self->split_like_shell($cf->{ccflags});
   my @optimize = $self->split_like_shell($cf->{optimize});
-  my @flags = (@include_dirs, @cccdlflags, '-c', @ccflags, @optimize, 
+
+  # Whoah! There seems to be a bug in gcc 4.1.0 and optimization
+  # and swig. I'm not sure who's at fault. But for now the simplest
+  # thing is to turn off all optimization. For the kinds of things that
+  # SWIG does - do conversions between parameters and transfers calls
+  # I doubt optimization makes much of a difference. But if it does,
+  # it can be added back via @extra_compiler_flags.
+  my @flags = (@include_dirs, @cccdlflags, '-c', @ccflags,
 	       @extra_compiler_flags, );
   
   my @cc = $self->split_like_shell($cf->{cc});
