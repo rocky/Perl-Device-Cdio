@@ -111,6 +111,16 @@
 %constant long int DRIVER_OP_BAD_POINTER = DRIVER_OP_BAD_POINTER;
 %constant long int DRIVER_OP_NO_DRIVER  = DRIVER_OP_NO_DRIVER;
 
+%constant unsigned int FS_AUDIO = CDIO_FS_AUDIO;
+%constant unsigned int FS_HIGH_SIERRA = CDIO_FS_HIGH_SIERRA;
+%constant unsigned int FS_ISO_9660 = CDIO_FS_ISO_9660;
+%constant unsigned int FS_INTERACTIVE = CDIO_FS_INTERACTIVE;
+%constant unsigned int FS_HFS = CDIO_FS_HFS;
+%constant unsigned int FS_UFS = CDIO_FS_UFS;
+%constant unsigned int FS_EXT2 = CDIO_FS_EXT2;
+%constant unsigned int FS_ISO_HFS = CDIO_FS_ISO_HFS;
+%constant unsigned int FS_ISO_9660_INTERACTIVE = CDIO_FS_ISO_9660_INTERACTIVE;
+
 %constant unsigned int FS_ANAL_XA = CDIO_FS_ANAL_XA;
 %constant unsigned int FS_ANAL_MULTISESSION = CDIO_FS_ANAL_MULTISESSION;
 %constant unsigned int FS_ANAL_PHOTO_CD = CDIO_FS_ANAL_PHOTO_CD;
