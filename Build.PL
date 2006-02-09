@@ -31,24 +31,36 @@ sub process_swig_files {
     return unless $p->{swig_source};
     my $files_ref = $p->{swig_source};
     foreach my $file (@$files_ref) {
-	$self->process_swig($file);
+	$self->process_swig($file->[0], $file->[1]);
     }
 }
 
+#
+# Run swig on $main_swig_file to produce a xxx_wrap.c C file.
+# We also check dependencies that presumably $main_swig_file 
+# %includes.
+#
 sub process_swig {
-  my ($self, $file) = @_;
+  my ($self, $main_swig_file, $deps_ref) = @_;
   my $cf = $self->{config}; # For convenience
 
   # File name. e.g, perlcdio.swg -> perlcdio_wrap.c
-  (my $file_base = $file) =~ s/\.[^.]+$//;
+  (my $file_base = $main_swig_file) =~ s/\.[^.]+$//;
   my $c_file = "${file_base}_wrap.c";
 
   # .swg -> .c
   $self->add_to_cleanup($c_file);
 
-  # print "+++ c_file: $c_file, file: $file ", `pwd`, "\n";
-  unless ($self->up_to_date($file, $c_file)) {
-    $self->compile_swig($file, $c_file);
+  # print "+++ c_file: $c_file, file: $main_swig_file ", `pwd`, "\n";
+  # If any of the swig files that the main swig depends is newer 
+  # then rebuild.
+  foreach my $depends_on ($main_swig_file, @$deps_ref) {
+      unless ($self->up_to_date($depends_on, $c_file)) {
+	  $self->compile_swig($main_swig_file, $c_file);
+	  # Only need to build $c_file once no matter how many 
+	  # includes there are.
+	  last;
+      }
   }
   
   # .c -> .o
@@ -73,7 +85,6 @@ sub compile_swig {
     
     # File name, minus the suffix
     (my $file_base = $file) =~ s/\.[^.]+$//;
-    return $c_file if $self->up_to_date($file, $c_file);
     
     my @swig;
     if (defined($p->{swig})) {
@@ -295,7 +306,10 @@ my $builder = $class->new(
         'version'                 => 0,
     },
     sign                => 1,
-    swig_source         => [ 'perlcdio.swg' ],
+    swig_source         => [ ['perlcdio.swg', 
+			      ['audio.swg', 'compat.swg', 'device.swg',
+			       'disc.swg', 'device_const.swg', 'disc.swg',
+			       'read.swg', 'track.swg', 'types.swg']] ],
 );
 
 $builder->add_build_element('swig');

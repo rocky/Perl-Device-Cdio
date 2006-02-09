@@ -11,7 +11,7 @@ BUILD_TARGETS = build clean code config_data diff dist distcheck distclean \
 .PHONY: all check $(BUILD_TARGETS)
 
 all: Build
-	@echo "We use perl Build here. Don't count on too much, but"
+	@echo "We use 'perl Build' here. Don't count on too much, but"
 	@echo "I'll try transferring your request."
 	perl Build
 
@@ -21,7 +21,7 @@ Build:: Build.PL
 dist: all
 
 $(BUILD_TARGETS): Build
-	@echo "We use perl Build.PL here. Don't count on too much, but"
+	@echo "We use perl Build here. Don't count on too much, but"
 	@echo "I'll try transferring your request."
 	perl Build $@
 

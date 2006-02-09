@@ -21,6 +21,40 @@
 
 %include "device_const.swg"
 
+/* Set up to allow functions returning device lists of type "char
+   **". We'll use a typedef so we can make sure to isolate this. I
+   don't think we need to in this program, but it I think it makes
+   thing clearer.
+*/
+%inline %{
+typedef char ** DeviceList_t;
+%}
+
+%typemap(newfree) DeviceList_t "cdio_free_device_list($1);";
+%typemap(perl5,out) DeviceList_t {   
+    // $1 is of type DeviceList_t
+    char **p   = $1;
+    unsigned int num = 0;
+
+    /* Figure out how many items in the array */
+    for (p = $1; *p; p++) {
+      num++;
+    }
+
+    if (argvi >= items) {            
+      /* Extend the stack by num objects */
+      EXTEND(sp, num);
+    }
+    /* For each element in the array of strings, create a new
+     * mortalscalar, and stuff it into the above array. */
+    for (p = $1; *p; p++) {
+      /* Have perl compute the length of the string using strlen() */
+      PUSHs(sv_2mortal(newSVpv(*p, 0)));
+    }
+    /* FIXME: the + 1 is because p_cdio is still on the stack. */
+    argvi += num + 1;
+}
+
 /*
   close_tray(drive=undef, driver_id=DRIVER_UNKNOWN) -> [status, driver_id]
 
@@ -140,32 +174,6 @@ None even though there may be a hardware CD-ROM.
 */
 char *cdio_get_default_device (const CdIo_t *p_cdio=NULL);
 
-/* %typemap(newfree) char ** "cdio_free_device_list($1);"; */
-%typemap(perl5,out) char ** {   // All functions returning char ** 
-                                // get this typemap
-    // $1 is of type char **
-    char **p   = $1;
-    unsigned int num = 0;
-
-    /* Figure out how many items in the array */
-    for (p = $1; *p; p++) {
-      num++;
-    }
-
-    if (argvi >= items) {            
-      /* Extend the stack by num objects */
-      EXTEND(sp, num);
-    }
-    /* For each element in the array of strings, create a new
-     * mortalscalar, and stuff it into the above array. */
-    for (p = $1; *p; p++) {
-      /* Have perl compute the length of the string using strlen() */
-      PUSHs(sv_2mortal(newSVpv(*p, 0)));
-    }
-    /* FIXME: the + 1 is because p_cdio is still on the stack. */
-    argvi += num + 1;
-}
-
 %newobject get_default_device_driver; // free malloc'd return value
 /*
 get_default_device_driver(driver_id=None)->[device, driver]
@@ -199,7 +207,7 @@ get_default_device_driver(driver_id_t driver_id, driver_id_t *p_out_driver_id)
   there is no media in it and it is possible for this routine to return
   NULL even though there may be a hardware CD-ROM.
 */
-char ** cdio_get_devices (driver_id_t driver_id);
+DeviceList_t cdio_get_devices (driver_id_t driver_id);
 
 %newobject get_devices_ret;
 /* Like cdio_get_devices, but we may change the p_driver_id if we
@@ -209,10 +217,10 @@ char ** cdio_get_devices (driver_id_t driver_id);
    things up for libcdio as well.
 */
     
-char ** get_devices_ret (driver_id_t driver_id, 
+DeviceList_t get_devices_ret (driver_id_t driver_id, 
 			 driver_id_t *p_out_driver_id);
 %inline %{
-char ** get_devices_ret (driver_id_t driver_id, 
+DeviceList_t get_devices_ret (driver_id_t driver_id, 
 			 driver_id_t *p_out_driver_id) {
   *p_out_driver_id = driver_id;
   return cdio_get_devices_ret (p_out_driver_id);
@@ -235,9 +243,9 @@ default device.  It is also possible to return a non NULL but after
 dereferencing the the value is NULL. This also means nothing was
 found.
 */
-char ** get_devices_with_cap (unsigned int capabilities, bool b_any);
+DeviceList_t get_devices_with_cap (unsigned int capabilities, bool b_any);
 %inline %{
-char ** 
+DeviceList_t 
 get_devices_with_cap (unsigned int capabilities, bool b_any) {
   /* FIXME: ? libcdio allows one to specify a list (char **) of devices
      to search. Don't know how to do that via SWIG though. */
@@ -254,10 +262,10 @@ get_devices_with_cap (unsigned int capabilities, bool b_any) {
   and then *open* it afterwards. Giving the driver back facilitates this,
   and speeds things up for libcdio as well.
 */
-char ** get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
+DeviceList_t get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
 				  driver_id_t *p_out_driver_id);
 %inline %{
-char ** 
+DeviceList_t
 get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
 			  driver_id_t *p_out_driver_id) {
   /* FIXME: ? libcdio allows one to specify a list (char **) of devices
@@ -402,7 +410,14 @@ Return 1 if media has changed since last call, 0 if not. Error
 return codes are the same as driver_return_code_t");
 int cdio_get_media_changed(CdIo_t *p_cdio);
 
-%typemap(perl5,out) const char ** {   // All functions returning char ** 
+/* Set up to allow returning hardware info. We'll use a typedef so we
+   can make sure to isolate this. 
+*/
+%inline %{
+typedef char ** HWInfo_t;
+%}
+
+%typemap(perl5,out) HWInfo_t {   // All functions returning char ** 
                                 // get this typemap
     // $1 is of type char **
     char **p   = $1;
@@ -433,10 +448,10 @@ Get the CD-ROM hardware info via a SCSI MMC INQUIRY command.
 An exception is raised if we had an error. 
 */
 %apply int *OUTPUT { int *drc };
-const char **get_hwinfo ( const CdIo_t *p_cdio, int *drc);
+const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc);
 
 %inline %{
-const char **get_hwinfo ( const CdIo_t *p_cdio, int *drc)
+const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
 {
   static cdio_hwinfo_t hw_info;
   static const char *hwinfo[4] = {NULL};
@@ -449,7 +464,7 @@ const char **get_hwinfo ( const CdIo_t *p_cdio, int *drc)
     hwinfo[3] = NULL;
   }
   *drc = b_got_hwinfo;
-  return hwinfo;
+  return (const HWInfo_t) hwinfo;
 }
 %}
 
