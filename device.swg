@@ -21,10 +21,10 @@
 
 #ifdef __CYGWIN32__
 #define uint32_t long unsigned int
-#define int32_t  unsigned int
+#define int32_t     long int
 #else 
-#define uint32_t unsigned  int
 #define int32_t  int
+#define uint32_t unsigned int
 #endif
 
 %include "device_const.swg"

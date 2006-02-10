@@ -92,13 +92,18 @@ sub compile_swig {
     } else {
 	@swig = ('swig');
     }
+    if (defined($p->{swig_flags})) {
+	@swig_flags = $self->split_like_shell($p->{swig_flags});
+    } else {
+	@swig_flags = ();
+    }
 
     my $blib_lib = File::Spec->catfile($self->blib, 'lib');
 
     # print "+++swig -o $c_file -outdir $blib_lib -perl $file\n";
     $self->do_system(@swig, '-o', $c_file, '-outdir', $blib_lib,
-		     '-perl', $file)
-	or die "error building $blib_c_file file from '$file'";
+		     '-perl', @swig_flags, $file)
+	or die "error building $c_file file from '$file'";
     
     return $c_file;
 }
@@ -296,9 +301,12 @@ $ccflags .= try_cflags("-Wno-unused-function");
 $ccflags .= try_cflags("-Wno-unused-variable");
 
 my $ldflags = $pkgcfg{libs};
+my $swig_flags='';
 if ('cygwin' eq $Config{osname} && 
     $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
     $ldflags .= " -L$1 -lperl";
+    # Should we check the 32-ness?
+    $swig_flags = '-D__CYGWIN32__'
 }
 
 my $class = Module::Build->subclass( code => $code );
@@ -311,6 +319,7 @@ my $builder = $class->new(
     dist_version_from   => 'lib/Device/Cdio.pm',
     extra_linker_flags  => $ldflags,
     extra_compiler_flags=> $ccflags,
+    swig_flags          => $swig_flags,
     license             => 'gpl',
     requires => {
 	'ExtUtils::PkgConfig'     => '1.03',
