@@ -25,9 +25,9 @@ use strict;
 
 BEGIN {
     chdir 'example' if -d 'example';
+    use lib '../lib';
+    eval "use blib";  # if we fail keep going - maybe we have installed Cdio
 }
-use lib '../lib';
-use blib;
 
 use Device::Cdio;
 use Device::Cdio::Device;

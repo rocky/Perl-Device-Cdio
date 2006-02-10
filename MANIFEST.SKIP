@@ -1,6 +1,8 @@
 CVS
 \.bak$
 ^Build$
+\.cvs2cl_header$
+\.cvs2cl_usermap$
 ^Device-Cdio-v.*gz$
 ^MANIFEST\.SKIP$
 ^\.cvsignore

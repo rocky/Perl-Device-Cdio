@@ -1,9 +1,16 @@
-audio.swg
 Build.PL
+COPYING
+ChangeLog
+ChangeLog.0
 Changes
+MANIFEST
+META.yml			# Will be created by "make dist"
+Makefile
+Makefile.PL
+README
+audio.swg
 compat.swg
 configure
-COPYING
 data/cdda.bin
 data/cdda.cue
 data/cdda.toc
@@ -12,24 +19,19 @@ data/isofs-m1.cue
 device.swg
 device_const.swg
 disc.swg
+examples/README
 examples/audio.pl
 examples/cdchange.pl
 examples/device.pl
 examples/drives.pl
 examples/eject.pl
-examples/README
 examples/tracks.pl
 lib/Device/Cdio.pm
 lib/Device/Cdio/Device.pm
 lib/Device/Cdio/Track.pm
 lib/Device/Cdio/Util.pm
-Makefile
-Makefile.PL
-MANIFEST
-META.yml			# Will be created by "make dist"
 perlcdio.swg
 read.swg
-README
 t/00.load.t
 t/01.pod-coverage.t
 t/01.pod.t
