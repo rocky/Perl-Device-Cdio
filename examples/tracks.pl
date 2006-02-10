@@ -58,15 +58,17 @@ my ($drc, $last_session) = $d->get_last_session();
 
 if ($drc == $perlcdio::DRIVER_OP_SUCCESS) {
     printf("CD-ROM %s has %d track(s) and %d session(s).\n",
-	   $d->get_device(), $d->get_num_tracks(), $last_session);
+	   $drive_name, $d->get_num_tracks(), $last_session);
 } elsif ($drc == $perlcdio::DRIVER_OP_UNSUPPORTED) {
     printf("CD-ROM %s has %d track(s).\n", 
-	   $d->get_device(), $d->get_num_tracks());
+	   $drive_name, $d->get_num_tracks());
 } else {
     print "Error in getting last session\n";
 }
 
 printf("Track format is %s.\n", $d->get_disc_mode());
+my $mcn = $d->get_mcn();
+printf "Media Catalog Number: %s\n", $mcn if $mcn;
     
 printf "%3s: %-6s  %s\n", "#", "LSN", "Format";
 for (my $i=$first_track; $i <= $last_track; $i++) {

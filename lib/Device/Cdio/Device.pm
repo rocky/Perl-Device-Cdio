@@ -429,6 +429,22 @@ sub get_joliet_level {
 
 =pod
 
+=head2 get_mcn
+
+get_mcn()->str
+       
+Get the media catalog number (MCN) from the CD.
+  
+=cut
+
+sub get_mcn {
+    my($self,@p) = @_;
+    return $perlcdio::BAD_PARAMETER if !_check_arg_count($#_, 0);
+    return perlcdio::get_mcn($self->{cd});
+}
+
+=pod
+
 =head2 get_last_session
 
 get_last_session(self) -> (track_lsn, drc)

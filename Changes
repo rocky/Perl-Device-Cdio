@@ -1,5 +1,28 @@
 Revision history for Device-Cdio
 
-0.0.1  Mon Feb  6 23:06:50 2006
-       Initial release.
+0.0.1  Feb 10, 2006
+       Initial release. 
 
+What's here from libcdio. Most everything from 
+  <cdio/audio.h> 
+  <cdio/device.h>
+  <cdio/disc.h> 
+  <cdio/read.h> 
+  <cdio/track.h>
+
+In lay terms, this is the audio CD controls, device controls, disc
+classification, various block CD read routines, and some track
+routines.
+
+What's not here (yet) is CD-Text reading, CD-Paranoia interface, the
+ISO 9660 library or the (SCSI) MMC command interface.
+
+An oft-asked for request is for UDF support, analogous to the ISO
+9660 support. That's currently missing in libcdio.
+
+If there is something in this list you want, dig in. Much of it is
+this is straightforward based on continuing what's here.
+
+It was an incredible amount of work to get just this far.
+
+$Id$

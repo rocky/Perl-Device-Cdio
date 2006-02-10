@@ -12,13 +12,14 @@ use lib '../lib';
 use blib;
 
 use Device::Cdio::Device;
-use Test::Simple tests => 8;
+use Test::Simple tests => 9;
 
 my $cuefile = '../data/cdda.cue';
 my $device = Device::Cdio::Device->new(-source=>$cuefile);
 $device->open($cuefile);
 my $result = $device->get_disc_mode();
 ok(defined($result) && $result eq 'CD-DA', 'get_disc_mode');
+ok($device->get_mcn() eq '0000010271955', 'get_mcn');
 my $drc = $device->get_last_session();
 # self.assertRaises(IOError, $device->get_joliet_level)
 $result = $device->get_num_tracks();

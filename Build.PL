@@ -306,7 +306,12 @@ if ('cygwin' eq $Config{osname} &&
     $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
     $ldflags .= " -L$1 -lperl";
     # Should we check the 32-ness?
-    $swig_flags = '-DNEED_LONG'
+    $swig_flags = '-DNEED_LONG';
+} elsif ('darwin' eq $Config{osname}) {
+    # This is just a guess from the python libcdio wrapper.
+    # If someone know what to do let me know. Perhaps nothing is needed?
+    # Right - on Darwan? Fuhgetaboutit!
+    $ldflags .= " -bundle -undefined suppress -flat_namespace";
 }
 
 my $class = Module::Build->subclass( code => $code );

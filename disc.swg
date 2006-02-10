@@ -60,6 +60,20 @@ This only makes sense for something that has an ISO-9660
 filesystem.");
 int cdio_get_joliet_level(const CdIo_t *p_cdio);
 
+/*!
+  Get the media catalog number (MCN) from the CD.
+  
+  @return the media catalog number or NULL if there is none or we
+  don't have the ability to get it.
+  
+  Note: string is malloc'd so caller has to free() the returned
+  string when done with it.
+  
+*/
+%rename cdio_get_mcn get_mcn;
+%newobject cdio_get_mcn; // free malloc'd return value
+char * cdio_get_mcn (const CdIo_t *p_cdio);
+
 %rename cdio_get_num_tracks get_num_tracks;
 %feature("autodoc",
 "get_num_tracks(p_cdio)->int
