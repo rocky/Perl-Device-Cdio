@@ -25,6 +25,15 @@
    I'm not sure why, but including that directly will not allow
    SWIG to understand say that a lsn_t is an int.
 */
+
+#ifdef __CYGWIN32__
+#define uint32_t long unsigned int
+#define int32_t     long int
+#else 
+#define int32_t  int
+#define uint32_t unsigned int
+#endif
+
 typedef unsigned int driver_id_t;
 typedef int lsn_t;
 typedef int int16_t;

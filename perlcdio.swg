@@ -444,6 +444,32 @@ bitmask which can  be used to specify matching any sort of CD
 
 =back
 
+=head2 Sector size constants
+
+=over 4 
+
+=item CD_FRAMESIZE 
+
+=item CD_FRAMESIZE_RAW 
+
+Size of a Philip Red book CD-DA block. It is also the maximum CD sector 
+size possible: 2352 bytes.
+
+=item ISO_BLOCKSIZE
+
+Size of an ISO 9660 block. Also the size of the data portion in CD data 
+reads: 2048 bytes.
+
+=item M2F2_SECTOR_SIZE 
+
+Mode 2 Form 2 Data size: 2328 bytes.
+
+=item M2RAW_SECTOR_SIZE
+
+Mod1 Form 1 Data size: 2336 bytes.
+
+=back 
+
 =head2 Reading Modes
 
 =over 4
@@ -472,6 +498,23 @@ Mode 2 Form 1 read. Blocksize is a multiple of $perlcdio::CD_FRAMESIZE
 
 Mode 2 Form 1 read. Blocksize is a multiple of (2328) bytes.
 
+=back
+
+=head2 Miscellaneous 
+
+=over 4 
+
+=item VERSION_NUM
+
+libcdio version that is getting used
+
+=item INVALID_LBA 
+
+Canonical value used for an invalid LBA.
+
+=item INVALID_LSN
+
+Canonical value used for an invalid LSN.
 
 =back 
 
