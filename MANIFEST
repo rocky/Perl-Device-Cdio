@@ -39,5 +39,6 @@ t/06.bincue.t
 t/06.image.t
 t/06.toc.t
 t/10.cdda.t
+t/10.read.t
 track.swg
 types.swg
