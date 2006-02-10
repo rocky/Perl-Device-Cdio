@@ -14,8 +14,7 @@ use blib;
 use Device::Cdio::Device;
 use Test::Simple tests => 8;
 
-my $cuefile="data/cdda.cue";
-$cuefile = '../data/cdda.cue' if ! -f $cuefile;
+my $cuefile = '../data/cdda.cue';
 my $device = Device::Cdio::Device->new(-source=>$cuefile);
 $device->open($cuefile);
 my $result = $device->get_disc_mode();

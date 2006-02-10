@@ -444,6 +444,37 @@ bitmask which can  be used to specify matching any sort of CD
 
 =back
 
+=head2 Reading Modes
+
+=over 4
+
+=item READ_MODE_AUDIO 
+
+audio mode (CD-DA) read. Blocksize is a multiple of
+$perlcdio::CD_FRAMESIZE_RAW (2352) bytes.
+
+=item READ_MODE_M1F1  
+
+Mode 1 Form 1 read. Blocksize is a multiple of $perlcdio::CD_FRAMESIZE
+(2048) bytes.
+
+=item READ_MODE_M1F2  
+
+Mode 1 Form 2 read. Blocksize is a multiple of $perlcdio::M2RAW_SECTIOR_SIZE
+(2336) bytes.
+
+=item READ_MODE_M2F1  
+
+Mode 2 Form 1 read. Blocksize is a multiple of $perlcdio::CD_FRAMESIZE
+(2048) bytes.
+
+=item READ_MODE_M2F2  
+
+Mode 2 Form 1 read. Blocksize is a multiple of (2328) bytes.
+
+
+=back 
+
 =head1 METHODS
 
 =head2 this

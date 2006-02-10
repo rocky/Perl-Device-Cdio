@@ -31,7 +31,6 @@ typedef int int16_t;
 typedef int lba_t;
 typedef unsigned int track_t;
 typedef long int driver_return_code_t;
-typedef long int off_t;
 typedef long int ssize_t;
 typedef unsigned int cdio_drive_read_cap_t;
 typedef unsigned int cdio_drive_write_cap_t;

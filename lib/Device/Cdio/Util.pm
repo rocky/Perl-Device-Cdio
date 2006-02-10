@@ -142,7 +142,7 @@ sub _simple_escape {
   $toencode;
 }
 
-1; # Magic true value requred at the end of a module
+1; # Magic true value required at the end of a module
 
 __END__
 

@@ -83,7 +83,7 @@ sub new {
 
 =head2 audio_pause
 
-audio_pause(cdio)->status
+audio_pause(cdio)-> $status
 Pause playing CD through analog output.
 The device status is returned.
 
@@ -99,7 +99,7 @@ sub audio_pause {
 
 =head2 audio_play_lsn
 
-audio_play_lsn(cdio, start_lsn, end_lsn)->status
+audio_play_lsn(cdio, start_lsn, end_lsn)-> $status
         
 Playing CD through analog output at the given lsn to the ending lsn
 The device status is returned.
@@ -118,7 +118,7 @@ sub audio_play_lsn {
 
 =head2 audio_resume
 
-audio_resume(cdio)->status
+audio_resume(cdio)-> $status
 
 Resume playing an audio CD through the analog interface.
 The device status is returned.
@@ -135,7 +135,7 @@ sub audio_resume {
 
 =head2 audio_stop
 
-audio_stop(cdio)->status
+audio_stop(cdio)-> $status
 
 Stop playing an audio CD through the analog interface.  The device
 status is returned.
@@ -392,7 +392,7 @@ sub get_first_track {
 
 =head2 get_hwinfo
 
-get_hwinfo()->[vendor, model, release, drc]
+get_hwinfo()->(vendor, model, release, drc)
 
 Get the CD-ROM hardware info via a SCSI MMC INQUIRY command.
 An exception is raised if we had an error. 
@@ -608,9 +608,127 @@ sub open {
 
 =pod
 
+=head2 read
+
+read(size)->(size, data)
+
+Reads the next size bytes.
+Similar to (if not the same as) libc's read()
+
+The number of bytes read and the data is returned. 
+
+=cut 
+
+sub read {
+
+    my($self,@p) = @_;
+    my($size) = _rearrange(['SIZE'], @p);
+    (my $data, $size) = perlcdio::read_cd($self->{cd}, $size);
+    return wantarray ? ($data, $size) : $data;
+}
+    
+=pod
+
+=head2 read_data_blocks
+
+read_data_blocks(lsn, blocks=1)->($data, $size, $drc)
+
+Reads a number of data sectors (AKA blocks).
+        
+lsn is sector to read, blocks is the number of bytes.
+
+The size of the data will be a multiple of $perlcdio::ISO_BLOCKSIZE.
+
+The number of data, size of the data, and teh return code status is
+returned in an array context. In a scalar context just the data is
+returned. undef is returned as the data on error.
+
+=cut 
+
+sub read_data_blocks {
+
+    my($self,@p) = @_;
+    my($lsn, $read_mode, $blocks) = _rearrange(['LSN', 'BLOCKS'], @p);
+    
+    $blocks = 1 if !defined($blocks);
+
+    my $size = $perlcdio::ISO_BLOCKSIZE * $blocks;
+    (my $data, $size, my $drc) = 
+	perlcdio::read_data_bytes($self->{cd}, $lsn, 
+				  $perlcdio::ISO_BLOCKSIZE,
+				  $size);
+
+    if ($perlcdio::DRIVER_OP_SUCCESS == $drc) {
+	return wantarray ? ($data, $size, $drc) : $data;
+    } else {
+	return wantarray ? (undef, undef, $drc) : undef;
+    }
+
+}
+    
+=pod
+
+=head2 read_sectors
+
+read_sectors($lsn, $read_mode, $blocks=1)->($data, $size, $drc)
+read_sectors($lsn, $read_mode, $blocks=1)->$data
+
+Reads a number of sectors (AKA blocks).
+
+lsn is sector to read, bytes is the number of bytes.
+
+If read_mode is $perlcdio::MODE_AUDIO, the return data size will be
+a multiple of $perlcdio::CDIO_FRAMESIZE_RAW i_blocks bytes.
+
+If read_mode is $perlcdio::MODE_DATA, data will be a multiple of
+$perlcdio::ISO_BLOCKSIZE, $perlcdio::M1RAW_SECTOR_SIZE or
+$perlcdio::M2F2_SECTOR_SIZE bytes depending on what mode the data is
+in.
+
+If read_mode is $perlcdio::MODE_M2F1, data will be a multiple of
+$perlcdio::M2RAW_SECTOR_SIZE bytes.
+
+If read_mode is $perlcdio::MODE_M2F2, the return data size will be a
+multiple of $perlcdio::CD_FRAMESIZE bytes.
+
+The number of data, size of the data, and teh return code status is
+returned in an array context. In a scalar context just the data is
+returned. undef is returned as the data on error.
+
+=cut
+
+sub read_sectors {
+
+    my($self,@p) = @_;
+    my($lsn, $read_mode, $blocks) = 
+	_rearrange(['LSN', 'READ_MODE', 'BLOCKS'], @p);
+    
+    $blocks = 1 if !defined($blocks);
+    
+    my $size;
+    my $blocksize = $Device::Cdio::read_mode2blocksize{$read_mode};
+    if (defined($blocksize)) {
+	$size = $blocks * $blocksize;
+    } else  {
+	printf "Bad read mode %s\n", $read_mode;
+	return undef;
+    }
+    (my $data, $size, my $drc) = 
+	perlcdio::read_sectors($self->{cd}, $lsn, $read_mode, $size);
+
+    if ($perlcdio::DRIVER_OP_SUCCESS == $drc) {
+	$blocks = $size / $blocksize;
+	return wantarray ? ($data, $size, $drc) : $data;
+    } else {
+	return wantarray ? (undef, undef, $drc) : undef;
+    }
+}
+
+=pod
+
 =head2 set_blocksize
 
-set_blocksize(blocksize)->status
+set_blocksize(blocksize) -> $status
 
 Set the blocksize for subsequent reads.  The operation status code is
 returned.
@@ -659,75 +777,11 @@ sub set_track {
     return $self;
 }
 
-1;
+1; # Magic true value required at the end of a module
 
 __END__
 
-    def read(size):
-        """
-        read(size)->[size, data]
-        
-        Reads the next size bytes.
-        Similar to (if not the same as) libc's read()
-        
-        The number of bytes read and the data is returned. 
-        A DeviceError exception may be raised.
-        """
-        size, data = $perlcdio::read_cd($self->{cd}, size)
-        __possibly_raise_exception__(size)
-        return [size, data]
-    
-    def read_sectors(lsn, read_mode, blocks=1):
-        """
-        read_sectors(lsn, read_mode, blocks=1)->[blocks, data]
-        Reads a number of sectors (AKA blocks).
-        
-        lsn is sector to read, bytes is the number of bytes.
-        
-        If read_mode is $perlcdio::MODE_AUDIO, the return buffer size will be
-        truncated to multiple of $perlcdio::CDIO_FRAMESIZE_RAW i_blocks bytes.
-        
-        If read_mode is $perlcdio::MODE_DATA, buffer will be truncated to a
-        multiple of $perlcdio::ISO_BLOCKSIZE, $perlcdio::M1RAW_SECTOR_SIZE or
-        $perlcdio::M2F2_SECTOR_SIZE bytes depending on what mode the data is in.
-
-        If read_mode is $perlcdio::MODE_M2F1, buffer will be truncated to a 
-        multiple of $perlcdio::M2RAW_SECTOR_SIZE bytes.
-        
-        If read_mode is $perlcdio::MODE_M2F2, the return buffer size will be
-        truncated to a multiple of $perlcdio::CD_FRAMESIZE bytes.
-        
-        The number of bytes read and the data is returned. 
-        A DeviceError exception may be raised.
-        """
-        try:
-            blocksize = read_mode2blocksize[read_mode]
-            size = blocks * blocksize
-        except KeyError:
-            raise DriverBadParameterError ('Bad read mode %d' % read_mode)
-        size, data = $perlcdio::read_sectors($self->{cd}, size, lsn, read_mode)
-        if size < 0:
-            __possibly_raise_exception__(size)
-        blocks = size / blocksize
-        return [blocks, data]
-
-    def read_data_blocks(lsn, blocks=1):
-        """
-        read_data_blocks(blocks, lsn, blocks=1)->[size, data]
-        
-        Reads a number of data sectors (AKA blocks).
-        
-        lsn is sector to read, bytes is the number of bytes.
-        A DeviceError exception may be raised.
-        """
-        size = $perlcdio::ISO_BLOCKSIZE*blocks
-        size, data = $perlcdio::read_data_bytes($self->{cd}, size, lsn,
-                                            $perlcdio::ISO_BLOCKSIZE)
-        if size < 0:
-             __possibly_raise_exception__(size)
-        return [size, data]
-    
-1;
+1; # Magic true value required at the end of a module
 
 __END__
 

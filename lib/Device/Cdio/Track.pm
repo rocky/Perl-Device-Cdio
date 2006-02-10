@@ -255,7 +255,7 @@ sub is_track_green {
     return perlcdio::is_track_green($self->{device}, $self->{track});
 }
 
-1; # Magic true value requred at the end of a module
+1; # Magic true value required at the end of a module
 
 __END__
 

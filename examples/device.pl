@@ -107,9 +107,6 @@ sub print_drive_capabilities($$$) {
 
 my ($d, $drive_name);
 
-printf "***Currently broken pending investigation...\n";
-exit 0;
-
 if ($ARGV[0]) {
     $drive_name=$ARGV[0];
     $d = Device::Cdio::Device->new(-source=>$drive_name);
@@ -126,6 +123,14 @@ if ($ARGV[0]) {
     }
 }
         
+my ($vendor, $model, $release, $drc) = $d->get_hwinfo();
+
+print "drive: $drive_name, vendor: $vendor, " .
+    "model: $model, release: $release\n";
+
+printf "***Remaining Currently broken pending investigation...\n";
+exit 0;
+
 my ($i_read_cap, $i_write_cap, $i_misc_cap) =  $d->get_drive_cap();
 print_drive_capabilities($i_read_cap, $i_write_cap, $i_misc_cap);
 

@@ -154,7 +154,7 @@ use Carp;
 =head2 close_tray 
 
 close_tray(drive=undef, driver_id=$perlcdio::DRIVER_UNKNOWN) 
- -> (drc, driver_id)
+ -> ($drc, $driver_id)
    
 close media tray in CD drive if there is a routine to do so. 
 
@@ -178,7 +178,7 @@ sub close_tray {
 
 =head2 get_default_device_driver
 
-get_default_device_driver(driver_id=DRIVER_DEVICE)->[device, driver]
+get_default_device_driver(driver_id=DRIVER_DEVICE)-> ($device, $driver)
 
 Return a string containing the default CD device if none is specified.
 if driver_id is DRIVER_UNKNOWN or DRIVER_DEVICE then find a suitable
