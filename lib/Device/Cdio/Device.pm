@@ -52,10 +52,10 @@ $Device::Cdio::Device::VERSION = '0.01';
 
 =head2 new
 
-new(source, driver_id, access_mode)->track_object
+new(source, driver_id, access_mode)->$track_object
 
 Create a new Track object. Either driver_id or source can be
-undef. Probably best to not to give anaccess_mode too, unless you know
+undef. Probably best to not to give an access_mode too, unless you know
 what you are doing.
 
 =cut 
@@ -639,7 +639,7 @@ lsn is sector to read, blocks is the number of bytes.
 
 The size of the data will be a multiple of $perlcdio::ISO_BLOCKSIZE.
 
-The number of data, size of the data, and teh return code status is
+The number of data, size of the data, and the return code status is
 returned in an array context. In a scalar context just the data is
 returned. undef is returned as the data on error.
 
@@ -691,7 +691,7 @@ $perlcdio::M2RAW_SECTOR_SIZE bytes.
 If read_mode is $perlcdio::MODE_M2F2, the return data size will be a
 multiple of $perlcdio::CD_FRAMESIZE bytes.
 
-The number of data, size of the data, and teh return code status is
+The number of data, size of the data, and the return code status is
 returned in an array context. In a scalar context just the data is
 returned. undef is returned as the data on error.
 

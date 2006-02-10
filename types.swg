@@ -26,13 +26,14 @@
    SWIG to understand say that a lsn_t is an int.
 */
 
-#ifdef __CYGWIN32__
-#define uint32_t long unsigned int
-#define int32_t     long int
+#ifdef NEED_LONG
+#define LONG long
 #else 
-#define int32_t  int
-#define uint32_t unsigned int
+#define LONG
 #endif
+
+#define uint32_t LONG unsigned int
+#define int32_t  LONG int
 
 typedef unsigned int driver_id_t;
 typedef int lsn_t;

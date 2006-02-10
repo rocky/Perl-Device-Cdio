@@ -516,6 +516,19 @@ Canonical value used for an invalid LBA.
 
 Canonical value used for an invalid LSN.
 
+=item INVALID_TRACK
+
+Canonical value used for an invalid track number. (Valid range 
+is 0 to 99.)
+
+=item LEADOUT_TRACK
+
+Canonical value for the "leadout" or track just after the last track. So 
+again this value is outside the range 0 to 99.
+The leadout track is often used to get the last LSN or LBA. The libcdio
+routines also allow the last actual track plus one as a synonym for the
+leadout track.
+
 =back 
 
 =head1 METHODS

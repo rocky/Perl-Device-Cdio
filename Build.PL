@@ -306,7 +306,7 @@ if ('cygwin' eq $Config{osname} &&
     $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
     $ldflags .= " -L$1 -lperl";
     # Should we check the 32-ness?
-    $swig_flags = '-D__CYGWIN32__'
+    $swig_flags = '-DNEED_LONG'
 }
 
 my $class = Module::Build->subclass( code => $code );

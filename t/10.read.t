@@ -12,7 +12,7 @@ use lib '../lib';
 use blib;
 
 use Device::Cdio::Device;
-use Test::Simple tests => 4;
+use Test::Simple tests => 6;
 
 my $cuefile="../data/isofs-m1.cue";
 my $device = Device::Cdio::Device->new(-source=>$cuefile);
@@ -22,10 +22,17 @@ my $device = Device::Cdio::Device->new(-source=>$cuefile);
 my($data, $size, $drc) = 
     $device->read_sectors(16, $perlcdio::READ_MODE_M1F1);
 
-ok(substr($data, 1, 5) eq 'CD001');
+ok(substr($data, 1, 5) eq 'CD001' 
+   && $perlcdio::M2RAW_SECTOR_SIZE == length($data),
+   "Mode 1 Format 1 reading");
 
-my $data2 = $device->read_sectors(16, $perlcdio::READ_MODE_M1F1);
-ok($data2 eq $data);
+ok(substr($data, 2328, 2) eq "\0\0", "Mode 1 Format 1 reading - null bytes");
+
+my $data2 = $device->read_sectors(16, $perlcdio::READ_MODE_M1F1, 1);
+ok($data2 eq $data, "Mode 1 reading with block parameter");
+
+my $data3 = $device->read_data_blocks(16, 1);
+ok($data2 eq $data, "Mode 1 reading matches data reading (block parameter)");
 
 ($data, $size, $drc) = $device->read_data_blocks(26);
 ok(substr($data, 6, 26) eq 'GNU GENERAL PUBLIC LICENSE');

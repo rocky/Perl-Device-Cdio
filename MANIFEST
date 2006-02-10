@@ -22,6 +22,7 @@ disc.swg
 examples/README
 examples/audio.pl
 examples/cdchange.pl
+examples/cd-read.pl
 examples/device.pl
 examples/drives.pl
 examples/eject.pl

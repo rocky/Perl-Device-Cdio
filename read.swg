@@ -48,14 +48,32 @@ read_cd(const CdIo_t *p_cdio, my_ssize_t i_size,
 }
 %}
 
+typedef char * buf_t;
+%typemap(perl5,out) buf_t {   
+  /* $1 is of type buf_t */
+  ST(argvi) = sv_newmortal();
+  if (result) {
+    /* I don't yet know how to pick up arg4 another way.
+       THIS MEANS ARG4 MUST ALWAYS BE THE SIZE.  */
+    sv_setpvn((SV*)ST(argvi++), (char *) result, arg4);
+    /* Don't leak memory. return value was malloc'd by libcdio. */
+    free(result);  
+  } else {
+    sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+  }
+}
+
 %apply long unsigned int *OUTPUT { long unsigned int *drc };
-char *read_sectors(const CdIo_t *p_cdio, lsn_t i_lsn, 
+/* NOTE: arg 4 *must* be the size of the buf for the buf_t typemap. */
+buf_t read_sectors(const CdIo_t *p_cdio, lsn_t i_lsn, 
 		       cdio_read_mode_t read_mode, my_ssize_t i_size, 
 		       /*out*/ my_ssize_t *pi_size, 
 		       /*out*/ long unsigned int *drc);
 
 %inline %{
-char *
+typedef char *buf_t;
+/* NOTE: arg 4 *must* be the size of the buf for the buf_t typemap. */
+buf_t
 read_sectors(const CdIo_t *p_cdio, lsn_t i_lsn, 
 	     cdio_read_mode_t read_mode,  my_ssize_t i_size, 
 	     /*out*/ my_ssize_t *pi_size, 
@@ -99,14 +117,16 @@ read_sectors(const CdIo_t *p_cdio, lsn_t i_lsn,
 }
  %}
 
-char *
+/* NOTE: arg 4 *must* be the size of the buf for the buf_t typemap. */
+buf_t
 read_data_bytes(const CdIo_t *p_cdio, lsn_t i_lsn, int16_t i_blocksize, 
 		my_ssize_t i_size, 
 		/*out*/ my_ssize_t *pi_size,
 		long unsigned int *drc);
 
 %inline %{
-char *
+/* NOTE: arg 4 *must* be the size of the buf for the buf_t typemap. */
+buf_t
 read_data_bytes(const CdIo_t *p_cdio, lsn_t i_lsn, 
 		int16_t i_blocksize, my_ssize_t i_size, 
 		/*out*/ my_ssize_t *pi_size,
