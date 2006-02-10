@@ -285,13 +285,13 @@ Get drive capabilities of device.
 In some situations of drivers or OS's we can't find a CD device if
 there is no media in it. In this situation capabilities will show up as 
 empty even though there is a hardware CD-ROM.");
-%apply unsigned int *OUTPUT { unsigned int *p_read_cap, 
-                              unsigned int *p_write_cap, 
-                              unsigned int *p_misc_cap };
+%apply unsigned long int *OUTPUT { long unsigned int *p_read_cap, 
+				   long unsigned int *p_write_cap, 
+				   long unsigned int *p_misc_cap };
 void cdio_get_drive_cap (const CdIo_t *p_cdio, 
-			 unsigned int *p_read_cap, 
-			 unsigned int *p_write_cap, 
-			 unsigned int *p_misc_cap);
+			 long unsigned int *p_read_cap, 
+			 long unsigned int *p_write_cap, 
+			 long unsigned int *p_misc_cap);
   
 %rename cdio_get_drive_cap_dev get_drive_cap;
 %feature("autodoc",
@@ -304,9 +304,9 @@ there is no media in it. In this situation capabilities will show up as
 empty even though there is a hardware CD-ROM.");
 
 void cdio_get_drive_cap_dev(const char *device=NULL, 
-			    unsigned int *p_read_cap, 
-			    unsigned int *p_write_cap, 
-			    unsigned int *p_misc_cap);
+			    long unsigned int *p_read_cap, 
+			    long unsigned int *p_write_cap, 
+			    long unsigned int *p_misc_cap);
   
 %rename cdio_get_driver_name get_driver_name;
 %feature("autodoc",
@@ -326,7 +326,7 @@ return pycdio.DRIVER_UNKNOWN.");
 driver_id_t cdio_get_driver_id (const CdIo_t *p_cdio);
 
 %rename cdio_get_last_session get_last_session;
-%apply int *OUTPUT { lsn_t *i_last_session };
+%apply long int *OUTPUT { lsn_t *i_last_session };
 driver_return_code_t cdio_get_last_session (CdIo_t *p_cdio, 
 					    lsn_t *i_last_session);
 

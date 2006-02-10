@@ -226,8 +226,13 @@ sub try_compile {
 sub try_cflags ($) {
     my ($ccflags) = @_;
     my $c_prog = "int main () { return 0; }\n";
-    return " $ccflags"
-	if try_compile($c_prog, ccflags=>$ccflags);
+    print "Checking if $Config{cc} supports \"$ccflags\"...";
+    my $result = try_compile($c_prog, ccflags=>$ccflags);
+    if ($result) {
+	print "yes\n";
+	return " $ccflags";
+    }
+    print "no\n";
     return '';
 	
 }
@@ -265,6 +270,7 @@ if (exists($pkgcfg{'modversion'})) {
     exit 1;
 }
 
+print "Checking for SWIG...";
 my @swig_version = `swig -version 2>&1`;
 if ($?) {
     my $errno = $? >> 8;
@@ -278,7 +284,7 @@ if ($?) {
 " if @swig_version;
     exit 2;
 }
-
+print "ok\n";
 
 my $ccflags = $pkgcfg{cflags};
 
@@ -289,6 +295,12 @@ $ccflags .= try_cflags("-Wno-unused-value");
 $ccflags .= try_cflags("-Wno-unused-function");
 $ccflags .= try_cflags("-Wno-unused-variable");
 
+my $ldflags = $pkgcfg{libs};
+if ('cygwin' eq $Config{osname} && 
+    $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
+    $ldflags .= " -L$1 -lperl";
+}
+
 my $class = Module::Build->subclass( code => $code );
 
 my $builder = $class->new( 
@@ -297,7 +309,7 @@ my $builder = $class->new(
     dist_abstract       => 'CD Input and control library',
     dist_author         => 'Rocky Bernstein <rocky@cpan.org>',
     dist_version_from   => 'lib/Device/Cdio.pm',
-    extra_linker_flags  => $pkgcfg{libs},
+    extra_linker_flags  => $ldflags,
     extra_compiler_flags=> $ccflags,
     license             => 'gpl',
     requires => {

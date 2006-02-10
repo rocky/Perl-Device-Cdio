@@ -45,7 +45,12 @@ if ($ARGV[0]) {
     }
 }
         
-my $first_track = $d->get_first_track()->{track};
+my $t = $d->get_first_track();
+if (!defined($t)) {
+    print "Problem getting first track.\n";
+    exit(2);
+}
+my $first_track = $t->{track};
 my $num_tracks  = $d->get_num_tracks();
 my $last_track  = $first_track+$num_tracks-1;
 
