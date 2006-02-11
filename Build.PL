@@ -311,7 +311,7 @@ if ('cygwin' eq $Config{osname} &&
     # This is just a guess from the python libcdio wrapper.
     # If someone know what to do let me know. Perhaps nothing is needed?
     # Right - on Darwan? Fuhgetaboutit!
-    $ldflags .= " -bundle -undefined suppress -flat_namespace";
+    $ldflags .= " -bundle -flat_namespace";
 }
 
 my $class = Module::Build->subclass( code => $code );

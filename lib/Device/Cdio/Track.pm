@@ -1,5 +1,5 @@
 package Device::Cdio::Track;
-require 5.8.7;
+require 5.8.6;
 #
 #    $Id$
 #
