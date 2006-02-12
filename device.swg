@@ -455,18 +455,17 @@ const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc);
 
 %inline %{
 static cdio_hwinfo_t hw_info;
-static const char *hwinfo[4] = {NULL};
-
-const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
+const 
+HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
 {
+  static const char *hwinfo[4] = {
+    hw_info.psz_vendor,
+    hw_info.psz_model,
+    hw_info.psz_revision,
+    NULL
+    };
   bool b_got_hwinfo = cdio_get_hwinfo(p_cdio, &hw_info);
 
-  if (b_got_hwinfo) {
-    hwinfo[0] = hw_info.psz_vendor;
-    hwinfo[1] = hw_info.psz_model;
-    hwinfo[2] = hw_info.psz_revision;
-    hwinfo[3] = NULL;
-  }
   *drc = b_got_hwinfo;
   return (const HWInfo_t) hwinfo;
 }
