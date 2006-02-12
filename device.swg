@@ -33,8 +33,10 @@ typedef char ** DeviceList_t;
 %typemap(newfree) DeviceList_t "cdio_free_device_list($1);";
 %typemap(perl5,out) DeviceList_t {   
     // $1 is of type DeviceList_t
-    char **p   = $1;
+    char **p   = result;
     unsigned int num = 0;
+
+    if (!result) goto out;
 
     /* Figure out how many items in the array */
     for (p = $1; *p; p++) {
@@ -53,6 +55,7 @@ typedef char ** DeviceList_t;
     }
     /* FIXME: the + 1 is because p_cdio is still on the stack. */
     argvi += num + 1;
+ out: ;
 }
 
 /*
@@ -451,10 +454,11 @@ An exception is raised if we had an error.
 const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc);
 
 %inline %{
+static cdio_hwinfo_t hw_info;
+static const char *hwinfo[4] = {NULL};
+
 const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
 {
-  static cdio_hwinfo_t hw_info;
-  static const char *hwinfo[4] = {NULL};
   bool b_got_hwinfo = cdio_get_hwinfo(p_cdio, &hw_info);
 
   if (b_got_hwinfo) {
