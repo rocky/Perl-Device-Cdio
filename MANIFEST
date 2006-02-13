@@ -21,8 +21,8 @@ device_const.swg
 disc.swg
 examples/README
 examples/audio.pl
-examples/cdchange.pl
 examples/cd-read.pl
+examples/cdchange.pl
 examples/device.pl
 examples/drives.pl
 examples/eject.pl
@@ -32,6 +32,7 @@ lib/Device/Cdio/Device.pm
 lib/Device/Cdio/Track.pm
 lib/Device/Cdio/Util.pm
 perlcdio.swg
+perlcdio_wrap.c
 read.swg
 t/00.load.t
 t/01.pod-coverage.t

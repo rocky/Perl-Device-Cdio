@@ -1,5 +1,18 @@
 Revision history for Device-Cdio
 
+0.0.2  Feb 13, 2006
+
+- Drop requirement that Swig is installed.
+
+- $dev->get_device() is a little more useful.
+
+- Fixes for Darwin (and remove some invalid pointer references too and
+  guard accessing outside of fixed-length hwinfo arrays).
+
+- Allow Perl 5.8.6.
+
+- synch up version numbers in Cdio/Track.pm and Cdio/Device.pm with Cdio.pm
+       
 0.0.1  Feb 10, 2006
        Initial release. 
 

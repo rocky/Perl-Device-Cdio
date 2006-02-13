@@ -36,6 +36,8 @@ use Device::Cdio::Util qw(_rearrange _check_arg_count _extra_args);
 use Device::Cdio;
 use Device::Cdio::Device;
 
+$Device::Cdio::Device::VERSION = $Device::Cdio::VERSION;
+
 =pod
 
 =head1 METHODS

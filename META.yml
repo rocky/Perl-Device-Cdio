@@ -12,10 +12,9 @@ requires:
 provides:
   Device::Cdio:
     file: lib/Device/Cdio.pm
-    version: v0.0.1
+    version: v0.0.2
   Device::Cdio::Device:
     file: lib/Device/Cdio/Device.pm
-    version: 0.01
   Device::Cdio::Track:
     file: lib/Device/Cdio/Track.pm
   Device::Cdio::Util:

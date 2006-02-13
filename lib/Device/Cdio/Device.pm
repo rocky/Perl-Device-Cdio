@@ -38,8 +38,7 @@ use Device::Cdio qw(convert_drive_cap_read convert_drive_cap_write
 		    convert_drive_cap_misc );
 use Device::Cdio::Track;
 
-@Device::Cdio::Device::ISA = qw( CGI );
-$Device::Cdio::Device::VERSION = '0.01';
+$Device::Cdio::Device::VERSION = $Device::Cdio::VERSION;
 @Device::Cdio::Device::EXPORT = qw( close open new );
 
 =pod 
@@ -234,8 +233,13 @@ sub get_default_device_driver {
 get_device()->str
 
 Get the default CD device.
-If we haven't initialized a specific device driver), 
-then find a suitable one and return the default device for that.
+
+If the CD object has an opened CD, return the name of the device used.
+(In fact this is the same thing as issuiing  "d->get_arg("source").
+
+If we haven't initialized a specific device driver, then find a
+suitable one and return the default device for that.  
+
 In some situations of drivers or OS's we can't find a CD device if
 there is no media in it and it is possible for this routine to return
 undef even though there may be a hardware CD-ROM.
@@ -245,6 +249,8 @@ undef even though there may be a hardware CD-ROM.
 sub get_device {
     my($self,@p) = @_;
     return undef if !_check_arg_count($#_, 0);
+    return perlcdio::get_arg($self->{cd}, "source")
+	if ($self->{cd});
     return perlcdio::get_device($self->{cd});
 }
 

@@ -9,5 +9,4 @@ CVS
 ^_build
 ^blib
 ~$
-perlcdio_wrap\..*$
 tmp\d+$
