@@ -221,10 +221,10 @@ DeviceList_t cdio_get_devices (driver_id_t driver_id);
 */
     
 DeviceList_t get_devices_ret (driver_id_t driver_id, 
-			 driver_id_t *p_out_driver_id);
+			      driver_id_t *p_out_driver_id);
 %inline %{
 DeviceList_t get_devices_ret (driver_id_t driver_id, 
-			 driver_id_t *p_out_driver_id) {
+			      driver_id_t *p_out_driver_id) {
   *p_out_driver_id = driver_id;
   return cdio_get_devices_ret (p_out_driver_id);
  }

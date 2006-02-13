@@ -435,6 +435,24 @@ sub is_cuefile {
     return perlcdio::is_cuefile($file_name);
 }
 
+=pod 
+
+=head2 is_device
+
+is_device(source, driver_id=$perlcdio::DRIVER_UNKNOWN)->bool
+
+Return True if source refers to a real hardware CD-ROM.
+=cut
+
+sub is_device {
+
+    my (@p) = @_;
+    my($source, $driver_id) = _rearrange(['SOURCE', 'DRIVER_ID'], @p);
+
+    $driver_id=$perlcdio::DRIVER_UNKNOWN if !defined($driver_id);
+    return perlcdio::is_device($source, $driver_id);
+}
+
 =pod
 
 =head2 is_nrg
@@ -449,23 +467,6 @@ sub is_nrg {
     my (@p) = @_;
     my($file_name) = _rearrange(['NRGFILE'], @p);
     return perlcdio::is_nrg($file_name);
-}
-
-=pod
-
-=head2 is_device
-
-is_device(source, driver_id=$perlcdio::DRIVER_UNKNOWN)->bool
-
-Return True if source refers to a real hardware CD-ROM.
-=cut
-sub is_device {
-
-    my (@p) = @_;
-    my($source, $driver_id) = _rearrange(['SOURCE', 'DRIVER_ID'], @p);
-
-    $driver_id=$perlcdio::DRIVER_UNKNOWN if !defined($driver_id);
-    return perlcdio::is_device($source, $driver_id);
 }
 
 =pod

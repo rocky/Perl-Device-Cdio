@@ -177,3 +177,11 @@ my ($i_read_cap, $i_write_cap, $i_misc_cap) =  $d->get_drive_cap();
 print_drive_capabilities($i_read_cap, $i_write_cap, $i_misc_cap);
 
 
+print "\nDriver Availabiliity...\n";
+
+foreach my $driver_name (sort keys(%Device::Cdio::drivers)) {
+    print "Driver $driver_name is installed.\n"
+	if Device::Cdio::have_driver($driver_name) and
+	$driver_name !~ m{device|Unknown};
+}
+$d->close();

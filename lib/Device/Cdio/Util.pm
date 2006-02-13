@@ -27,7 +27,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw(_rearrange _make_attributes _check_arg_count _extra_args);
 
-$VERSION = '0.01';
+$VERSION = $Device::Cdio::VERSION;
 
 # Check that we $count (the argument count of arguments passed has
 # between $min and $max arguments.

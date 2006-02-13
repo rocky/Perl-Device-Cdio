@@ -206,28 +206,6 @@ sub  get_arg {
 
 =pod
 
-=head2 get_default_device_driver
-
-get_default_device_driver( driver_id=$perlcdio::DRIVER_DEVICE)->str
-
-Get the default CD device.  If we haven't initialized a specific
-device driver, then find a suitable one and return the default device
-for that.  In some situations of drivers or OS's we can't find a CD
-device if there is no media in it and it is possible for this routine
-to return undef even though there may be a hardware CD-ROM.
-
-=cut
-
-sub get_default_device_driver {
-    my($self,@p) = @_;
-    my($driver_id, @args) = _rearrange(['DRIVER_ID'], @p);
-    return undef if _extra_args(@args);
-    $driver_id = $perlcdio::DRIVER_DEVICE if !defined($driver_id);
-    return perlcdio::get_default_device_driver($driver_id);
-}
-
-=pod
-
 =head2 get_device
 
 get_device()->str
@@ -435,22 +413,6 @@ sub get_joliet_level {
 
 =pod
 
-=head2 get_mcn
-
-get_mcn()->str
-       
-Get the media catalog number (MCN) from the CD.
-  
-=cut
-
-sub get_mcn {
-    my($self,@p) = @_;
-    return $perlcdio::BAD_PARAMETER if !_check_arg_count($#_, 0);
-    return perlcdio::get_mcn($self->{cd});
-}
-
-=pod
-
 =head2 get_last_session
 
 get_last_session(self) -> (track_lsn, drc)
@@ -481,6 +443,22 @@ sub get_last_track {
     return $perlcdio::BAD_PARAMETER if !_check_arg_count($#_, 0);
     return Device::Cdio::Track->new(-device=>$self->{cd},
 				    -track=>perlcdio::get_last_track_num($self->{cd}));
+}
+
+=pod
+
+=head2 get_mcn
+
+get_mcn()->str
+       
+Get the media catalog number (MCN) from the CD.
+  
+=cut
+
+sub get_mcn {
+    my($self,@p) = @_;
+    return $perlcdio::BAD_PARAMETER if !_check_arg_count($#_, 0);
+    return perlcdio::get_mcn($self->{cd});
 }
 
 =pod
@@ -779,24 +757,6 @@ sub set_speed {
     my($speed, @args) =  _rearrange(['SPEED'], @p);
     return $perlcdio::BAD_PARAMETER if _extra_args(@args);
     return perlcdio::set_speed($self->{cd}, $speed);
-}
-
-=pod
-
-=head2 set_track
-
-set_track(track_num)
-
-Set a new track number for the given track number.
-
-=cut 
-
-sub set_track {
-    my($self,@p) = @_;
-    my($track_num, @args) = _rearrange(['TRACK'], @p);
-    return undef if _extra_args(@args);
-    $self->{track} = $track_num;
-    return $self;
 }
 
 1; # Magic true value required at the end of a module

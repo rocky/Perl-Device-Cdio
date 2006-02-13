@@ -1,6 +1,6 @@
 ---
 name: Device-Cdio
-version: v0.0.1
+version: v0.0.2
 author:
   - Rocky Bernstein <rocky@cpan.org>
 abstract: CD Input and control library

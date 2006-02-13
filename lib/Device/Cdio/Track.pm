@@ -129,9 +129,9 @@ sub get_copy_permit {
 
 =head2 get_format
 
-get_format()->format
+get_format()->$format
        
-Get the format (audio, mode2, mode1) of track. 
+Get the format (e.g. 'audio', 'mode2', 'mode1') of track. 
 
 =cut
 
@@ -255,6 +255,24 @@ sub is_track_green {
     my ($self, @p) = @_;
     return 0 if !_check_arg_count($#_, 0);
     return perlcdio::is_track_green($self->{device}, $self->{track});
+}
+
+=pod
+
+=head2 set_track
+
+set_track(track_num)
+
+Set a new track number.
+
+=cut 
+
+sub set_track {
+    my($self,@p) = @_;
+    my($track_num, @args) = _rearrange(['TRACK'], @p);
+    return undef if _extra_args(@args);
+    $self->{track} = $track_num;
+    return $self;
 }
 
 1; # Magic true value required at the end of a module
