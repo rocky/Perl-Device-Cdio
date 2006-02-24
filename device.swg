@@ -455,17 +455,6 @@ const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc);
 
 %inline %{
 static cdio_hwinfo_t hw_info;
-#if LIBCDIO_VERSION_NUM <= 76
-/* There is yet another bug in libcdio <= 0.76 were we
-   might not respect the fixed-length field boundaries
-   in image drivers. In non CVS versions it probably isn't
-   a problem - and it isn's a problem in the current CVS.
-   But we'll add this variable below as a buffer just in 
-   case.
-*/
-static char junk[20];
-#endif
- 
 const 
 HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
 {

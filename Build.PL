@@ -22,8 +22,6 @@ use ExtUtils::PkgConfig;
 use Config;
 
 my $code = <<'EOC';
-use Cwd;
-use File::Copy;
 
 sub process_swig_files {
     my $self = shift;
@@ -35,11 +33,10 @@ sub process_swig_files {
     }
 }
 
-#
-# Run swig on $main_swig_file to produce a xxx_wrap.c C file.
-# We also check dependencies that presumably $main_swig_file 
-# %includes.
-#
+# Check check dependencies for $main_swig_file. These are the
+# %includes. If needed, arrange to run swig on $main_swig_file to
+# produce a xxx_wrap.c C file.
+
 sub process_swig {
   my ($self, $main_swig_file, $deps_ref) = @_;
   my ($cf, $p) = ($self->{config}, $self->{properties}); # For convenience
@@ -81,6 +78,7 @@ sub process_swig {
   $self->link_c($archdir, $file_base, $obj_file);
 }
 
+# Invoke swig with -perl -outdir and other options.
 sub compile_swig {
     my ($self, $file, $c_file) = @_;
     my ($cf, $p) = ($self->{config}, $self->{properties}); # For convenience
@@ -110,8 +108,8 @@ sub compile_swig {
     return $c_file;
 }
 
-# From Base.pm but modified for SWIG conventions.
-# Actually that's not all that true. We just pass a $obj_file parameter
+# From Base.pm but modified for a SWIG conventions.
+# We just pass a $obj_file parameter
 # SWIG objects have a get created with _wrap added. For example
 # perlcdio.swg produces perlcdio_wrap.c, and perlcdio_wrap.o.
 # But the shared object is still perlcdio.so.
@@ -312,9 +310,6 @@ if ('cygwin' eq $Config{osname} &&
     # Should we check the 32-ness?
     $swig_flags = '-DNEED_LONG';
 } elsif ('darwin' eq $Config{osname}) {
-    # This is just a guess from the python libcdio wrapper.
-    # If someone know what to do let me know. Perhaps nothing is needed?
-    # Right - on Darwan? Fuhgetaboutit!
     $ldflags .= " -bundle -flat_namespace";
 }
 

@@ -9,6 +9,7 @@ Makefile
 Makefile.PL
 README
 audio.swg
+blib/lib/perlcdio.pm
 compat.swg
 configure
 data/cdda.bin
