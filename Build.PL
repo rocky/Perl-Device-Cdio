@@ -302,7 +302,7 @@ $ccflags .= try_cflags("-Wno-unused-value");
 $ccflags .= try_cflags("-Wno-unused-function");
 $ccflags .= try_cflags("-Wno-unused-variable");
 
-my $ldflags = $pkgcfg{libs};
+my $ldflags = "$pkgcfg{libs} -liso9660";
 my $swig_flags='';
 if ('cygwin' eq $Config{osname} && 
     $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
@@ -335,8 +335,9 @@ my $builder = $class->new(
     swig_source         => [ ['perlcdio.swg', 
 			      ['audio.swg', 'compat.swg', 'device.swg',
 			       'disc.swg', 'device_const.swg', 'disc.swg',
-			       'read.swg', 'track.swg', 'types.swg']] ],
-);
+			       'read.swg', 'track.swg', 'types.swg']],
+			     ['perliso9660.swg', []] ],
+			   );
 
 $builder->add_build_element('swig');
 $builder->create_build_script();

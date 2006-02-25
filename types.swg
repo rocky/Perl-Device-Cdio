@@ -34,6 +34,7 @@
 
 #define uint32_t LONG unsigned int
 #define int32_t  LONG int
+#define uint8_t  unsigned char
 
 typedef unsigned int driver_id_t;
 typedef int lsn_t;

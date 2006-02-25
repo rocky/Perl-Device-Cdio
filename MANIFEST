@@ -10,6 +10,7 @@ Makefile.PL
 README
 audio.swg
 blib/lib/perlcdio.pm
+blib/lib/perliso9660.pm
 compat.swg
 configure
 data/cdda.bin
@@ -34,6 +35,8 @@ lib/Device/Cdio/Track.pm
 lib/Device/Cdio/Util.pm
 perlcdio.swg
 perlcdio_wrap.c
+perliso9660.swg
+perliso9660_wrap.c
 read.swg
 t/00.load.t
 t/01.pod-coverage.t
@@ -43,6 +46,7 @@ t/05.ops.t
 t/06.bincue.t
 t/06.image.t
 t/06.toc.t
+t/07.iso.t
 t/10.cdda.t
 t/10.read.t
 track.swg
