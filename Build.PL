@@ -336,7 +336,8 @@ my $builder = $class->new(
 			      ['audio.swg', 'compat.swg', 'device.swg',
 			       'disc.swg', 'device_const.swg', 'disc.swg',
 			       'read.swg', 'track.swg', 'types.swg']],
-			     ['perliso9660.swg', []] ],
+			     ['perliso9660.swg', 
+			      ['types.swg']] ],
 			   );
 
 $builder->add_build_element('swig');

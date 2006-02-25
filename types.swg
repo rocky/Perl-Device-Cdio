@@ -33,6 +33,7 @@
 #endif
 
 #define uint32_t LONG unsigned int
+#define uint16_t LONG unsigned int
 #define int32_t  LONG int
 #define uint8_t  unsigned char
 

@@ -266,7 +266,7 @@ get_devices_with_cap (unsigned int capabilities, bool b_any) {
   and speeds things up for libcdio as well.
 */
 DeviceList_t get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
-				  driver_id_t *p_out_driver_id);
+				       driver_id_t *p_out_driver_id);
 %inline %{
 DeviceList_t
 get_devices_with_cap_ret (unsigned int capabilities, bool b_any,

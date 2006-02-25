@@ -20,7 +20,7 @@
 %define DOCSTRING 
 "This is a wrapper for The CD Input and Control library's ISO-9660 library
 See also the ISO-9660 specification. The freely available European
-equivalant standard is called ECMA-119.."
+equivalant standard is called ECMA-119."
 %enddef
 %module(docstring=DOCSTRING) perliso9660
 
@@ -35,6 +35,9 @@ equivalant standard is called ECMA-119.."
 
 /* Various libcdio constants and typedefs */
 %include "types.swg"
+
+%include "typemaps.i"
+
 typedef uint8_t iso_extension_mask_t;
 
 %constant long int ISO_BLOCKSIZE        = CDIO_CD_FRAMESIZE;
@@ -137,7 +140,6 @@ iso9660_t *iso9660_open_fuzzy_ext (const char *psz_path,
 bool iso9660_ifs_fuzzy_read_superblock (iso9660_t *p_iso, 
 					iso_extension_mask_t iso_extension_mask,
 					uint16_t i_fuzz);
-  
 /*!
   Close previously opened ISO 9660 image.
   True is unconditionally returned. If there was an error false would
@@ -145,7 +147,6 @@ bool iso9660_ifs_fuzzy_read_superblock (iso9660_t *p_iso,
 */
 %rename iso9660_close close;
 bool iso9660_close (iso9660_t * p_iso);
-
 
 /*!
   Seek to a position and then read n bytes. Size read is returned.
@@ -158,17 +159,29 @@ long int iso9660_iso_seek_read (const iso9660_t *p_iso, void *ptr,
   Read the Primary Volume Descriptor for a CD.
   True is returned if read, and false if there was an error.
 */
-%rename iso9660_fs_read_pvd fs_read_pvd;
-bool iso9660_fs_read_pvd ( const CdIo_t *p_cdio, 
-			   /*out*/ iso9660_pvd_t *p_pvd );
-
+iso9660_pvd_t *fs_read_pvd ( const CdIo_t *p_cdio );
+%inline %{
+iso9660_pvd_t *fs_read_pvd ( const CdIo_t *p_cdio ) {
+  static iso9660_pvd_t pvd;
+  bool b_ok = iso9660_fs_read_pvd ( p_cdio, &pvd );
+  if (!b_ok) return NULL;
+  return &pvd;
+ }
+%}
+ 
 /*!
   Read the Primary Volume Descriptor for an ISO 9660 image.
   True is returned if read, and false if there was an error.
 */
-%rename iso9660_ifs_read_pvd ifs_read_pvd;
-bool iso9660_ifs_read_pvd (const iso9660_t *p_iso, 
-			   /*out*/ iso9660_pvd_t *p_pvd);
+iso9660_pvd_t *ifs_read_pvd ( const iso9660_t *p_iso );
+%inline %{
+iso9660_pvd_t *ifs_read_pvd ( const iso9660_t *p_iso ) {
+  static iso9660_pvd_t pvd;
+  bool b_ok = iso9660_ifs_read_pvd ( p_iso, &pvd );
+  if (!b_ok) return NULL;
+  return &pvd;
+ }
+%}
 
 /*!
   Read the Super block of an ISO 9660 image. This is the 
@@ -195,17 +208,42 @@ bool iso9660_ifs_read_superblock (iso9660_t *p_iso,
 /*!
   Set time in format used in ISO 9660 directory index record
   from a Unix time structure. */
-%rename iso9660_set_dtime set_dtime;
-void iso9660_set_dtime (const struct tm *tm, 
-			/*out*/ iso9660_dtime_t *idr_date);
-
+iso9660_dtime_t *
+set_dtime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
+	    int tm_year, int tm_wday, int tm_yday, int tm_isdst);
+%inline %{
+iso9660_dtime_t *
+set_dtime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
+	    int tm_year, int tm_wday, int tm_yday, int tm_isdst)
+{
+  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, tm_wday,
+		   tm_isdst };
+  static iso9660_dtime_t idr_date;
+  iso9660_set_dtime (&tm, &idr_date);
+  return &idr_date;
+}
+%}
 
 /*!
   Set "long" time in format used in ISO 9660 primary volume descriptor
   from a Unix time structure. */
-%rename iso9660_set_ltime set_ltime;
-void iso9660_set_ltime (const struct tm *_tm, 
-			/*out*/ iso9660_ltime_t *p_pvd_date);
+iso9660_ltime_t *
+set_ltime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
+	    int tm_year, int tm_wday, int tm_yday, int tm_isdst);
+
+%inline %{
+iso9660_ltime_t *
+set_ltime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
+	    int tm_year, int tm_wday, int tm_yday, int tm_isdst)
+
+{
+  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, tm_wday,
+		   tm_isdst };
+  static iso9660_ltime_t pvd_date;
+  iso9660_set_ltime (&tm, &pvd_date);
+  return &pvd_date;
+}
+%}
 
 /*!
   Get Unix time structure from format use in an ISO 9660 directory index 
@@ -215,17 +253,70 @@ void iso9660_set_ltime (const struct tm *_tm,
   If tm is to reflect the localtime, set "use_localtime" true, otherwise
   tm will reported in GMT.
 */
-%rename iso9660_get_dtime get_dtime;
-bool iso9660_get_dtime (const iso9660_dtime_t *idr_date, bool use_localtime,
-			/*out*/ struct tm *tm);
+%apply int *OUTPUT { int *tm_sec, int *tm_min,  int *tm_hour, int *tm_mday,
+                     int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
+                     int *tm_isdst };
+
+bool get_dtime (const iso9660_dtime_t *idr_date, bool use_localtime,
+		int *tm_sec, int *tm_min,  int *tm_hour, int *tm_mday,
+		int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
+		int *tm_isdst);
+
+%inline %{
+bool get_dtime (const iso9660_dtime_t *idr_date, bool use_localtime,
+		int *tm_sec, int *tm_min,  int *tm_hour, int *tm_mday,
+		int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
+		int *tm_isdst) 
+{
+  struct tm tm;
+  bool b_okay = iso9660_get_dtime (idr_date, use_localtime, &tm);
+  if (b_okay) {
+    *tm_sec   = tm.tm_sec;
+    *tm_min   = tm.tm_min;
+    *tm_hour  = tm.tm_hour;
+    *tm_mon   = tm.tm_mon;
+    *tm_mday  = tm.tm_mday;
+    *tm_year  = tm.tm_year;
+    *tm_wday  = tm.tm_wday;
+    *tm_yday  = tm.tm_yday;
+    *tm_isdst = tm.tm_isdst;
+  }
+  return b_okay;
+}
+%}
 
 /*!
   Get "long" time in format used in ISO 9660 primary volume descriptor
   from a Unix time structure. 
 */
-%rename iso9660_get_ltime get_ltime;
-bool iso9660_get_ltime (const iso9660_ltime_t *p_ldate, 
-			/*out*/ struct tm *p_tm);
+bool get_ltime (const iso9660_ltime_t *idr_date, 
+		int *tm_sec, int *tm_min,  int *tm_hour, int *tm_mday,
+		int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
+		int *tm_isdst);
+
+%inline %{
+bool get_ltime (const iso9660_ltime_t *p_ldate, 
+		int *tm_sec, int *tm_min,  int *tm_hour, int *tm_mday,
+		int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
+		int *tm_isdst) 
+{
+  struct tm tm;
+  bool b_okay = iso9660_get_ltime (p_ldate, &tm);
+  if (b_okay) {
+    *tm_sec   = tm.tm_sec;
+    *tm_min   = tm.tm_min;
+    *tm_hour  = tm.tm_hour;
+    *tm_mon   = tm.tm_mon;
+    *tm_mday  = tm.tm_mday;
+    *tm_year  = tm.tm_year;
+    *tm_wday  = tm.tm_wday;
+    *tm_yday  = tm.tm_yday;
+    *tm_isdst = tm.tm_isdst;
+  }
+  return b_okay;
+}
+%}
+
 
 /*====================================================
   Characters used in file and directory and manipulation
@@ -280,10 +371,17 @@ int iso9660_name_translate_ext(const char *psz_old, char *psz_new,
   In addition to getting changed, dst is the return value.
   Note: this string might not be NULL terminated.
  */
+%newobject iso9660_strncpy_pad; // free malloc'd return value
 %rename iso9660_strncpy_pad strncpy_pad;
-char *iso9660_strncpy_pad(char dst[], const char src[], size_t len, 
-                          enum strncpy_pad_check _check);
-
+char *strncpy_pad(const char src[], size_t len, enum strncpy_pad_check _check);
+%inline %{
+char *
+strncpy_pad(const char src[], size_t len, enum strncpy_pad_check _check) {
+  char *dst = calloc(sizeof(char), len);
+  return iso9660_strncpy_pad(dst, src, len, _check);
+}
+%}
+ 
 /*=====================================================================
   file/dirname's 
 ======================================================================*/
@@ -307,7 +405,8 @@ bool iso9660_dirname_valid_p (const char psz_path[]);
   number. For example, mydir/file.ext -> MYDIR/FILE.EXT;1 for version
   1. The resulting ISO-9660 pathname is returned.
 */
-%rename iso9660_pathname_isofy_p pathname_isofy;
+%rename iso9660_pathname_isofy pathname_isofy;
+%newobject iso9660_pathname_isofy; // free malloc'd return value
 char *iso9660_pathname_isofy (const char psz_path[], uint16_t i_version);
 
 /*!
