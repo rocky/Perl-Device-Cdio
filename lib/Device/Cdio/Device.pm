@@ -30,6 +30,7 @@ Cdio:Device handles disc and device aspects of Cdio.
 
 =cut
 
+use warnings;
 use strict;
 use Exporter;
 use perlcdio;
@@ -51,9 +52,9 @@ $Device::Cdio::Device::VERSION = $Device::Cdio::VERSION;
 
 =head2 new
 
-new(source, driver_id, access_mode)->$track_object
+new(source, driver_id, access_mode)->$device_object
 
-Create a new Track object. Either driver_id or source can be
+Create a new Device object. Either driver_id or source can be
 undef. Probably best to not to give an access_mode too, unless you know
 what you are doing.
 
@@ -579,7 +580,7 @@ sub lseek {
 
 =head2 open
 
-open(source=undef, driver_id=libcdio.DRIVER_UNKNOWN,
+open(source=undef, driver_id=$libcdio::DRIVER_UNKNOWN,
     access_mode=undef)
 
 Sets up to read from place specified by source, driver_id and access

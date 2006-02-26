@@ -36,46 +36,46 @@ my @achars = ('!', '"', '%', '&', '(', ')', '*', '+', ',', '-', '.',
 
 my $bad = 0;
 for (my $c=ord('A'); $c<=ord('Z'); $c++ ) {
-    if (!perliso9660::isdchar($c)) {
-	printf "Failed iso9660_isachar test on %c\n", $c;
+    if (!perliso9660::is_dchar($c)) {
+	printf "Failed iso9660_is_achar test on %c\n", $c;
 	$bad++;
     }
-    if (!perliso9660::isachar($c)) {
-	printf "Failed iso9660_isachar test on %c\n", $c;
+    if (!perliso9660::is_achar($c)) {
+	printf "Failed iso9660_is_achar test on %c\n", $c;
 	$bad++;
     }
 }
 
-ok($bad==0, 'isdchar & isarch A..Z');
+ok($bad==0, 'is_dchar & isarch A..Z');
 
 $bad=0;
 for (my $c=ord('0'); $c<=ord('9'); $c++ ) {
-    if (!perliso9660::isdchar($c)) {
-	printf "Failed iso9660_isdchar test on %c\n", $c;
+    if (!perliso9660::is_dchar($c)) {
+	printf "Failed iso9660_is_dchar test on %c\n", $c;
 	$bad++;
     }
-    if (!perliso9660::isachar($c)) {
-	printf "Failed iso9660_isachar test on %c\n", $c;
+    if (!perliso9660::is_achar($c)) {
+	printf "Failed iso9660_is_achar test on %c\n", $c;
 	$bad++;
     }
 }
 
-ok($bad==0, 'isdchar & isachar 0..9');
+ok($bad==0, 'is_dchar & is_achar 0..9');
 
 $bad=0;
 for (my $i=0; $i<=13; $i++ ) {
     my $c=ord($achars[$i]);
-    if (perliso9660::isdchar($c)) {
-	printf "Should not pass isdchar test on %c\n", $c;
+    if (perliso9660::is_dchar($c)) {
+	printf "Should not pass is_dchar test on %c\n", $c;
 	$bad++;
     }
-    if (!perliso9660::isachar($c)) {
-	printf "Failed isachar test on symbol %c\n", $c;
+    if (!perliso9660::is_achar($c)) {
+	printf "Failed is_achar test on symbol %c\n", $c;
 	$bad++;
     }
 }
 
-ok($bad==0, 'isdchar & isachar symbols');
+ok($bad==0, 'is_dchar & is_achar symbols');
 
 #####################################
 # Test perliso9660::strncpy_pad
@@ -146,7 +146,7 @@ ok($bad==0, 'perliso9660::pathname_valid_p - invalid, long extension');
 
 $bad=0;
 $dst = perliso9660::pathname_isofy("this/file.ext", 1);
-if ( $dst ne "this/file.ext;1") {
+if ($dst ne "this/file.ext;1") {
     printf("Failed iso9660_pathname_isofy\n");
     $bad++;
 }
@@ -157,8 +157,9 @@ my $dtime = perliso9660::set_dtime($tm[0], $tm[1], $tm[2], $tm[3], $tm[4],
 				   $tm[5], $tm[6], $tm[7], $tm[8]);
 my ($bool, @new_tm) = perliso9660::get_dtime($dtime, 0);
 
-### FIXME Don't know why the discrepancy.
+### FIXME Don't know why the discrepancy, but there is a 5 hour difference.
 $new_tm[2] = $tm[2]; 
 
 ok(is_eq(\@new_tm, \@tm), 'get_dtime != set_dtime');
+
 exit 0;

@@ -105,10 +105,10 @@ iso9660_t *iso9660_open_ext (const char *psz_path,
 
 /*!
   Open an ISO 9660 image for reading with some tolerence for positioning
-  of the ISO9660 image. Here we will scan for ISO_STANDARD_ID and set
-  that position as the 
-  Maybe in the future we will have
-  a mode. NULL is returned on error.
+  of the ISO9660 image. We scan for ISO_STANDARD_ID and use that to set
+  the eventual offset to adjust by (as long as that is <= i_fuzz).
+
+  Maybe in the future we will have a mode. NULL is returned on error.
 
   @see iso9660_open
 */
@@ -118,10 +118,10 @@ iso9660_t *iso9660_open_fuzzy (const char *psz_path /*flags, mode */,
 
 /*!
   Open an ISO 9660 image for reading with some tolerence for positioning
-  of the ISO9660 image. Here we will scan for ISO_STANDARD_ID and set
-  that position as the 
-  Maybe in the future we will have
-  a mode. NULL is returned on error.
+  of the ISO9660 image. We scan for ISO_STANDARD_ID and use that to set
+  the eventual offset to adjust by (as long as that is <= i_fuzz).
+
+  Maybe in the future we will have a mode. NULL is returned on error.
 
   @see iso9660_open
 */
@@ -326,7 +326,7 @@ bool get_ltime (const iso9660_ltime_t *p_ldate,
    ISO-9600 level 1 directory name. These are the ASCII capital
    letters A-Z, the digits 0-9 and an underscore.
 */
-%rename iso9660_isdchar isdchar;
+%rename iso9660_isdchar is_dchar;
 bool iso9660_isdchar (int c);
 
 /*!
@@ -334,7 +334,7 @@ bool iso9660_isdchar (int c);
    These are the DCHAR's plus some ASCII symbols including the space 
    symbol.   
 */
-%rename iso9660_isachar isachar;
+%rename iso9660_isachar is_achar;
 bool iso9660_isachar (int c);
 
 /*!

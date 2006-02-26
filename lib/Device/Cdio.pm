@@ -28,7 +28,7 @@ Device::Cdio - Base class for CD Input and Control library.
 
 =head1 VERSION
 
-This document describes Cdio version 0.1.3
+This document describes Cdio version 0.2.0
 
 =cut 
 
@@ -38,7 +38,7 @@ use version; $VERSION = qv('0.2.0');
 
 =head1 SYNOPSIS
 
-The encapsulates CD-ROM reading and control. Applications wishing to
+This encapsulates CD-ROM reading and control. Applications wishing to
 be oblivious of the OS- and device-dependent properties of a CD-ROM
 can use this library.
 
@@ -94,7 +94,7 @@ Routines accept named parameters as well as positional parameters.
 For named parameters, each argument name is preceded by a dash. For
 example:
 
-    Cdio::have_driver(-driver_id=>'GNU/Linux')
+    Device::Cdio::have_driver(-driver_id=>'GNU/Linux')
 
 Each argument name is preceded by a dash.  Neither case nor order
 matters in the argument list.  -driver_id, -Driver_ID, and -DRIVER_ID
@@ -117,22 +117,22 @@ $perlcdio::DRIVER_UNKNOWN is used.
 The older, more traditional style of positional parameters is also
 supported. So the "have_driver example from above can also be written:
 
-    Cdio::have_driver('GNU/Linux')
+    Device::Cdio::have_driver('GNU/Linux')
 
 Finally, since no parameter name can be confused with a an integer,
 negative values will not get confused as a named parameter.
 
 =cut
 
-use vars qw($VERSION $revision @EXPORT_OK @EXPORT @ISA %drivers);
-use perlcdio;
-use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
-
 $revision = '$Id$';
 
 use warnings;
 use strict;
+use perlcdio;
 use Carp;
+
+use vars qw($VERSION $revision @EXPORT_OK @EXPORT @ISA %drivers);
+use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 @ISA = qw(Exporter);
 @EXPORT    = qw(close_tray have_driver is_binfile is_cuefile is_nrg is_device
@@ -623,7 +623,8 @@ __END__
 =head1 SEE ALSO
 
 L<Device::Cdio::Device> for device objects and L<Device::Cdio::Track>
-for track objects.
+for track objects and L<Device::Cdio::ISO9660> for working with ISO 9660
+filesystems.
 
 L<perlcdio> is the lower-level interface to libcdio.
 

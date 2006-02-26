@@ -64,7 +64,7 @@ sub new {
 
   my $self = {};
   
-  if ($track !~ m/^\d+$/) {
+  if ($track !~ m{\A\d+\Z}) {
       print "*** Expecting track to be an integer; got '$track'\n";
       return undef;
   } elsif ($track < 0 || $track > 200) {
