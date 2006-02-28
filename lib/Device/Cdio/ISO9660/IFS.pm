@@ -280,7 +280,7 @@ sub read_fuzzy_superblock {
 
 read_pvd()->pvd
 
-Read the Super block of an ISO 9660 image. This is the rimary Volume
+Read the Super block of an ISO 9660 image. This is the Primary Volume
 Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
 (Joliet) extensions are acceptable.
 
@@ -300,7 +300,7 @@ sub read_pvd {
 
 read_superblock(iso_mask=$libiso9660::EXTENSION_NONE)->bool
 
-Read the Super block of an ISO 9660 image. This is the rimary Volume
+Read the Super block of an ISO 9660 image. This is the Primary Volume
 Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
 (Joliet) extensions are acceptable.
 
@@ -314,6 +314,16 @@ sub read_superblock {
 
     return perliso9660::ifs_read_superblock($self->{iso9660}, $iso_mask);
 }
+
+=pod 
+
+=head2 seek_read
+
+seek_read(start, size)->(size, str)
+
+Seek to a position and then read n bytes. Size read is returned.
+
+=cut
 
 sub seek_read {
     my($self,@p) = @_;
