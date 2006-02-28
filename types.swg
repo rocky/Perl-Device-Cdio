@@ -37,6 +37,7 @@
 #define int32_t  LONG int
 #define uint8_t  unsigned char
 
+typedef long int my_ssize_t;
 typedef unsigned int driver_id_t;
 typedef int lsn_t;
 typedef int int16_t;

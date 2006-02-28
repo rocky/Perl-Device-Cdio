@@ -1,4 +1,4 @@
-package Device::Cdio::ISO9660:IFS;
+package Device::Cdio::ISO9660::IFS;
 require 5.8.6;
 #
 #    $Id$
@@ -125,8 +125,10 @@ new(source, iso_mask)->$track_object
 
 Create a new ISO 9660 object. Source or iso_mask is optional. 
 
-If source is given open is called using that and the optional iso_mask
+If source is given, open() is called using that and the optional iso_mask
 parameter; iso_mask is used only if source is specified.
+If source is given but opening fails, undef is returned.
+If source is not given, an object is always returned.
 
 =cut
 
@@ -138,14 +140,16 @@ sub new {
       _rearrange(['SOURCE', 'ISO_MASK'], @p);
 
   return undef if _extra_args(@args);
-  $iso_mask = perliso9660::EXTENSION_NONE if !defined($iso_mask);
+  $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
 
   my $self = {};
   $self->{iso9660} = undef;
 
   bless ($self, $class);
 
-  $self->open($source, $iso_mask) if defined($source);
+  if (defined($source)) {
+      return undef if !$self->open($source, $iso_mask);
+  }
 
   return $self;
 }
@@ -194,8 +198,8 @@ sub open {
 	_rearrange(['SOURCE', 'ISO_MASK'], @p);
     
     $self->close() if defined($self->{iso9660});
-    $iso_mask = perliso9660::EXTENSION_NONE if !defined($iso_mask);
-    if !defined($source) {
+    $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
+    if (!defined($source)) {
       print "*** An ISO-9660 file must be given\n";
       return 0;
     }
@@ -226,7 +230,7 @@ sub open_fuzzy {
 	_rearrange(['SOURCE', 'ISO_MASK', 'FUZZ'], @p);
     
     $self->close() if defined($self->{iso9660});
-    $iso_mask = perliso9660::EXTENSION_NONE if !defined($iso_mask);
+    $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
 
     if (!defined($fuzz)) {
 	$fuzz = 20;
@@ -236,7 +240,7 @@ sub open_fuzzy {
     }
 
     $self->{iso9660} = perliso9660::open_fuzzy_ext($source, $iso_mask, $fuzz);
-    return defined($self->{iso9660};
+    return defined($self->{iso9660});
 }
 
 =pod
@@ -257,7 +261,7 @@ sub read_fuzzy_superblock {
     my($iso_mask, $fuzz) = 
 	_rearrange(['ISO_MASK', 'FUZZ'], @p);
     
-    $iso_mask = perliso9660::EXTENSION_NONE if !defined($iso_mask);
+    $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
 
     if (!defined($fuzz)) {
 	$fuzz = 20;
@@ -266,7 +270,57 @@ sub read_fuzzy_superblock {
 	return 0;
     }
 
-    return = perliso9660::ifs_fuzzy_read_superblock($iso_mask, $fuzz);
+    return perliso9660::ifs_fuzzy_read_superblock($self->{iso9660},
+						  $iso_mask, $fuzz);
+}
+
+=pod
+
+=head2 read_pvd
+
+read_pvd()->pvd
+
+Read the Super block of an ISO 9660 image. This is the rimary Volume
+Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
+(Joliet) extensions are acceptable.
+
+=cut
+
+sub read_pvd {
+    my($self,@p) = @_;
+    return 0 if !_check_arg_count($#_, 0);
+
+    # FIXME call new on PVD object
+    return perliso9660::ifs_read_pvd($self->{iso9660});
+}
+
+=pod
+
+=head2 read_superblock
+
+read_superblock(iso_mask=$libiso9660::EXTENSION_NONE)->bool
+
+Read the Super block of an ISO 9660 image. This is the rimary Volume
+Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
+(Joliet) extensions are acceptable.
+
+=cut
+
+sub read_superblock {
+    my($self,@p) = @_;
+    my($iso_mask) = rearrange(['ISO_MASK'], @p);
+    
+    $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
+
+    return perliso9660::ifs_read_superblock($self->{iso9660}, $iso_mask);
+}
+
+sub seek_read {
+    my($self,@p) = @_;
+    my($start, $size) = rearrange(['START', 'SIZE'], @p);
+    
+    (my $data, $size) = perliso9660::seek_read($self->{iso}, $start, $size);
+    return wantarray ? ($data, $size) : $data;
 }
 
 1; # Magic true value requred at the end of a module
