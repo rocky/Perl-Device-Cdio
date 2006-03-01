@@ -200,7 +200,7 @@ sub open {
     $self->close() if defined($self->{iso9660});
     $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
     if (!defined($source)) {
-      print "*** An ISO-9660 file must be given\n";
+      print "*** An ISO-9660 file image must be given\n";
       return 0;
     }
     $self->{iso9660} = perliso9660::open_ext($source, $iso_mask);
@@ -272,6 +272,81 @@ sub read_fuzzy_superblock {
 
     return perliso9660::ifs_fuzzy_read_superblock($self->{iso9660},
 						  $iso_mask, $fuzz);
+}
+
+=pod
+
+=head2 readdir
+
+readdir(dirname)->@iso_stat
+
+Read path (a directory) and return a list of iso9660 stat references
+
+Each item of @iso_stat is a hash reference which contains
+
+=over 4
+
+=item LSN 
+
+the Logical sector number (an integer)
+
+=item size 
+
+the total size of the file in bytes
+
+=item  sec_size 
+
+the number of sectors allocated
+
+=item  filename
+
+the file name of the statbuf entry
+
+=item XA
+
+if the file has XA attributes; 0 if not
+
+=item is_dir 
+
+1 if a directory; 0 if a not;
+
+=back
+
+FIXME: If you look at iso9660.h you'll see more fields, such as for
+Rock-Ridge specific fields or XA specific fields. Eventually these
+will be added. Volunteers? 
+
+=cut
+
+sub readdir {
+    my($self,@p) = @_;
+
+    my($dirname, @args) = _rearrange(['DIRNAME'], @p);
+    return undef if _extra_args(@args);
+
+    if (!defined($dirname)) {
+      print "*** A directory name must be given\n";
+      return undef;
+    }
+
+    my @values = perliso9660::ifs_readdir($self->{iso9660}, $dirname);
+
+    # Remove the two input parameters
+    splice(@values, 0, 2) if @values > 2;
+
+    my @result = ();
+    my $i      = 0;
+    while ( $i < @values ) {
+	my $href = {};
+	$href->{filename} = $values[$i++];
+	$href->{LSN}      = $values[$i++];
+	$href->{size}     = $values[$i++];
+	$href->{sec_size} = $values[$i++];
+	$href->{is_dir}   = $values[$i++];
+	$href->{XA}       = $values[$i++];
+	push @result, $href;
+    }
+    return @result;
 }
 
 =pod

@@ -87,6 +87,46 @@ typedef uint8_t iso_extension_mask_t;
 %constant long int EXTENSION_NONE          = ISO_EXTENSION_NONE;
 %constant long int EXTENSION_JOLIET        = ISO_EXTENSION_JOLIET;
 
+/* Set up to allow functions to return stat lists of type "stat
+   *". We'll use a typedef so we can make sure to isolate this. 
+*/
+%inline %{
+typedef CdioList_t IsoStatList_t;
+%}
+typedef CdioList_t IsoStatList_t;
+
+%typemap(perl5,out) IsoStatList_t *{   
+    // $1 is of type IsoStatList_t
+    CdioList_t *p_entlist   = result;
+    CdioListNode_t *p_entnode;
+    unsigned int num = 0;
+
+    if (!result) goto out;
+
+ PPCODE:
+    /* Figure out how many items in the array */
+    _CDIO_LIST_FOREACH (p_entnode, p_entlist) {
+      num +=6;
+    }
+
+    /* For each element in the array of strings, create a new
+     * mortalscalar, and stuff it into the above array. */
+    _CDIO_LIST_FOREACH (p_entnode, p_entlist) {
+      iso9660_stat_t *p_statbuf = 
+	(iso9660_stat_t *) _cdio_list_node_data (p_entnode);
+      /* Have perl compute the length of the string using strlen() */
+      XPUSHs(sv_2mortal(newSVpv(p_statbuf->filename, 0)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->lsn)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->secsize)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->type)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
+    }
+    _cdio_list_free (p_entlist, true);
+    argvi += num;
+ out: ;
+}
+
 /*!
   Open an ISO 9660 image for reading. Maybe in the future we will have
   a mode. NULL is returned on error.
@@ -333,9 +373,9 @@ bool get_ltime (const iso9660_ltime_t *p_ldate,
 %}
 
 
-/*====================================================
+/*========================================================
   Characters used in file and directory and manipulation
- ====================================================*/
+ =======================================================*/
 /*!
    Return true if c is a DCHAR - a character that can appear in an an
    ISO-9600 level 1 directory name. These are the ASCII capital
@@ -353,28 +393,52 @@ bool iso9660_isdchar (int c);
 bool iso9660_isachar (int c);
 
 /*!
-   Convert ISO-9660 file name that stored in a directory entry into 
+   Convert an ISO-9660 file name that stored in a directory entry into 
    what's usually listed as the file name in a listing.
    Lowercase name, and remove trailing ;1's or .;1's and
    turn the other ;'s into version numbers.
 
-   The length of the translated string is returned.
+   @param psz_oldname the ISO-9660 filename to be translated.
+   @param psz_newname returned string. The caller allocates this and
+   it should be at least the size of psz_oldname.
+   @return length of the translated string is returned.
 */
-%rename iso9660_name_translate name_translate;
-int iso9660_name_translate(const char *psz_oldname, char *psz_newname);
+%newobject name_translate;
+char * name_translate(const char *psz_oldname);
+%inline %{
+char *
+name_translate(const char *psz_oldname) {
+  char *psz_newname=calloc(sizeof(char), strlen(psz_oldname));
+  iso9660_name_translate(psz_oldname, psz_newname);
+  return psz_newname;
+}
+%}
 
 /*!
-   Convert ISO-9660 file name that stored in a directory entry into
+   Convert an ISO-9660 file name that stored in a directory entry into
    what's usually listed as the file name in a listing.  Lowercase
-   name if not using Joliet extension. Remove trailing ;1's or .;1's and
-   turn the other ;'s into version numbers.
+   name if no Joliet Extension interpretation. Remove trailing ;1's or
+   .;1's and turn the other ;'s into version numbers.
 
-   The length of the translated string is returned.
+   @param psz_oldname the ISO-9660 filename to be translated.
+   @param psz_newname returned string. The caller allocates this and
+   it should be at least the size of psz_oldname.
+   @param i_joliet_level 0 if not using Joliet Extension. Otherwise the
+   Joliet level.
+   @return length of the translated string is returned. It will be no greater
+   than the length of psz_oldname.
 */
-%rename iso9660_name_translate_ext name_translate_ext;
-int iso9660_name_translate_ext(const char *psz_old, char *psz_new, 
-                               uint8_t i_joliet_level);
-  
+%newobject name_translate_ext;
+char * name_translate_ext(const char *psz_oldname, uint8_t i_joliet_level);
+%inline %{
+char * 
+name_translate_ext(const char *psz_oldname, uint8_t i_joliet_level) {
+  char *psz_newname=calloc(sizeof(char), strlen(psz_oldname));
+  iso9660_name_translate_ext(psz_oldname, psz_newname, i_joliet_level);
+  return psz_newname;
+}
+%}
+
 /*!  
   Pad string src with spaces to size len and copy this to dst. If
   len is less than the length of src, dst will be truncated to the
@@ -492,20 +556,34 @@ iso9660_stat_t *iso9660_ifs_stat (iso9660_t *p_iso, const char psz_path[]);
 iso9660_stat_t *iso9660_ifs_stat_translate (iso9660_t *p_iso, 
                                             const char psz_path[]);
 
-#ifdef FINISHED
 /*!  Read psz_path (a directory) and return a list of iso9660_stat_t
   pointers for the files inside that directory. The caller must free the
   returned result.
 */
-CdioList_t * iso9660_fs_readdir (CdIo_t *p_cdio, const char psz_path[], 
-                                 bool b_mode2);
+IsoStatList_t *fs_readdir (CdIo_t *p_cdio, const char psz_path[], 
+			   bool b_mode2);
+%inline %{
+IsoStatList_t *fs_readdir (CdIo_t *p_cdio, const char psz_path[], 
+			   bool b_mode2)
+{
+  CdioList_t *p_statlist = iso9660_fs_readdir (p_cdio, psz_path, b_mode2);
+  return p_statlist;
+}
+%}
 
 /*!  Read psz_path (a directory) and return a list of iso9660_stat_t
   pointers for the files inside that directory. The caller must free
   the returned result.
 */
-CdioList_t * iso9660_ifs_readdir (iso9660_t *p_iso, const char psz_path[]);
-#endif
+IsoStatList_t *ifs_readdir (iso9660_t *p_iso, const char psz_path[]);
+
+%inline %{
+IsoStatList_t *ifs_readdir (iso9660_t *p_iso, const char psz_path[])
+{
+  CdioList_t *p_statlist = iso9660_ifs_readdir (p_iso, psz_path);
+  return p_statlist;
+}
+%}
 
 /*!
   Return the PVD's application ID.
@@ -644,6 +722,41 @@ char *iso9660_get_volumeset_id(const iso9660_pvd_t *p_pvd);
 bool iso9660_ifs_get_volumeset_id(iso9660_t *p_iso,
 				  /*out*/ char **p_psz_volumeset_id);
   
+/* pathtable */
+  
+/*! Zero's out pathable. Do this first. */
+void iso9660_pathtable_init (void *pt);
+  
+unsigned int iso9660_pathtable_get_size (const void *pt);
+  
+uint16_t iso9660_pathtable_l_add_entry (void *pt, const char name[], 
+					uint32_t extent, uint16_t parent);
+  
+uint16_t iso9660_pathtable_m_add_entry (void *pt, const char name[], 
+					uint32_t extent, uint16_t parent);
+  
+/*======================================================================
+   Volume Descriptors
+========================================================================*/
+
+#ifdef FINSHED
+void iso9660_set_pvd (void *pd, const char volume_id[], 
+		      const char application_id[], 
+		      const char publisher_id[], const char preparer_id[],
+		      uint32_t iso_size, const void *root_dir, 
+		      uint32_t path_table_l_extent, 
+		      uint32_t path_table_m_extent,
+		      uint32_t path_table_size, const time_t *pvd_time);
+#endif /*FINISHED*/
+
+void iso9660_set_evd (void *pd);
+
+/*!
+  Return true if ISO 9660 image has extended attrributes (XA).
+*/
+bool iso9660_ifs_is_xa (const iso9660_t * p_iso);
+
+
 %perlcode %{
 =pod
 

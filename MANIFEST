@@ -16,6 +16,7 @@ configure
 data/cdda.bin
 data/cdda.cue
 data/cdda.toc
+data/copying.iso
 data/isofs-m1.bin
 data/isofs-m1.cue
 device.swg
@@ -28,6 +29,7 @@ examples/cdchange.pl
 examples/device.pl
 examples/drives.pl
 examples/eject.pl
+examples/iso1.pl
 examples/tracks.pl
 lib/Device/Cdio.pm
 lib/Device/Cdio/Device.pm
