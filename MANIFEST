@@ -34,6 +34,7 @@ examples/tracks.pl
 lib/Device/Cdio.pm
 lib/Device/Cdio/Device.pm
 lib/Device/Cdio/ISO9660/FS.pm
+lib/Device/Cdio/ISO9660/IFS.pm
 lib/Device/Cdio/ISO9660.pm
 lib/Device/Cdio/Track.pm
 lib/Device/Cdio/Util.pm

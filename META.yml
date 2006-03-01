@@ -15,6 +15,10 @@ provides:
     version: v0.2.0
   Device::Cdio::Device:
     file: lib/Device/Cdio/Device.pm
+  Device::Cdio::ISO9660:
+    file: lib/Device/Cdio/ISO9660.pm
+  Device::Cdio::ISO9660::FS:
+    file: lib/Device/Cdio/ISO9660/FS.pm
   Device::Cdio::Track:
     file: lib/Device/Cdio/Track.pm
   Device::Cdio::Util:
