@@ -30,6 +30,8 @@ examples/device.pl
 examples/drives.pl
 examples/eject.pl
 examples/iso1.pl
+examples/iso2.pl
+examples/iso3.pl
 examples/tracks.pl
 lib/Device/Cdio.pm
 lib/Device/Cdio/Device.pm

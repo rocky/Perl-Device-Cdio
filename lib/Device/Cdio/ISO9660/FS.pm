@@ -109,8 +109,8 @@ use vars qw($VERSION $revision @EXPORT_OK @EXPORT @ISA %drivers);
 use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 
-@ISA = qw(Exporter Device::Cdio);
-@EXPORT    = qw( close open new );
+@ISA = qw(Exporter Device::Cdio::Device);
+@EXPORT_OK  = qw( close open );
 
 # Note: the keys below match those the names returned by
 # cdio_get_driver_name()
@@ -154,6 +154,85 @@ sub read_superblock {
     $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
 
     return perliso9660::fs_read_superblock($self->{cd}, $iso_mask);
+}
+
+=pod
+
+=head2 stat
+
+stat(path, translate=0)->\%stat
+
+Return file status for path name psz_path. NULL is returned on error.
+
+If translate is 1,  version numbers in the ISO 9660 name are dropped, i.e. ;1
+is removed and if level 1 ISO-9660 names are lowercased.
+
+Each item of @iso_stat is a hash reference which contains
+
+=over 4
+
+=item LSN 
+
+the Logical sector number (an integer)
+
+=item size 
+
+the total size of the file in bytes
+
+=item  sec_size 
+
+the number of sectors allocated
+
+=item  filename
+
+the file name of the statbuf entry
+
+=item XA
+
+if the file has XA attributes; 0 if not
+
+=item is_dir 
+
+1 if a directory; 0 if a not;
+
+=back
+
+=cut
+
+sub stat {
+    my($self, @p) = @_;
+    my($path, $translate, $mode2, @args) = 
+	_rearrange(['PATH', 'TRANSLATE'], @p);
+    
+    return undef if _extra_args(@args);
+    $translate = 0 if !defined($translate);
+
+    if (!defined($path)) {
+      print "*** An CD-ROM or CD-image must be given\n";
+      return undef;
+    }
+
+    my @values;
+    if ($translate) {
+	@values = perliso9660::fs_stat_translate($self->{cd}, $path, 
+						 0); 
+    } else {
+	@values = perliso9660::fs_stat($self->{cd}, $path);
+    }
+
+    # Remove the input parameters
+    splice(@values, 0, 2) if @values > 2;
+
+    return undef if !@values;
+    my $href = {};
+    my $i=0;
+    $href->{filename} = $values[$i++];
+    $href->{LSN}      = $values[$i++];
+    $href->{size}     = $values[$i++];
+    $href->{sec_size} = $values[$i++];
+    $href->{is_dir}   = $values[$i++] == 2;
+    $href->{XA}       = $values[$i++];
+    return $href;
 }
 
 1; # Magic true value requred at the end of a module

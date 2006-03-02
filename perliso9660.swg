@@ -92,8 +92,29 @@ typedef uint8_t iso_extension_mask_t;
 */
 %inline %{
 typedef CdioList_t IsoStatList_t;
+typedef iso9660_stat_t IsoStat_t;
 %}
 typedef CdioList_t IsoStatList_t;
+typedef iso9660_stat_t IsoStat_t;
+
+%typemap(perl5,out) IsoStat_t *{   
+    // $1 is of type IsoStatList_t
+    iso9660_stat_t *p_statbuf = result;
+
+    if (!result) goto out;
+
+ PPCODE:
+    /* Have perl compute the length of the string using strlen() */
+    XPUSHs(sv_2mortal(newSVpv(p_statbuf->filename, 0)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->lsn)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->secsize)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->type)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
+    argvi += 8;
+    free (p_statbuf);
+ out: ;
+}
 
 %typemap(perl5,out) IsoStatList_t *{   
     // $1 is of type IsoStatList_t
@@ -188,6 +209,19 @@ bool iso9660_ifs_fuzzy_read_superblock (iso9660_t *p_iso,
 %rename iso9660_close close;
 bool iso9660_close (iso9660_t * p_iso);
 
+%typemap(perl5,out) buf_t {   
+  /* $1 is of type buf_t */
+  ST(argvi) = sv_newmortal();
+  if (result) {
+    /* I don't yet know how to pick up arg4 another way.
+       THIS MEANS ARG3 MUST ALWAYS BE THE SIZE.  */
+    sv_setpvn((SV*)ST(argvi++), (char *) result, *arg4);
+    /* Don't leak memory. return value was malloc'd by libcdio. */
+    /* free(result);   */
+  } else {
+    sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+  }
+}
 %inline %{
   typedef long int my_ssize_t;
 %}
@@ -195,16 +229,19 @@ bool iso9660_close (iso9660_t * p_iso);
 /*!
   Seek to a position and then read n bytes. Size read is returned.
 */
-%newobject iso_seek_read; // free malloc'd return value
-char *iso_seek_read (const iso9660_t *p_iso, 
-		     lsn_t start, long int i_size, 
-		     /*out*/ my_ssize_t *pi_size);
+%newobject seek_read; // free malloc'd return value
+typedef char *buf_t;
+buf_t seek_read (const iso9660_t *p_iso, 
+		 lsn_t start, long int i_size, 
+		 /*out*/ my_ssize_t *pi_size);
 %inline %{
-char *iso_seek_read (const iso9660_t *p_iso, 
-		     lsn_t start, long int i_size, 
-		     /*out*/ my_ssize_t *pi_size) {
-  char *p_buf = calloc(1, i_size);
-  *pi_size = iso9660_seek_read(p_iso, p_buf, start, i_size);
+typedef char *buf_t;
+buf_t seek_read (const iso9660_t *p_iso, 
+		 lsn_t start, long int i_size,
+		 /*out*/ my_ssize_t *pi_size) {
+  
+  char *p_buf = calloc(ISO_BLOCKSIZE, i_size);
+  *pi_size = iso9660_iso_seek_read(p_iso, p_buf, start, i_size);
   return p_buf;
  }
 %}
@@ -511,7 +548,7 @@ bool iso9660_pathname_valid_p (const char psz_path[]);
    Returns stat_t of entry if we found lsn, or NULL otherwise.
  */
 %rename iso9660_find_fs_lsn find_fs_lsn;
-iso9660_stat_t *iso9660_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
+IsoStat_t *iso9660_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
 
 
 /*!
@@ -521,14 +558,14 @@ iso9660_stat_t *iso9660_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
    Returns stat_t of entry if we found lsn, or NULL otherwise.
  */
 %rename iso9660_find_ifs_lsn find_ifs_lsn;
-iso9660_stat_t *iso9660_find_ifs_lsn(const iso9660_t *p_iso, lsn_t i_lsn);
+IsoStat_t *iso9660_find_ifs_lsn(const iso9660_t *p_iso, lsn_t i_lsn);
 
 
 /*!
   Return file status for psz_path. NULL is returned on error.
  */
-%rename iso9660_find_fs_stat find_fs_stat;
-iso9660_stat_t *iso9660_fs_stat (CdIo_t *p_cdio, const char psz_path[]);
+%rename iso9660_fs_stat fs_stat;
+IsoStat_t *iso9660_fs_stat (CdIo_t *p_cdio, const char psz_path[]);
   
 
 /*!  
@@ -536,16 +573,16 @@ iso9660_stat_t *iso9660_fs_stat (CdIo_t *p_cdio, const char psz_path[]);
   pathname version numbers in the ISO 9660 name are dropped, i.e. ;1
   is removed and if level 1 ISO-9660 names are lowercased.
  */
-%rename iso9660_find_fs_stat_translate find_fs_stat_translate;
-iso9660_stat_t *iso9660_fs_stat_translate (CdIo_t *p_cdio, 
-                                           const char psz_path[], 
-                                           bool b_mode2);
+%rename iso9660_fs_stat_translate fs_stat_translate;
+IsoStat_t *iso9660_fs_stat_translate (CdIo_t *p_cdio, 
+				      const char psz_path[], 
+				      bool b_mode2);
 
 /*!  
   Return file status for pathname. NULL is returned on error.
  */
 %rename iso9660_ifs_stat ifs_stat;
-iso9660_stat_t *iso9660_ifs_stat (iso9660_t *p_iso, const char psz_path[]);
+IsoStat_t *iso9660_ifs_stat (iso9660_t *p_iso, const char psz_path[]);
 
 
 /*!  Return file status for path name psz_path. NULL is returned on
@@ -553,8 +590,8 @@ iso9660_stat_t *iso9660_ifs_stat (iso9660_t *p_iso, const char psz_path[]);
   i.e. ;1 is removed and if level 1 ISO-9660 names are lowercased.
  */
 %rename iso9660_ifs_stat_translate ifs_stat_translate;
-iso9660_stat_t *iso9660_ifs_stat_translate (iso9660_t *p_iso, 
-                                            const char psz_path[]);
+IsoStat_t *iso9660_ifs_stat_translate (iso9660_t *p_iso, 
+				       const char psz_path[]);
 
 /*!  Read psz_path (a directory) and return a list of iso9660_stat_t
   pointers for the files inside that directory. The caller must free the

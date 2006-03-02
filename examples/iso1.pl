@@ -37,32 +37,29 @@ use Device::Cdio::Device;
 use Device::Cdio::ISO9660;
 use Device::Cdio::ISO9660::IFS;
 
+# The default ISO 9660 image if none given
 my $ISO9660_IMAGE_PATH="../data/";
 my $ISO9660_IMAGE=$ISO9660_IMAGE_PATH."copying.iso";
 
-use vars qw($0);
+my $iso_image_fname = $ISO9660_IMAGE;
+$iso_image_fname = $ARGV[0] if @ARGV >= 1;
 
-our $program;
-
-my $fname = $ISO9660_IMAGE;
-$fname = $ARGV[1] if @ARGV > 1;
-
-my $iso = Device::Cdio::ISO9660::IFS->new(-source=>$fname);
+my $iso = Device::Cdio::ISO9660::IFS->new(-source=>$iso_image_fname);
   
 if (!defined($iso)) {
-    printf "Sorry, couldn't open %s as an ISO-9660 image\n", $fname;
+    printf "Sorry, couldn't open %s as an ISO-9660 image\n", $iso_image_fname;
     exit 1;
 }
 
-my @file_stats = Device::Cdio::ISO9660::IFS::readdir ($iso, "/");
+my $path = '/';
+my @file_stats = Device::Cdio::ISO9660::IFS::readdir ($iso, $path);
 
-if (@file_stats) {
-    printf "%-30s %6s %8s\n", 'name', 'LSN', 'size';
-}
 foreach my $href (@file_stats) {    
-    printf "/%-29s %6d %8d\n", 
-    Device::Cdio::ISO9660::name_translate($href->{filename}), 
-    $href->{LSN}, $href->{size};
+    printf "%s [LSN %6d] %8d %s%s\n", 
+    $href->{is_dir} ? "d" : "-",
+    $href->{LSN}, $href->{size},
+    $path,
+    Device::Cdio::ISO9660::name_translate($href->{filename});
 }
     
 $iso->close();

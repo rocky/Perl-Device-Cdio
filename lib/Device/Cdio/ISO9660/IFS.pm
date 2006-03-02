@@ -110,7 +110,8 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 
 @ISA = qw(Exporter);
-@EXPORT    = qw( close open new );
+@EXPORT     = qw( new );
+@EXPORT_OK  = qw( close open );
 
 # Note: the keys below match those the names returned by
 # cdio_get_driver_name()
@@ -342,7 +343,7 @@ sub readdir {
 	$href->{LSN}      = $values[$i++];
 	$href->{size}     = $values[$i++];
 	$href->{sec_size} = $values[$i++];
-	$href->{is_dir}   = $values[$i++];
+	$href->{is_dir}   = $values[$i++] == 2;
 	$href->{XA}       = $values[$i++];
 	push @result, $href;
     }
@@ -383,7 +384,7 @@ Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
 
 sub read_superblock {
     my($self,@p) = @_;
-    my($iso_mask) = rearrange(['ISO_MASK'], @p);
+    my($iso_mask) = _rearrange(['ISO_MASK'], @p);
     
     $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
 
@@ -394,7 +395,7 @@ sub read_superblock {
 
 =head2 seek_read
 
-seek_read(start, size)->(size, str)
+seek_read(start, size=1)->(size, str)
 
 Seek to a position and then read n bytes. Size read is returned.
 
@@ -402,10 +403,91 @@ Seek to a position and then read n bytes. Size read is returned.
 
 sub seek_read {
     my($self,@p) = @_;
-    my($start, $size) = rearrange(['START', 'SIZE'], @p);
+    my($start, $size, @args) = _rearrange(['START', 'SIZE'], @p);
+    return undef if _extra_args(@args);
+
+    $size = 1 if !defined($size);
     
-    (my $data, $size) = perliso9660::seek_read($self->{iso}, $start, $size);
+    (my $data, $size) = perliso9660::seek_read($self->{iso9660}, $start, 
+					       $size);
     return wantarray ? ($data, $size) : $data;
+}
+
+=pod
+
+=head2 stat
+
+stat(path, translate=0)->\%stat
+
+Return file status for path name psz_path. NULL is returned on error.
+
+If translate is 1,  version numbers in the ISO 9660 name are dropped, i.e. ;1
+is removed and if level 1 ISO-9660 names are lowercased.
+
+Each item of @iso_stat is a hash reference which contains
+
+=over 4
+
+=item LSN 
+
+the Logical sector number (an integer)
+
+=item size 
+
+the total size of the file in bytes
+
+=item  sec_size 
+
+the number of sectors allocated
+
+=item  filename
+
+the file name of the statbuf entry
+
+=item XA
+
+if the file has XA attributes; 0 if not
+
+=item is_dir 
+
+1 if a directory; 0 if a not;
+
+=back
+
+=cut
+
+sub stat {
+    my($self, @p) = @_;
+    my($path, $translate, @args) = _rearrange(['PATH', 'TRANSLATE'], @p);
+    
+    return undef if _extra_args(@args);
+    $translate = 0 if !defined($translate);
+
+    if (!defined($path)) {
+      print "*** An ISO-9660 file path must be given\n";
+      return undef;
+    }
+
+    my @values;
+    if ($translate) {
+	@values = perliso9660::ifs_stat_translate($self->{iso9660}, $path);
+    } else {
+	@values = perliso9660::ifs_stat($self->{iso9660}, $path);
+    }
+
+    # Remove the input parameters
+    splice(@values, 0, 2) if @values > 2;
+
+    return undef if !@values;
+    my $href = {};
+    my $i=0;
+    $href->{filename} = $values[$i++];
+    $href->{LSN}      = $values[$i++];
+    $href->{size}     = $values[$i++];
+    $href->{sec_size} = $values[$i++];
+    $href->{is_dir}   = $values[$i++] == 2;
+    $href->{XA}       = $values[$i++];
+    return $href;
 }
 
 1; # Magic true value requred at the end of a module

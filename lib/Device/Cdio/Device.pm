@@ -26,7 +26,7 @@ require 5.8.6;
 
 =head1 NAME
 
-Cdio:Device handles disc and device aspects of Cdio.
+Cdio::Device handles disc and device aspects of Cdio.
 
 =cut
 
@@ -39,8 +39,9 @@ use Device::Cdio qw(convert_drive_cap_read convert_drive_cap_write
 		    convert_drive_cap_misc );
 use Device::Cdio::Track;
 
-$Device::Cdio::Device::VERSION = $Device::Cdio::VERSION;
-@Device::Cdio::Device::EXPORT = qw( close open new );
+$Device::Cdio::Device::VERSION   = $Device::Cdio::VERSION;
+@Device::Cdio::Device::EXPORT    = qw( new );
+@Device::Cdio::Device::EXPORT_OK = qw( close open );
 
 =pod 
 
