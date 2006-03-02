@@ -52,7 +52,25 @@ if (!defined($iso)) {
 }
 
 my $path = '/';
-my @file_stats = Device::Cdio::ISO9660::IFS::readdir ($iso, $path);
+my @file_stats = $iso->readdir($path);
+
+my $id = $iso->get_application_id();
+printf "Application ID: %s\n", $id if defined($id);
+
+$id = $iso->get_preparer_id();
+printf "Preparer ID: %s\n", $id if defined($id);
+
+$id = $iso->get_publisher_id();
+printf "Publisher ID: %s\n", $id if defined($id);
+
+$id = $iso->get_system_id();
+printf "System ID: %s\n", $id if defined($id);
+
+$id = $iso->get_volume_id();
+printf "Volume ID: %s\n", $id if defined($id);
+
+$id = $iso->get_volumeset_id();
+printf "Volumeset ID: %s\n", $id if defined($id);
 
 foreach my $href (@file_stats) {    
     printf "%s [LSN %6d] %8d %s%s\n", 

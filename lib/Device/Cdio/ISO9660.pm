@@ -264,6 +264,35 @@ sub name_translate {
 
 =pod
 
+=head2 stat_array_to_href
+
+stat_array_to_href(values)->href
+
+Convert a ISO 9660 array to an hash reference of the values.
+
+Used internally in convert from C code.
+
+Note, we modify the input parameter.
+
+=cut
+
+sub stat_array_to_href {
+    my $href = {};
+    $href->{filename} = shift @_;
+    $href->{LSN}      = shift @_;
+    $href->{size}     = shift @_;
+    $href->{sec_size} = shift @_;
+    $href->{is_dir}   = shift @_;
+    $href->{XA}       = shift @_;
+
+    # A string comparison is more robust than a numeric comparison.
+    # and some Perls seem to get a string 2 back from SWIG.
+    $href->{is_dir}   = $href->{is_dir} eq '2';
+    return $href;
+}
+ 
+=pod
+
 =head2 strncpy_pad
 
 strncpy_pad(name)->str

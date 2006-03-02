@@ -179,6 +179,157 @@ sub close {
     }
 }
 
+=pod 
+
+=head2 find_lsn
+
+find_lsn(lsn)->$stat_href
+
+Find the filesystem entry that contains LSN and statu 
+return information about it. Undef is returned on error.
+
+=cut
+
+sub find_lsn {
+    my($self,@p) = @_;
+    my($lsn, @args) = _rearrange(['LSN'], @p);
+    return undef if _extra_args(@args);
+
+    if (!defined($lsn)) {
+      print "*** An LSN paramater must be given\n";
+      return undef;
+    }
+
+    my @values = perliso9660::ifs_find_lsn($self->{iso9660}, $lsn);
+    return Device::Cdio::ISO9660::stat_array_to_href(@values);
+}
+
+=pod
+
+=head2 get_application_id
+
+get_application_id()->$id
+
+Get the application ID stored in the Primary Volume Descriptor.
+undef is returned if there is some problem.
+
+=cut
+
+sub get_application_id {
+    my($self,@p) = @_;
+    return undef if !_check_arg_count($#_, 0);
+
+    return perliso9660::ifs_get_application_id($self->{iso9660});
+}
+
+=pod
+
+=head2 get_preparer_id
+
+get_perparer_id()->$id
+
+Get the preparer ID stored in the Primary Volume Descriptor.
+undef is returned if there is some problem.
+
+=cut
+
+sub get_preparer_id {
+    my($self,@p) = @_;
+    return undef if !_check_arg_count($#_, 0);
+
+    return perliso9660::ifs_get_preparer_id($self->{iso9660});
+}
+
+=pod
+
+=head2 get_publisher_id
+
+get_publisher_id()->$id
+
+Get the publisher ID stored in the Primary Volume Descriptor.
+undef is returned if there is some problem.
+
+=cut
+
+sub get_publisher_id {
+    my($self,@p) = @_;
+    return undef if !_check_arg_count($#_, 0);
+
+    return perliso9660::ifs_get_publisher_id($self->{iso9660});
+}
+
+=pod
+
+=head2 get_root_lsn
+
+get_root_lsn()->$lsn
+
+Get the Root LSN stored in the Primary Volume Descriptor.
+undef is returned if there is some problem.
+
+=cut
+
+sub get_root_lsn {
+    my($self,@p) = @_;
+    return undef if !_check_arg_count($#_, 0);
+
+    return perliso9660::ifs_get_root_lsn($self->{iso9660});
+}
+
+=pod
+
+=head2 get_system_id
+
+get_system_id()->$id
+
+Get the Volume ID stored in the Primary Volume Descriptor.
+undef is returned if there is some problem.
+
+=cut
+
+sub get_system_id {
+    my($self,@p) = @_;
+    return undef if !_check_arg_count($#_, 0);
+
+    return perliso9660::ifs_get_system_id($self->{iso9660});
+}
+
+=pod
+
+=head2 get_volume_id
+
+get_volume_id()->$id
+
+Get the Volume ID stored in the Primary Volume Descriptor.
+undef is returned if there is some problem.
+
+=cut
+
+sub get_volume_id {
+    my($self,@p) = @_;
+    return undef if !_check_arg_count($#_, 0);
+
+    return perliso9660::ifs_get_volume_id($self->{iso9660});
+}
+
+=pod
+
+=head2 get_volumeset_id
+
+get_volume_id()->$id
+
+Get the Volume ID stored in the Primary Volume Descriptor.
+undef is returned if there is some problem.
+
+=cut
+
+sub get_volumeset_id {
+    my($self,@p) = @_;
+    return undef if !_check_arg_count($#_, 0);
+
+    return perliso9660::ifs_get_volumeset_id($self->{iso9660});
+}
+
 =pod
 
 =head2 open
@@ -336,17 +487,10 @@ sub readdir {
     splice(@values, 0, 2) if @values > 2;
 
     my @result = ();
-    my $i      = 0;
-    while ( $i < @values ) {
-	my $href = {};
-	$href->{filename} = $values[$i++];
-	$href->{LSN}      = $values[$i++];
-	$href->{size}     = $values[$i++];
-	$href->{sec_size} = $values[$i++];
-	$href->{is_dir}   = $values[$i++] eq '2';
-	$href->{XA}       = $values[$i++];
-	push @result, $href;
-    }
+    while (@values) {
+	push @result, Device::Cdio::ISO9660::stat_array_to_href(@values);
+	splice(@values, 0, 6);
+    }	    
     return @result;
 }
 
@@ -479,15 +623,7 @@ sub stat {
     splice(@values, 0, 2) if @values > 2;
 
     return undef if !@values;
-    my $href = {};
-    my $i=0;
-    $href->{filename} = $values[$i++];
-    $href->{LSN}      = $values[$i++];
-    $href->{size}     = $values[$i++];
-    $href->{sec_size} = $values[$i++];
-    $href->{is_dir}   = $values[$i++] eq '2';
-    $href->{XA}       = $values[$i++];
-    return $href;
+    return Device::Cdio::ISO9660::stat_array_to_href(@values);
 }
 
 1; # Magic true value requred at the end of a module

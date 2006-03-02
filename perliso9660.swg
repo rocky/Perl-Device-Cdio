@@ -143,7 +143,7 @@ typedef iso9660_stat_t IsoStat_t;
       XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
     }
     _cdio_list_free (p_entlist, true);
-    argvi += num;
+    argvi += num + 2;
  out: ;
 }
 
@@ -499,7 +499,7 @@ strncpy_pad(const char src[], size_t len, enum strncpy_pad_check _check) {
 %}
  
 /*=====================================================================
-  file/dirname's 
+  Files and Directory Names 
 ======================================================================*/
 
 /*!
@@ -547,8 +547,8 @@ bool iso9660_pathname_valid_p (const char psz_path[]);
 
    Returns stat_t of entry if we found lsn, or NULL otherwise.
  */
-%rename iso9660_find_fs_lsn find_fs_lsn;
-IsoStat_t *iso9660_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
+%rename iso9660_find_fs_lsn fs_find_lsn;
+IsoStat_t *iso9660_fs_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
 
 
 /*!
@@ -557,7 +557,7 @@ IsoStat_t *iso9660_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
 
    Returns stat_t of entry if we found lsn, or NULL otherwise.
  */
-%rename iso9660_find_ifs_lsn find_ifs_lsn;
+%rename iso9660_find_ifs_lsn ifs_find_lsn;
 IsoStat_t *iso9660_find_ifs_lsn(const iso9660_t *p_iso, lsn_t i_lsn);
 
 
@@ -630,12 +630,21 @@ IsoStatList_t *ifs_readdir (iso9660_t *p_iso, const char psz_path[])
 char * iso9660_get_application_id(iso9660_pvd_t *p_pvd);
   
 /*!  
-  Get the application ID.  psz_app_id is set to NULL if there
+  Get the application ID.  Return NULL if there
   is some problem in getting this and false is returned.
 */
-%rename iso9660_ifs_get_application_id ifs_get_application_id;
-bool iso9660_ifs_get_application_id(iso9660_t *p_iso,
-                                    /*out*/ char **p_psz_app_id);
+%newobject get_application_id; // free malloc'd return value
+char *ifs_get_application_id(iso9660_t *p_iso);
+%inline %{
+char *
+ifs_get_application_id(iso9660_t *p_iso) {
+  char *psz;
+  bool ok = iso9660_ifs_get_application_id(p_iso, &psz);
+  if (!ok) return NULL;
+  return psz;
+}
+%}
+
 
 /*!  
   Return the Joliet level recognized for p_iso.
@@ -651,11 +660,11 @@ uint8_t iso9660_get_dir_len(const iso9660_dir_t *p_idr);
   
   A string is allocated: the caller must deallocate.
 */
-%rename iso9660_get_dir_len get_dir_len;
+%rename iso9660_get_to_name get_to_name;
 char * iso9660_dir_to_name (const iso9660_dir_t *p_iso9660_dir);
   
 /*!  
-  Returns a POSIX mode for a given p_udf_dirent.
+  Returns a POSIX mode for a given p_iso_dirent.
 */
 %rename iso9660_get_posix_filemode get_posix_filemode;
 mode_t iso9660_get_posix_filemode(const iso9660_stat_t *p_iso_dirent);
@@ -667,14 +676,21 @@ mode_t iso9660_get_posix_filemode(const iso9660_stat_t *p_iso_dirent);
 %rename iso9660_get_preparer_id get_preparer_id;
 char *iso9660_get_preparer_id(const iso9660_pvd_t *p_pvd);
 
-/*!  
-  Get the preparer ID.  psz_preparer_id is set to NULL if there
-  is some problem in getting this and false is returned.
+/*!  Get the preparer ID.  Return NULL if there is some problem in
+  getting this and false is returned.
 */
-%rename iso9660_ifs_get_preparer_id ifs_get_preparer_id;
-bool iso9660_ifs_get_preparer_id(iso9660_t *p_iso,
-				 /*out*/ char **p_psz_preparer_id);
-  
+%newobject ifs_get_preparer_id; // free malloc'd return value
+char *ifs_get_preparer_id(iso9660_t *p_iso);
+%inline %{
+char *
+ifs_get_preparer_id(iso9660_t *p_iso) {
+  char *psz;
+  bool ok = iso9660_ifs_get_preparer_id(p_iso, &psz);
+  if (!ok) return NULL;
+  return psz;
+}
+%}
+
 /*!
   Return a string containing the PVD's publisher id with trailing
   blanks removed.
@@ -683,12 +699,20 @@ bool iso9660_ifs_get_preparer_id(iso9660_t *p_iso,
 char *iso9660_get_publisher_id(const iso9660_pvd_t *p_pvd);
 
 /*!  
-  Get the publisher ID.  psz_publisher_id is set to NULL if there
+  Get the publisher ID.  return NULL if there
   is some problem in getting this and false is returned.
 */
-%rename iso9660_ifs_get_publisher_id ifs_get_publisher_id;
-bool iso9660_ifs_get_publisher_id(iso9660_t *p_iso,
-				  /*out*/ char **p_psz_publisher_id);
+%newobject ifs_get_publisher_id; // free malloc'd return value
+char *ifs_get_publisher_id(iso9660_t *p_iso);
+%inline %{
+char *
+ifs_get_publisher_id(iso9660_t *p_iso) {
+  char *psz;
+  bool ok = iso9660_ifs_get_publisher_id(p_iso, &psz);
+  if (!ok) return NULL;
+  return psz;
+}
+%}
 
 %rename iso9660_get_pvd_type get_pvd_type;
 uint8_t iso9660_get_pvd_type(const iso9660_pvd_t *p_pvd);
@@ -716,14 +740,21 @@ int iso9660_get_pvd_version(const iso9660_pvd_t *pvd) ;
 char *iso9660_get_system_id(const iso9660_pvd_t *p_pvd);
 
 /*!  
-  Get the system ID.  psz_system_id is set to NULL if there
+  Get the system ID.  return NULL if there
   is some problem in getting this and false is returned.
 */
-%rename iso9660_ifs_get_system_id ifs_get_system_id;
-bool iso9660_ifs_get_system_id(iso9660_t *p_iso,
-			       /*out*/ char **p_psz_system_id);
+%newobject ifs_get_system_id; // free malloc'd return value
+char *ifs_get_system_id(iso9660_t *p_iso);
+%inline %{
+char *
+ifs_get_system_id(iso9660_t *p_iso) {
+  char *psz;
+  bool ok = iso9660_ifs_get_system_id(p_iso, &psz);
+  if (!ok) return NULL;
+  return psz;
+}
+%}
 
-  
 /*! Return the LSN of the root directory for pvd.
   If there is an error CDIO_INVALID_LSN is returned. 
 */
@@ -737,12 +768,20 @@ lsn_t iso9660_get_root_lsn(const iso9660_pvd_t *p_pvd);
 char *iso9660_get_volume_id(const iso9660_pvd_t *p_pvd);
 
 /*!  
-  Get the system ID.  psz_system_id is set to NULL if there
+  Get the system ID.  return NULL if there
   is some problem in getting this and false is returned.
 */
-%rename iso9660_ifs_get_volume_id ifs_get_volume_id;
-bool iso9660_ifs_get_volume_id(iso9660_t *p_iso,
-			       /*out*/ char **p_psz_volume_id);
+%newobject ifs_get_volume_id; // free malloc'd return value
+char *ifs_get_volume_id(iso9660_t *p_iso);
+%inline %{
+char *
+ifs_get_volume_id(iso9660_t *p_iso) {
+  char *psz;
+  bool ok = iso9660_ifs_get_volume_id(p_iso, &psz);
+  if (!ok) return NULL;
+  return psz;
+}
+%}
 
 /*!
   Return the PVD's volumeset ID.
@@ -752,23 +791,35 @@ bool iso9660_ifs_get_volume_id(iso9660_t *p_iso,
 char *iso9660_get_volumeset_id(const iso9660_pvd_t *p_pvd);
 
 /*!  
-  Get the systemset ID.  psz_systemset_id is set to NULL if there
+  Get the volumeset ID.  return NULL if there
   is some problem in getting this and false is returned.
 */
-%rename iso9660_ifs_get_volumeset_id ifs_get_volumeset_id;
-bool iso9660_ifs_get_volumeset_id(iso9660_t *p_iso,
-				  /*out*/ char **p_psz_volumeset_id);
-  
-/* pathtable */
+%newobject ifs_get_volumeset_id; // free malloc'd return value
+char *ifs_get_volumeset_id(iso9660_t *p_iso);
+%inline %{
+char *
+ifs_get_volumeset_id(iso9660_t *p_iso) {
+  char *psz;
+  bool ok = iso9660_ifs_get_volumeset_id(p_iso, &psz);
+  if (!ok) return NULL;
+  return psz;
+}
+%}
+
+/* ================= pathtable  ================== */
   
 /*! Zero's out pathable. Do this first. */
+%rename iso9660_pathtable_init pathtable_init;
 void iso9660_pathtable_init (void *pt);
   
+%rename iso9660_pathtable_get_size pathtable_get_size;
 unsigned int iso9660_pathtable_get_size (const void *pt);
   
+%rename iso9660_pathtable_l_add_entry pathtable_l_add_entry;
 uint16_t iso9660_pathtable_l_add_entry (void *pt, const char name[], 
 					uint32_t extent, uint16_t parent);
   
+%rename iso9660_pathtable_m_add_entry pathtable_m_add_entry;
 uint16_t iso9660_pathtable_m_add_entry (void *pt, const char name[], 
 					uint32_t extent, uint16_t parent);
   
@@ -786,13 +837,14 @@ void iso9660_set_pvd (void *pd, const char volume_id[],
 		      uint32_t path_table_size, const time_t *pvd_time);
 #endif /*FINISHED*/
 
+%rename iso9660_set_evd set_evd;
 void iso9660_set_evd (void *pd);
 
 /*!
   Return true if ISO 9660 image has extended attrributes (XA).
 */
+%rename iso9660_ifs_is_xa is_xa;
 bool iso9660_ifs_is_xa (const iso9660_t * p_iso);
-
 
 %perlcode %{
 =pod
@@ -980,40 +1032,31 @@ Use any Joliet Extension available.
 
 =head1 SUBROUTINES
 
-=head2 open
+=head2 Input Output
+
+=head3 open
 
 Open an ISO 9660 image for reading. Maybe in the future we will have
 mode. undef is returned on error.
 
-=head2 open_ext
+=head3 open_ext
 
 Open an ISO 9660 image for reading allowing various ISO 9660
 xtensions.  Maybe in the future we will have a mode. undef is
 eturned on error.
 
-=head2 open_fuzzy
+=head3 open_fuzzy
 
 Open an ISO 9660 image for reading with some tolerence for positioning
 of the ISO9660 image. We scan for $perliso9660::ISO_STANDARD_ID and
 use that to set he eventual offset to adjust by (as long as that is <=
 i_fuzz).
 
-Maybe in the future we will have a mode. NULL is returned on error.
+Maybe in the future we will have a mode. undef is returned on error.
 
 See also open
 
-=head2 iso9660_open_fuzzy
-
-Open an ISO 9660 image for reading with some tolerence for positioning
-of the ISO9660 image. We scan for $perliso9660::ISO_STANDARD_ID and
-use that to set the eventual offset to adjust by (as long as that is
-<= i_fuzz).
-
-Maybe in the future we will have a mode. undef is returned on error.
-
-See also open.
-
-=head2 open_fuzzy_ext
+=head3 open_fuzzy_ext
 
 Open an ISO 9660 image for reading with some tolerence for positioning
 of the ISO9660 image. We scan for ISO_STANDARD_ID and use that to set
@@ -1021,93 +1064,97 @@ the eventual offset to adjust by (as long as that is <= i_fuzz).
 
 Maybe in the future we will have a mode. undef is returned on error.
 
-=head2 ifs_fuzzy_read_superblock
+=head3 ifs_fuzzy_read_superblock
 
 Read the Super block of an ISO 9660 image but determine framesize
 and datastart and a possible additional offset. Generally here we are
 not reading an ISO 9660 image but a CD-Image which contains an ISO 9660
 filesystem.
 
-=head2 close
+=head3 close
 
 Close previously opened ISO 9660 image.
-1 is unconditionally returned. If there was an error false would
+1 is unconditionally returned. If there was an error 0 would
 be returned.
 
-=head2 seek_read
+=head3 seek_read
 
 Seek to a position and then read n bytes. (buffer, size) are is returned.
 
-=head2 fs_read_pvd
+=head3 fs_read_pvd
 
 Read the Primary Volume Descriptor for a CD.
-True is returned if read, and false if there was an error.
+1 is returned if read, and 0 if there was an error.
 
-=head2 ifs_read_pvd
+=head3 ifs_read_pvd
 
 Read the Primary Volume Descriptor for an ISO 9660 image.
-True is returned if read, and false if there was an error.
+1 is returned if read, and 0 if there was an error.
 
-=head2 iso9660_fs_read_superblock
-
-Read the Super block of an ISO 9660 image. This is the 
-Primary Volume Descriptor (PVD) and perhaps a Supplemental Volume 
-Descriptor if (Joliet) extensions are acceptable.
-
-=head2 iso9660_ifs_read_superblock
+=head3 _fs_read_superblock
 
 Read the Super block of an ISO 9660 image. This is the 
 Primary Volume Descriptor (PVD) and perhaps a Supplemental Volume 
 Descriptor if (Joliet) extensions are acceptable.
 
-=head2 set_dtime
+=head3 ifs_read_superblock
+
+Read the Super block of an ISO 9660 image. This is the 
+Primary Volume Descriptor (PVD) and perhaps a Supplemental Volume 
+Descriptor if (Joliet) extensions are acceptable.
+
+=head2 Time Conversion
+
+=head3 set_dtime
 
 Set time in format used in ISO 9660 directory index record
 from a Unix time structure.
 
 
-=head2 set_ltime
+=head3 set_ltime
 
 Set "long" time in format used in ISO 9660 primary volume descriptor
 from a Unix time structure.
 
-=head2 get_dtime 
+=head3 get_dtime 
 
 Get Unix time structure from format use in an ISO 9660 directory index 
 record. Even though tm_wday and tm_yday fields are not explicitly in
 idr_date, they are calculated from the other fields.
 
-If tm is to reflect the localtime, set "use_localtime" true, otherwise
+If tm is to reflect the localtime, set "use_localtime" 1, otherwise
 tm will reported in GMT.
 
-=head2 get_ltime
+=head3 get_ltime
 
 Get "long" time in format used in ISO 9660 primary volume descriptor
 from a Unix time structure. 
 
-=head2 is_dchar
+=head2 Character Classification and String Manipulation
 
-Return true if c (an int) is a DCHAR - a character that can appear in an an
+=head3 is_dchar
+
+Return 1 if c (an int) is a DCHAR - a character that can appear in an an
 ISO-9600 level 1 directory name. These are the ASCII capital
 letters A-Z, the digits 0-9 and an underscore.
 
-=head2 is_achar
+=head3 is_achar
 
-=head2 name_translate
+=head3 name_translate
 
 Convert an ISO-9660 file name that stored in a directory entry into 
 what's usually listed as the file name in a listing.
 wercase name, and remove trailing ;1's or .;1's and
 turn the other ;'s into version numbers.
 
-=head2 name_translate_ext
+=head3 name_translate_ext
 
 Convert an ISO-9660 file name that stored in a directory entry into
 what's usually listed as the file name in a listing.  Lowercase
 name if no Joliet Extension interpretation. Remove trailing ;1's or
 .;1's and turn the other ;'s into version numbers.
 
-=head2 strncpy_pad 
+=head3 strncpy_pad 
 
 Pad string src with spaces to size len and copy this to dst. If len is
 less than the length of src, dst will be truncated to the first len
@@ -1117,8 +1164,202 @@ src can also be scanned to see if it contains only ACHARs, DCHARs,
 7-bit ASCII chars depending on the enumeration _check.
 
 In addition to getting changed, dst is the return value.  Note: this
-string might not be NULL terminated.
+string might not be undef terminated.
 
+=head2 File and Directory Names 
+
+=head3 dirname_valid_p
+
+Check that psz_path is a valid ISO-9660 directory name.
+
+A valid directory name should not start out with a slash (/), 
+dot (.) or null byte, should be less than 37 characters long, 
+have no more than 8 characters in a directory component 
+which is separated by a /, and consist of only DCHARs. 
+
+1 is returned if psz_path is valid.
+
+=head3 pathname_isofy
+
+Take psz_path and a version number and turn that into a ISO-9660
+pathname.  (That is just the pathname followd by ";" and the version
+number. For example, mydir/file.ext -> MYDIR/FILE.EXT;1 for version
+1. The resulting ISO-9660 pathname is returned.
+
+=head3 pathname_valid_p
+
+Check that psz_path is a valid ISO-9660 pathname.  
+
+A valid pathname contains a valid directory name, if one appears and
+the filename portion should be no more than 8 characters for the
+file prefix and 3 characters in the extension (or portion after a
+dot). There should be exactly one dot somewhere in the filename
+portion and the filename should be composed of only DCHARs.
+  
+1 is returned if psz_path is valid.
+
+=head3 fs_find_lsn
+
+Given a directory pointer, find the filesystem entry that contains
+lsn and return information about it.
+
+Returns stat_t of entry if we found lsn, or undef otherwise.
+
+=head3 ifs_find_lsn
+
+Given a directory pointer, find the filesystem entry that contains
+lsn and return information about it.
+
+Returns stat_t of entry if we found lsn, or undef otherwise.
+
+=head3 fs_stat
+
+Return file status for psz_path. undef is returned on error.
+
+=head3 fs_stat_translate
+
+Return file status for path name psz_path. undef is returned on error.
+pathname version numbers in the ISO 9660 name are dropped, i.e. ;1
+is removed and if level 1 ISO-9660 names are lowercased.
+
+=head3 ifs_stat
+
+Return file status for pathname. undef is returned on error.
+
+=head3 ifs_stat_translate
+
+Return file status for path name psz_path. undef is returned on
+error.  pathname version numbers in the ISO 9660 name are dropped,
+i.e. ;1 is removed and if level 1 ISO-9660 names are lowercased.
+
+
+=head3 fs_readdir
+
+Read psz_path (a directory) and return a list of iso9660_stat_t
+pointers for the files inside that directory. The caller must free the
+returned result.
+
+=head3 ifs_readdir
+
+Read psz_path (a directory) and return a list of iso9660_stat_t
+pointers for the files inside that directory. The caller must free
+the returned result.
+
+=head3 get_dir_len
+
+Return the directory name stored in the iso9660_dir_t
+  
+A string is allocated: the caller must deallocate.
+
+=head3 dir_to_name
+  
+=head3 get_posix_filemode
+
+Returns a POSIX mode for a given p_iso_dirent.
+
+=head2 Primary Volume Descriptor Routines
+
+=head3 get_application_id
+
+Return the PVD's application ID.
+
+undef is returned if there is some problem in getting this. 
+
+=head3 ifs_get_application_id
+
+Get the application ID.  psz_app_id is set to undef if there
+is some problem in getting this and 0 is returned.
+
+=head3 get_preparer_id
+
+Return a string containing the preparer id with trailing
+blanks removed.
+
+=head3 ifs_get_preparer_id
+
+Get the preparer ID.  psz_preparer_id is set to undef if there
+is some problem in getting this and 0 is returned.
+  
+=head3 get_publisher_id
+
+Return a string containing the PVD's publisher id with trailing
+blanks removed.
+
+=head3 ifs_get_publisher_id
+
+Get the publisher ID.  psz_publisher_id is set to undef if there
+is some problem in getting this and 0 is returned.
+
+=head3 get_pvd_type
+  
+=head3 get_pvd_id
+
+=head3 get_pvd_space_size
+
+=head3 get_pvd_block_size
+
+=head3 get_pvd_version
+
+Return the primary volume id version number (of pvd).
+If there is an error 0 is returned. 
+
+=head3 get_system_id
+
+Return a string containing the PVD's system id with trailing
+blanks removed.
+
+=head3 ifs_get_system_id
+
+Get the system ID.  psz_system_id is set to undef if there
+is some problem in getting this and 0 is returned.
+
+=head3 get_root_lsn
+
+Return the LSN of the root directory for pvd.
+If there is an error CDIO_INVALID_LSN is returned. 
+
+=head3 get_volume_id
+
+Return the PVD's volume ID.
+
+=head3 ifs_get_volume_id
+
+Get the system ID.  psz_system_id is set to undef if there
+s some problem in getting this and 0 is returned.
+
+=head3 get_volumeset_id
+
+Return the PVD's volumeset ID.
+undef is returned if there is some problem in getting this. 
+
+=head3 ifs_get_volumeset_id
+
+Get the systemset ID.  psz_systemset_id is set to undef if there
+is some problem in getting this and 0 is returned.
+
+=head2 Path Table Routines
+  
+=head3 iso9660_pathtable_init
+
+Zero out pathable. Do this first.
+  
+=head3 pathtable_get_size 
+  
+=head3 pathtable_l_add_entry
+  
+=head3 pathtable_m_add_entry 
+  
+=head3 set_evd
+
+=head2 Miscellaneous
+
+=head3 get_joliet_level
+
+Return the Joliet level recognized for p_iso.
+
+=head3 ifs_is_xa
+
+Return 1 if ISO 9660 image has extended attrributes (XA).
 
 =head1 METHODS
 

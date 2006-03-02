@@ -112,8 +112,30 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 @ISA = qw(Exporter Device::Cdio::Device);
 @EXPORT_OK  = qw( close open );
 
-# Note: the keys below match those the names returned by
-# cdio_get_driver_name()
+=pod 
+
+=head2 find_lsn
+
+find_lsn(lsn)->$stat_href
+
+Find the filesystem entry that contains LSN and statu 
+return information about it. Undef is returned on error.
+
+=cut
+
+sub find_lsn {
+    my($self,@p) = @_;
+    my($lsn, @args) = _rearrange(['LSN'], @p);
+    return undef if _extra_args(@args);
+
+    if (!defined($lsn)) {
+      print "*** An LSN paramater must be given\n";
+      return undef;
+    }
+
+    my @values = perliso9660::fs_find_lsn($self->{iso9660}, $lsn);
+    return Device::Cdio::ISO9660::stat_array_to_href(@values);
+}
 
 =pod
 
@@ -176,17 +198,10 @@ sub readdir {
     splice(@values, 0, 2) if @values > 2;
 
     my @result = ();
-    my $i      = 0;
-    while ( $i < @values ) {
-	my $href = {};
-	$href->{filename} = $values[$i++];
-	$href->{LSN}      = $values[$i++];
-	$href->{size}     = $values[$i++];
-	$href->{sec_size} = $values[$i++];
-	$href->{is_dir}   = $values[$i++] eq '2';
-	$href->{XA}       = $values[$i++];
-	push @result, $href;
-    }
+    while (@values) {
+	push @result, Device::Cdio::ISO9660::stat_array_to_href(@values);
+	splice(@values, 0, 6);
+    }	    
     return @result;
 }
 
@@ -235,12 +250,16 @@ sub read_superblock {
 
 =head2 stat
 
-stat(path, translate=0)->\%stat
+stat(path, translate=0, mode2=0)->\%stat
 
 Return file status for path name psz_path. NULL is returned on error.
 
 If translate is 1,  version numbers in the ISO 9660 name are dropped, i.e. ;1
 is removed and if level 1 ISO-9660 names are lowercased.
+
+Mode2 is used only if translate is 1 and is a hack that really should go 
+away in libcdio sometime. If set use mode 2 reading, otherwise use
+mode 1 reading. 
 
 Each item of @iso_stat is a hash reference which contains
 
@@ -277,10 +296,11 @@ if the file has XA attributes; 0 if not
 sub stat {
     my($self, @p) = @_;
     my($path, $translate, $mode2, @args) = 
-	_rearrange(['PATH', 'TRANSLATE'], @p);
+	_rearrange(['PATH', 'TRANSLATE', 'MODE2'], @p);
     
     return undef if _extra_args(@args);
     $translate = 0 if !defined($translate);
+    $mode2 = 0 if !defined($mode2);
 
     if (!defined($path)) {
       print "*** An CD-ROM or CD-image must be given\n";
@@ -290,7 +310,7 @@ sub stat {
     my @values;
     if ($translate) {
 	@values = perliso9660::fs_stat_translate($self->{cd}, $path, 
-						 0); 
+						 $mode2); 
     } else {
 	@values = perliso9660::fs_stat($self->{cd}, $path);
     }
@@ -299,15 +319,7 @@ sub stat {
     splice(@values, 0, 2) if @values > 2;
 
     return undef if !@values;
-    my $href = {};
-    my $i=0;
-    $href->{filename} = $values[$i++];
-    $href->{LSN}      = $values[$i++];
-    $href->{size}     = $values[$i++];
-    $href->{sec_size} = $values[$i++];
-    $href->{is_dir}   = $values[$i++] eq '2';
-    $href->{XA}       = $values[$i++];
-    return $href;
+    return Device::Cdio::ISO9660::stat_array_to_href(@values);
 }
 
 1; # Magic true value requred at the end of a module
