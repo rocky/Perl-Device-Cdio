@@ -1,8 +1,16 @@
 Revision history for Device-Cdio
 
+0.2.0  Mar 1, 2006
+
+- Add rudimentary ISO 9660 library. See iso1.pl, iso2.pl, iso3.pl
+  and 07.iso.t
+
+- Include more C files from SWIG. (In other words drop requirement that
+  SWIG is installed - this time, for sure!)
+
 0.0.2  Feb 13, 2006
 
-- Drop requirement that Swig is installed.
+- Drop requirement that SWIG is installed.
 
 - $dev->get_device() is a little more useful.
 
