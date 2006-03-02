@@ -103,6 +103,7 @@ use warnings;
 use strict;
 use Exporter;
 use perliso9660;
+use perlcdio;
 use Carp;
 
 use vars qw($VERSION $revision @EXPORT_OK @EXPORT @ISA %drivers);
@@ -200,6 +201,10 @@ sub find_lsn {
       return undef;
     }
 
+    if ($perlcdio::VERSION_NUM <= 76) {
+	print "*** Routine available only in libcdio versions >= 0.76\n";
+	return undef;
+    }
     my @values = perliso9660::ifs_find_lsn($self->{iso9660}, $lsn);
     return Device::Cdio::ISO9660::stat_array_to_href(@values);
 }

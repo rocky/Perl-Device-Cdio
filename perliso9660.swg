@@ -28,13 +28,16 @@ equivalant standard is called ECMA-119."
 /* Includes the header in the wrapper code */
 #include <time.h>
 #include <cdio/iso9660.h>
+#include <cdio/version.h>
 %}
 
 #include <time.h>
 #include <cdio/iso9660.h>
+#include <cdio/version.h>
 
 /* Various libcdio constants and typedefs */
 %include "types.swg"
+%include "compat.swg"
 
 %include "typemaps.i"
 
@@ -109,8 +112,12 @@ typedef iso9660_stat_t IsoStat_t;
     XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));
     XPUSHs(sv_2mortal(newSViv(p_statbuf->secsize)));
     XPUSHs(sv_2mortal(newSViv(p_statbuf->type)));
-    XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
-    argvi += 8;
+#if LIBCDIO_VERSION_NUM > 76
+            XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
+            argvi += 8;
+#else
+            argvi += 7;
+#endif
     free (p_statbuf);
  out: ;
 }
@@ -140,7 +147,9 @@ typedef iso9660_stat_t IsoStat_t;
       XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));
       XPUSHs(sv_2mortal(newSViv(p_statbuf->secsize)));
       XPUSHs(sv_2mortal(newSViv(p_statbuf->type)));
-      XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
+#if LIBCDIO_VERSION_NUM > 76
+            XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
+#endif
     }
     _cdio_list_free (p_entlist, true);
     argvi += num + 2;
@@ -548,9 +557,10 @@ bool iso9660_pathname_valid_p (const char psz_path[]);
    Returns stat_t of entry if we found lsn, or NULL otherwise.
  */
 %rename iso9660_find_fs_lsn fs_find_lsn;
-IsoStat_t *iso9660_fs_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
+IsoStat_t *iso9660_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
 
 
+#if LIBCDIO_VERSION_NUM > 76
 /*!
    Given a directory pointer, find the filesystem entry that contains
    lsn and return information about it.
@@ -559,6 +569,7 @@ IsoStat_t *iso9660_fs_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
  */
 %rename iso9660_find_ifs_lsn ifs_find_lsn;
 IsoStat_t *iso9660_find_ifs_lsn(const iso9660_t *p_iso, lsn_t i_lsn);
+#endif
 
 
 /*!
@@ -663,11 +674,13 @@ uint8_t iso9660_get_dir_len(const iso9660_dir_t *p_idr);
 %rename iso9660_get_to_name get_to_name;
 char * iso9660_dir_to_name (const iso9660_dir_t *p_iso9660_dir);
   
+#if LIBCDIO_VERSION_NUM > 76
 /*!  
   Returns a POSIX mode for a given p_iso_dirent.
 */
 %rename iso9660_get_posix_filemode get_posix_filemode;
 mode_t iso9660_get_posix_filemode(const iso9660_stat_t *p_iso_dirent);
+#endif
 
 /*!
   Return a string containing the preparer id with trailing

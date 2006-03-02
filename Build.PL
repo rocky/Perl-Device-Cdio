@@ -302,7 +302,7 @@ $ccflags .= try_cflags("-Wno-unused-value");
 $ccflags .= try_cflags("-Wno-unused-function");
 $ccflags .= try_cflags("-Wno-unused-variable");
 
-my $ldflags = "$pkgcfg{libs} -liso9660";
+my $ldflags = "$pkgcfg{libs} -liso9660 -liconv -lcdio";
 my $swig_flags='';
 if ('cygwin' eq $Config{osname} && 
     $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
