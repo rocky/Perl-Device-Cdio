@@ -488,8 +488,7 @@ name_translate_ext(const char *psz_oldname, uint8_t i_joliet_level) {
   In addition to getting changed, dst is the return value.
   Note: this string might not be NULL terminated.
  */
-%newobject iso9660_strncpy_pad; // free malloc'd return value
-%rename iso9660_strncpy_pad strncpy_pad;
+%newobject strncpy_pad; // free malloc'd return value
 char *strncpy_pad(const char src[], size_t len, enum strncpy_pad_check _check);
 %inline %{
 char *
