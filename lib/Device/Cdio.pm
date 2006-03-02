@@ -356,7 +356,7 @@ sub get_devices_with_cap {
 
 Like get_devices_with_cap but we return the driver we found as
 well. This is because often one wants to search for kind of drive and
-then *open* it afterwards. Giving the driver back facilitates this,
+then *open* it afterward. Giving the driver back facilitates this,
 and speeds things up for libcdio as well.
 
 =cut

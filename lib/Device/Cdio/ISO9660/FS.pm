@@ -117,6 +117,81 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 =pod
 
+=head2 readdir
+
+readdir(dirname)->@iso_stat
+
+Read path (a directory) and return a list of iso9660 stat references
+
+Each item of @iso_stat is a hash reference which contains
+
+=over 4
+
+=item LSN 
+
+the Logical sector number (an integer)
+
+=item size 
+
+the total size of the file in bytes
+
+=item  sec_size 
+
+the number of sectors allocated
+
+=item  filename
+
+the file name of the statbuf entry
+
+=item XA
+
+if the file has XA attributes; 0 if not
+
+=item is_dir 
+
+1 if a directory; 0 if a not;
+
+=back
+
+FIXME: If you look at iso9660.h you'll see more fields, such as for
+Rock-Ridge specific fields or XA specific fields. Eventually these
+will be added. Volunteers? 
+
+=cut
+
+sub readdir {
+    my($self,@p) = @_;
+
+    my($dirname, @args) = _rearrange(['DIRNAME'], @p);
+    return undef if _extra_args(@args);
+
+    if (!defined($dirname)) {
+      print "*** A directory name must be given\n";
+      return undef;
+    }
+
+    my @values = perliso9660::fs_readdir($self->{iso9660}, $dirname);
+
+    # Remove the two input parameters
+    splice(@values, 0, 2) if @values > 2;
+
+    my @result = ();
+    my $i      = 0;
+    while ( $i < @values ) {
+	my $href = {};
+	$href->{filename} = $values[$i++];
+	$href->{LSN}      = $values[$i++];
+	$href->{size}     = $values[$i++];
+	$href->{sec_size} = $values[$i++];
+	$href->{is_dir}   = $values[$i++] eq '2';
+	$href->{XA}       = $values[$i++];
+	push @result, $href;
+    }
+    return @result;
+}
+
+=pod
+
 =head2 read_pvd
 
 read_pvd()->pvd
@@ -230,7 +305,7 @@ sub stat {
     $href->{LSN}      = $values[$i++];
     $href->{size}     = $values[$i++];
     $href->{sec_size} = $values[$i++];
-    $href->{is_dir}   = $values[$i++] == 2;
+    $href->{is_dir}   = $values[$i++] eq '2';
     $href->{XA}       = $values[$i++];
     return $href;
 }

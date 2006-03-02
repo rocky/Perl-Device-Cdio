@@ -343,7 +343,7 @@ sub readdir {
 	$href->{LSN}      = $values[$i++];
 	$href->{size}     = $values[$i++];
 	$href->{sec_size} = $values[$i++];
-	$href->{is_dir}   = $values[$i++] == 2;
+	$href->{is_dir}   = $values[$i++] eq '2';
 	$href->{XA}       = $values[$i++];
 	push @result, $href;
     }
@@ -485,7 +485,7 @@ sub stat {
     $href->{LSN}      = $values[$i++];
     $href->{size}     = $values[$i++];
     $href->{sec_size} = $values[$i++];
-    $href->{is_dir}   = $values[$i++] == 2;
+    $href->{is_dir}   = $values[$i++] eq '2';
     $href->{XA}       = $values[$i++];
     return $href;
 }

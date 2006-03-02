@@ -76,7 +76,6 @@ typedef uint8_t iso_extension_mask_t;
 %constant long int ACHARS               = ISO9660_ACHARS;
 %constant long int DCHARS               = ISO9660_DCHARS;
 
-
 %constant long int EXTENSION_JOLIET_LEVEL1 = ISO_EXTENSION_JOLIET_LEVEL1;
 %constant long int EXTENSION_JOLIET_LEVEL2 = ISO_EXTENSION_JOLIET_LEVEL2;
 %constant long int EXTENSION_JOLIET_LEVEL3 = ISO_EXTENSION_JOLIET_LEVEL3;
@@ -226,8 +225,9 @@ bool iso9660_close (iso9660_t * p_iso);
   typedef long int my_ssize_t;
 %}
 %apply my_ssize_t *OUTPUT { my_ssize_t *pi_size };
-/*!
-  Seek to a position and then read n bytes. Size read is returned.
+
+/*!  Seek to a position and then read n bytes. (buffer, size) are
+  returned.
 */
 %newobject seek_read; // free malloc'd return value
 typedef char *buf_t;
@@ -819,7 +819,306 @@ interface is called perlcdio (this file) and is generated via SWIG.
 
 =over 4
 
+=item ISO_BLOCKSIZE
+
+Number of bytes in an ISO 9660 block (2048)
+
+=item PVD_SECTOR
+
+Sector of Primary Volume Descriptor
+
+=item EVD_SECTOR
+
+Sector of End Volume Descriptor
+
+=item LEN_ISONAME
+
+Size in bytes of the filename  portion + null byte
+
+=item MAX_SYSTEM_ID
+
+Maximum number of characters in a system id
+
+=item MAX_ISONAME
+
+Size in bytes of the filename portion + null byte.
+
+=item MAX_PREPARER_ID
+
+Maximum number of characters in a preparer id.
+
+=item MAX_ISOPATHNAME
+
+Maximum number of characters in the entire ISO 9660 filename.
+
+=item FILE
+
+Not really a flag but the lack of one.
+
+=item EXISTENCE
+
+Do not make existence known (hidden).
+
+=item DIRECTORY
+
+This file is a directory.
+
+=item ASSOCIATED
+
+This file is an associated file
+
+=item RECORD
+
+Record format in extended attr. if not set.
+
+=item PROTECTION
+
+No read/execute permission in extended attribute.
+
+=item DRESERVED1
+
+Reserved bit 5.
+
+=item DRESERVED2
+
+Reserved bit 6
+
+=item MULTIEXTENT
+
+Not the final entry of a multi-extent file.
+
+=item VD_BOOT_RECORD
+
+CD is bootable
+
+=item VD_PRIMARY
+
+Primary Volume descriptor which must be in any ISO-9660
+
+=item VD_SUPPLEMENTARY
+
+(optional) Supplimentary Volume Descriptor. But used by Joliet, for
+example.
+
+=item VD_PARITION
+
+Indicates a partition of a CD.
+
+=item VD_END
+
+=item MAX_PUBLISHER_ID
+
+Maximum number of characters in a publisher id.
+
+=item MAX_APPLICATION_ID
+
+Maximum number of characters in an application id.
+
+=item MAX_VOLUME_ID
+
+Maximum number of characters in a volume id.
+
+=item MAX_VOLUMESET_ID
+
+Maximum number of characters in a volume-set id.
+
+=item STANDARD_ID
+
+String inside frame which identifies an ISO 9660 filesystem. This
+string is the "id" field of an iso9660_pvd_t or an iso9660_svd_t.
+
+=item NOCHECK
+
+Enumeration for don't check in strncpy_pad.
+
+=item SEVEN_BIT
+
+Enumeration in strncpy_pad for checking entry has only 7-bit characters.
+
+
+=item ACHARS
+
+Enumeration in strncpy_pad for checking entry has only ACHARs.
+
+=item DCHARS
+
+Enumeration in strncpy_pad for checking entry has only DCHARs.
+
+=item EXTENSION_JOLIET_LEVEL1
+
+Use Joliet Level 1.
+
+=item EXTENSION_JOLIET_LEVEL2
+
+Use Joliet Level 2.
+
+=item EXTENSION_JOLIET_LEVEL3
+
+Use Joliet Level 3
+
+=item EXTENSION_ROCK_RIDGE
+
+Use Rock-Ridge Extensions.
+
+=item EXTENSION_HIGH_SIERRA
+
+Use High-Sierra Extensions.
+
+=item EXTENSION_ALL
+
+Use any of the above extensions.
+
+=item EXTENSION_NONE
+
+Use none of the above extensions.
+
+=item EXTENSION_JOLIET
+
+Use any Joliet Extension available.
+
 =back
+
+=head1 SUBROUTINES
+
+=head2 open
+
+Open an ISO 9660 image for reading. Maybe in the future we will have
+mode. undef is returned on error.
+
+=head2 open_ext
+
+Open an ISO 9660 image for reading allowing various ISO 9660
+xtensions.  Maybe in the future we will have a mode. undef is
+eturned on error.
+
+=head2 open_fuzzy
+
+Open an ISO 9660 image for reading with some tolerence for positioning
+of the ISO9660 image. We scan for $perliso9660::ISO_STANDARD_ID and
+use that to set he eventual offset to adjust by (as long as that is <=
+i_fuzz).
+
+Maybe in the future we will have a mode. NULL is returned on error.
+
+See also open
+
+=head2 iso9660_open_fuzzy
+
+Open an ISO 9660 image for reading with some tolerence for positioning
+of the ISO9660 image. We scan for $perliso9660::ISO_STANDARD_ID and
+use that to set the eventual offset to adjust by (as long as that is
+<= i_fuzz).
+
+Maybe in the future we will have a mode. undef is returned on error.
+
+See also open.
+
+=head2 open_fuzzy_ext
+
+Open an ISO 9660 image for reading with some tolerence for positioning
+of the ISO9660 image. We scan for ISO_STANDARD_ID and use that to set
+the eventual offset to adjust by (as long as that is <= i_fuzz).
+
+Maybe in the future we will have a mode. undef is returned on error.
+
+=head2 ifs_fuzzy_read_superblock
+
+Read the Super block of an ISO 9660 image but determine framesize
+and datastart and a possible additional offset. Generally here we are
+not reading an ISO 9660 image but a CD-Image which contains an ISO 9660
+filesystem.
+
+=head2 close
+
+Close previously opened ISO 9660 image.
+1 is unconditionally returned. If there was an error false would
+be returned.
+
+=head2 seek_read
+
+Seek to a position and then read n bytes. (buffer, size) are is returned.
+
+=head2 fs_read_pvd
+
+Read the Primary Volume Descriptor for a CD.
+True is returned if read, and false if there was an error.
+
+=head2 ifs_read_pvd
+
+Read the Primary Volume Descriptor for an ISO 9660 image.
+True is returned if read, and false if there was an error.
+
+=head2 iso9660_fs_read_superblock
+
+Read the Super block of an ISO 9660 image. This is the 
+Primary Volume Descriptor (PVD) and perhaps a Supplemental Volume 
+Descriptor if (Joliet) extensions are acceptable.
+
+=head2 iso9660_ifs_read_superblock
+
+Read the Super block of an ISO 9660 image. This is the 
+Primary Volume Descriptor (PVD) and perhaps a Supplemental Volume 
+Descriptor if (Joliet) extensions are acceptable.
+
+=head2 set_dtime
+
+Set time in format used in ISO 9660 directory index record
+from a Unix time structure.
+
+
+=head2 set_ltime
+
+Set "long" time in format used in ISO 9660 primary volume descriptor
+from a Unix time structure.
+
+=head2 get_dtime 
+
+Get Unix time structure from format use in an ISO 9660 directory index 
+record. Even though tm_wday and tm_yday fields are not explicitly in
+idr_date, they are calculated from the other fields.
+
+If tm is to reflect the localtime, set "use_localtime" true, otherwise
+tm will reported in GMT.
+
+=head2 get_ltime
+
+Get "long" time in format used in ISO 9660 primary volume descriptor
+from a Unix time structure. 
+
+=head2 is_dchar
+
+Return true if c (an int) is a DCHAR - a character that can appear in an an
+ISO-9600 level 1 directory name. These are the ASCII capital
+letters A-Z, the digits 0-9 and an underscore.
+
+=head2 is_achar
+
+=head2 name_translate
+
+Convert an ISO-9660 file name that stored in a directory entry into 
+what's usually listed as the file name in a listing.
+wercase name, and remove trailing ;1's or .;1's and
+turn the other ;'s into version numbers.
+
+=head2 name_translate_ext
+
+Convert an ISO-9660 file name that stored in a directory entry into
+what's usually listed as the file name in a listing.  Lowercase
+name if no Joliet Extension interpretation. Remove trailing ;1's or
+.;1's and turn the other ;'s into version numbers.
+
+=head2 strncpy_pad 
+
+Pad string src with spaces to size len and copy this to dst. If len is
+less than the length of src, dst will be truncated to the first len
+characters of src.
+
+src can also be scanned to see if it contains only ACHARs, DCHARs,
+7-bit ASCII chars depending on the enumeration _check.
+
+In addition to getting changed, dst is the return value.  Note: this
+string might not be NULL terminated.
+
 
 =head1 METHODS
 
