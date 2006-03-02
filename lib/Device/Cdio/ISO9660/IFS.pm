@@ -494,7 +494,7 @@ sub readdir {
     my @result = ();
     while (@values) {
 	push @result, Device::Cdio::ISO9660::stat_array_to_href(@values);
-	splice(@values, 0, 6);
+	splice(@values, 0, 5);
     }	    
     return @result;
 }

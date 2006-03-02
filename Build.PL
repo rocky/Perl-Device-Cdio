@@ -242,12 +242,12 @@ sub try_cflags ($) {
 	
 }
 
-my %pkgcfg = ExtUtils::PkgConfig->find ('libcdio');
+my %libcdio_pkgcfg = ExtUtils::PkgConfig->find ('libcdio');
 
 use constant MIN_LIBCDIO_VERSION => 0.76;
-my $lv = $pkgcfg{'modversion'};
-if (exists($pkgcfg{'modversion'})) {
-    if ($pkgcfg{'modversion'} =~ m{\A((?:\d+)(?:\.\d+))}) {
+my $lv = $libcdio_pkgcfg{'modversion'};
+if (exists($libcdio_pkgcfg{'modversion'})) {
+    if ($libcdio_pkgcfg{'modversion'} =~ m{\A((?:\d+)(?:\.\d+))}) {
 	if ($1 < MIN_LIBCDIO_VERSION) {
 	    printf "
 *** 
@@ -293,7 +293,7 @@ if ($?) {
     print "ok\n";
 }
 
-my $ccflags = $pkgcfg{cflags};
+my $ccflags = $libcdio_pkgcfg{cflags};
 
 ## Swig produces a number of GCC warnings. Turn them off if we can.
 $ccflags .= try_cflags("-Wno-strict-aliasing");
@@ -302,7 +302,8 @@ $ccflags .= try_cflags("-Wno-unused-value");
 $ccflags .= try_cflags("-Wno-unused-function");
 $ccflags .= try_cflags("-Wno-unused-variable");
 
-my $ldflags = "$pkgcfg{libs} -liso9660 -liconv -lcdio";
+my %libiso9660_pkgcfg = ExtUtils::PkgConfig->find ('libiso9660');
+my $ldflags = "$libcdio_pkgcfg{libs} $libiso9660_pkgcfg{libs} -lcdio";
 my $swig_flags='';
 if ('cygwin' eq $Config{osname} && 
     $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {

@@ -112,12 +112,7 @@ typedef iso9660_stat_t IsoStat_t;
     XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));
     XPUSHs(sv_2mortal(newSViv(p_statbuf->secsize)));
     XPUSHs(sv_2mortal(newSViv(p_statbuf->type)));
-#if LIBCDIO_VERSION_NUM > 76
-            XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
-            argvi += 8;
-#else
-            argvi += 7;
-#endif
+    argvi += 7;
     free (p_statbuf);
  out: ;
 }
@@ -133,7 +128,7 @@ typedef iso9660_stat_t IsoStat_t;
  PPCODE:
     /* Figure out how many items in the array */
     _CDIO_LIST_FOREACH (p_entnode, p_entlist) {
-      num +=6;
+      num +=5;
     }
 
     /* For each element in the array of strings, create a new
@@ -147,9 +142,6 @@ typedef iso9660_stat_t IsoStat_t;
       XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));
       XPUSHs(sv_2mortal(newSViv(p_statbuf->secsize)));
       XPUSHs(sv_2mortal(newSViv(p_statbuf->type)));
-#if LIBCDIO_VERSION_NUM > 76
-            XPUSHs(sv_2mortal(newSViv(p_statbuf->b_xa)));
-#endif
     }
     _cdio_list_free (p_entlist, true);
     argvi += num + 2;

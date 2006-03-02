@@ -89,7 +89,7 @@ SKIP:
 	if 'cygwin' eq $Config{osname};
 
     $dst = perliso9660::strncpy_pad("1_3", 5, $perliso9660::DCHARS);
-    ok($dst eq "1_3  l", "strncpy_pad DCHARS");
+    ok($dst eq "1_3  ", "strncpy_pad DCHARS");
 
     $dst = perliso9660::strncpy_pad("ABC!123", 2, $perliso9660::ACHARS);
     ok($dst eq "AB", "strncpy_pad ACHARS truncation");

@@ -278,12 +278,11 @@ Note, we modify the input parameter.
 
 sub stat_array_to_href {
     my $href = {};
-    $href->{filename} = shift @_;
-    $href->{LSN}      = shift @_;
-    $href->{size}     = shift @_;
-    $href->{sec_size} = shift @_;
-    $href->{is_dir}   = shift @_;
-    $href->{XA}       = shift @_;
+    $href->{filename} = shift @_; return $href if !@_;
+    $href->{LSN}      = shift @_; return $href if !@_;
+    $href->{size}     = shift @_; return $href if !@_;
+    $href->{sec_size} = shift @_; return $href if !@_;
+    $href->{is_dir}   = shift @_; return $href if !@_;
 
     # A string comparison is more robust than a numeric comparison.
     # and some Perls seem to get a string 2 back from SWIG.
