@@ -4,6 +4,7 @@ Build
 Device-Cdio-*
 Makefile
 Makefile.old
+META.yml
 _build*
 blib*
 cover_db
