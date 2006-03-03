@@ -88,7 +88,7 @@ binmode OUTPUT;
 my $blocks = POSIX::ceil($statbuf->{size} / $perlcdio::ISO_BLOCKSIZE);
 for (my $i = 0; $i < $blocks; $i++) {
     my $lsn = $statbuf->{LSN} + $i;
-    my $buf = $iso->seek_read ($lsn, 1);
+    my $buf = $iso->seek_read ($lsn);
 
     if (!defined($buf)) {
 	printf "Error reading ISO 9660 file %s at LSN %d\n",
