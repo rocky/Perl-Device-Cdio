@@ -859,7 +859,7 @@ $VERSION = $Device::Cdio::VERSION;
 
 =head1 NAME
 
-perliso9660 - lower-level wrapper to libiso9660, CD Input and Control library'sISO9660 library
+perliso9660 - lower-level wrapper to libiso9660, the ISO 9660 library the CD Input and Control package
 
 =head1 SYNOPSIS
 
@@ -873,7 +873,7 @@ There are various constants that are defined here.
 =head1 DESCRIPTION
 
 Encapsulation is done in two parts. The lower-level Perl
-interface is called perlcdio (this file) and is generated via SWIG.
+interface is called perliso9660 (this file) and is generated via SWIG.
 
 =head1 CONSTANTS
 
@@ -885,86 +885,31 @@ Number of bytes in an ISO 9660 block (2048)
 
 =item PVD_SECTOR
 
-Sector of Primary Volume Descriptor
+"Primary Volume Descriptor" sector (16)
 
 =item EVD_SECTOR
 
-Sector of End Volume Descriptor
+"End Volume Descriptor" sector (17)
 
 =item LEN_ISONAME
 
-Size in bytes of the filename  portion + null byte
+Size in bytes of the filename  portion + null byte (31)
 
 =item MAX_SYSTEM_ID
 
-Maximum number of characters in a system id
+Maximum number of characters in a system id (32)
 
 =item MAX_ISONAME
 
-Size in bytes of the filename portion + null byte.
+Size in bytes of the filename portion + null byte. (37)
 
 =item MAX_PREPARER_ID
 
-Maximum number of characters in a preparer id.
+Maximum number of characters in a preparer id. (128)
 
 =item MAX_ISOPATHNAME
 
-Maximum number of characters in the entire ISO 9660 filename.
-
-=item FILE
-
-Not really a flag but the lack of one.
-
-=item EXISTENCE
-
-Do not make existence known (hidden).
-
-=item DIRECTORY
-
-This file is a directory.
-
-=item ASSOCIATED
-
-This file is an associated file
-
-=item RECORD
-
-Record format in extended attr. if not set.
-
-=item PROTECTION
-
-No read/execute permission in extended attribute.
-
-=item DRESERVED1
-
-Reserved bit 5.
-
-=item DRESERVED2
-
-Reserved bit 6
-
-=item MULTIEXTENT
-
-Not the final entry of a multi-extent file.
-
-=item VD_BOOT_RECORD
-
-CD is bootable
-
-=item VD_PRIMARY
-
-Primary Volume descriptor which must be in any ISO-9660
-
-=item VD_SUPPLEMENTARY
-
-(optional) Supplimentary Volume Descriptor. But used by Joliet, for
-example.
-
-=item VD_PARITION
-
-Indicates a partition of a CD.
-
-=item VD_END
+Maximum number of characters in the entire ISO 9660 filename. (255)
 
 =item MAX_PUBLISHER_ID
 
@@ -986,23 +931,6 @@ Maximum number of characters in a volume-set id.
 
 String inside frame which identifies an ISO 9660 filesystem. This
 string is the "id" field of an iso9660_pvd_t or an iso9660_svd_t.
-
-=item NOCHECK
-
-Enumeration for don't check in strncpy_pad.
-
-=item SEVEN_BIT
-
-Enumeration in strncpy_pad for checking entry has only 7-bit characters.
-
-
-=item ACHARS
-
-Enumeration in strncpy_pad for checking entry has only ACHARs.
-
-=item DCHARS
-
-Enumeration in strncpy_pad for checking entry has only DCHARs.
 
 =item EXTENSION_JOLIET_LEVEL1
 
@@ -1038,6 +966,96 @@ Use any Joliet Extension available.
 
 =back
 
+=head2 Directory Flags
+
+=over 4
+
+=item FILE
+
+Not really a flag but the lack of one.
+
+=item EXISTENCE
+
+Do not make existence known (hidden).
+
+=item DIRECTORY
+
+This file is a directory.
+
+=item ASSOCIATED
+
+This file is an associated file
+
+=item RECORD
+
+Record format is in extended attribute if not set.
+
+=item PROTECTION
+
+No read/execute permission in extended attribute.
+
+=item DRESERVED1
+
+Reserved bit 5.
+
+=item DRESERVED2
+
+Reserved bit 6
+
+=item MULTIEXTENT
+
+Not the final entry of a multi-extent file.
+
+=back 
+
+=head2 Volume Descriptor Types
+
+=over 4
+
+=item VD_BOOT_RECORD
+
+CD is bootable
+
+=item VD_PRIMARY
+
+Primary Volume descriptor which must be in any ISO-9660
+
+=item VD_SUPPLEMENTARY
+
+(optional) Supplimentary Volume Descriptor. But used by Joliet, for
+example.
+
+=item VD_PARITION
+
+Indicates a partition of a CD.
+
+=item VD_END
+
+=back 
+
+=head2 Flags for strncpy
+
+=over 4 
+
+=item NOCHECK
+
+Enumeration meaning don not check in strncpy_pad.
+
+=item SEVEN_BIT
+
+Enumeration in strncpy_pad for checking entry has only 7-bit characters.
+
+
+=item ACHARS
+
+Enumeration in strncpy_pad for checking entry has only ACHARs.
+
+=item DCHARS
+
+Enumeration in strncpy_pad for checking entry has only DCHARs.
+
+=back 
+
 =head1 SUBROUTINES
 
 =head2 Input Output
@@ -1050,7 +1068,7 @@ mode. undef is returned on error.
 =head3 open_ext
 
 Open an ISO 9660 image for reading allowing various ISO 9660
-xtensions.  Maybe in the future we will have a mode. undef is
+extensions.  Maybe in the future we will have a mode. undef is
 eturned on error.
 
 =head3 open_fuzzy
@@ -1151,16 +1169,16 @@ letters A-Z, the digits 0-9 and an underscore.
 =head3 name_translate
 
 Convert an ISO-9660 file name that stored in a directory entry into 
-what's usually listed as the file name in a listing.
+what is usually listed as the file name in a listing.
 wercase name, and remove trailing ;1's or .;1's and
-turn the other ;'s into version numbers.
+turn the others into version numbers.
 
 =head3 name_translate_ext
 
 Convert an ISO-9660 file name that stored in a directory entry into
-what's usually listed as the file name in a listing.  Lowercase
+what is usually listed as the file name in a listing.  Lowercase
 name if no Joliet Extension interpretation. Remove trailing ;1's or
-.;1's and turn the other ;'s into version numbers.
+.;1's and turn the others into version numbers.
 
 =head3 strncpy_pad 
 
