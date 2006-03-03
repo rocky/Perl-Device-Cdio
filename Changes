@@ -11,6 +11,10 @@ Revision history for Device-Cdio
 
 - Better "Synopsis" documentation on IFS and FS.
 
+0.2.0  Mar 2, 2006
+
+Interrum hand-hacked package to get CPAN to index. 
+
 0.2.0  Mar 1, 2006
 
 - Add rudimentary ISO 9660 library. See iso1.pl, iso2.pl, iso3.pl
