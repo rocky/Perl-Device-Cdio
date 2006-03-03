@@ -1,5 +1,16 @@
 Revision history for Device-Cdio
 
+0.2.2  Mar 3, 2006
+
+- Changes dictated by CPAN: copy of SWIG-generated files from blib/lib
+  to lib
+
+- Add version numbers for SWIG Perl modules
+
+- Add ISO9660::IFS regression test
+
+- Better "Synopsis" documentation on IFS and FS.
+
 0.2.0  Mar 1, 2006
 
 - Add rudimentary ISO 9660 library. See iso1.pl, iso2.pl, iso3.pl

@@ -282,10 +282,10 @@ sub stat_array_to_href {
     $href->{LSN}      = shift @_; return $href if !@_;
     $href->{size}     = shift @_; return $href if !@_;
     $href->{sec_size} = shift @_; return $href if !@_;
-    $href->{is_dir}   = shift @_; return $href if !@_;
+    $href->{is_dir}   = shift @_; 
 
     # A string comparison is more robust than a numeric comparison.
-    # and some Perls seem to get a string 2 back from SWIG.
+    # and some Perl interpreters seem to get a string 2 back from SWIG.
     $href->{is_dir}   = $href->{is_dir} eq '2';
     return $href;
 }

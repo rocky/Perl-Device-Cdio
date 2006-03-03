@@ -8,5 +8,8 @@ CVS
 ^\.cvsignore
 ^_build
 ^blib
+^lib\.cvsignore
+^lib/perlcdio\.pm
+^lib/perliso9660\.pm
 ~$
 tmp\d+$
