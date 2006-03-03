@@ -83,16 +83,11 @@ my $dst;
 # Test perliso9660::strncpy_pad
 #####################################
 
-SKIP: 
-{
-    skip("strncpy_pad broken too often. Volunteers for fixing?.", 2);
+$dst = perliso9660::strncpy_pad("1_3", 5, $perliso9660::DCHARS);
+ok($dst eq "1_3  ", "strncpy_pad DCHARS");
 
-    $dst = perliso9660::strncpy_pad("1_3", 5, $perliso9660::DCHARS);
-    ok($dst eq "1_3  ", "strncpy_pad DCHARS");
-
-    $dst = perliso9660::strncpy_pad("ABC!123", 2, $perliso9660::ACHARS);
-    ok($dst eq "AB", "strncpy_pad ACHARS truncation");
-}
+$dst = perliso9660::strncpy_pad("ABC!123", 2, $perliso9660::ACHARS);
+ok($dst eq "AB", "strncpy_pad ACHARS truncation");
 
 #####################################
 # Test perliso9660::dirname_valid_p 

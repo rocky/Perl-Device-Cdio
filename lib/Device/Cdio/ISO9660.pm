@@ -113,7 +113,14 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 @ISA = qw(Exporter);
 @EXPORT    = qw( dirname_valid_p is_achar is_dchar pathame_valid_p 
-		 name_translate strncpy_pad );
+		 name_translate strncpy_pad %check );
+
+%Device::Cdio::ISO9660::check = (
+    'nocheck'   => $perliso9660::NOCHECK,
+    '7bit'      => $perliso9660::SEVEN_BIT,
+    'achars'    => $perliso9660::ACHARS,
+    'dchars'    => $perliso9660::DCHARS
+    );
 
 # Note: the keys below match those the names returned by
 # cdio_get_driver_name()
@@ -296,25 +303,44 @@ sub stat_array_to_href {
 
 =head2 strncpy_pad
 
-strncpy_pad(name)->str
+strncpy_pad(src, len, check='nocheck')->str
 
-Pad string src with spaces to size len and copy this to dst. If
+Pad string I<src> with spaces to size len and return this. If
 len is less than the length of src, dst will be truncated to the
-first len characters of src.
+first len characters of I<src>.
 
-name can also be scanned to see if it contains only ACHARs, DCHARs, 
-7-bit ASCII chars depending on the enumeration _check.
-
-In addition to getting changed, dst is the return value.
-Note: this string might not be NULL terminated.
+I<src> can also be scanned to see if it contains only ACHARs, DCHARs,
+or 7-bit ASCII chars, and this is specified via the I<check> parameter. 
+If the I<check> parameter is given it must be one of the 'nocheck',
+'7bit', 'achars' or 'dchars'. Case is not significant. 
 
 =cut
 
 sub strncpy_pad {
     my (@p) = @_;
-    my($name, $iso_ext, @args) = _rearrange(['NAME'], @p);
+    my($name, $len, $check_key, @args) = 
+	_rearrange(['NAME', 'LEN', 'CHECK'], @p);
     return 0 if _extra_args(@args);
-    return perlcdio::strncpy_pad($name);
+    if (!defined($name)) {
+      print "*** A NAME parameter is expected\n";
+      return undef;
+    }
+    if (!defined($len)) {
+      print "*** A LEN parameter is expected\n";
+      return undef;
+    }
+
+    $check_key = 'nocheck' if !defined($check_key);
+
+    $check_key = lc($check_key);
+    if (not exists $Device::Cdio::ISO9660::check{$check_key}) {
+      printf "*** A CHECK parameter must be one of %s\n", 
+      join(', ', keys %Device::Cdio::ISO9660::check);
+      return undef;
+    }
+
+    return perlcdio::strncpy_pad($name, $len, 
+				 $Device::Cdio::ISO9660::check{$check_key});
 }
  
 1; # Magic true value requred at the end of a module
