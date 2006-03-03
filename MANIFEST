@@ -9,8 +9,6 @@ Makefile
 Makefile.PL
 README
 audio.swg
-blib/lib/perlcdio.pm
-blib/lib/perliso9660.pm
 compat.swg
 configure
 data/cdda.bin
@@ -33,6 +31,8 @@ examples/iso1.pl
 examples/iso2.pl
 examples/iso3.pl
 examples/tracks.pl
+lib/perlcdio.pm
+lib/perliso9660.pm
 lib/Device/Cdio.pm
 lib/Device/Cdio/Device.pm
 lib/Device/Cdio/ISO9660/FS.pm

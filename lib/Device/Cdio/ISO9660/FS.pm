@@ -24,15 +24,25 @@ require 5.8.6;
 
 =head1 NAME
 
-Device::Cdio::ISO9660::FS - Class for ISO9660 filesystem reading
+Device::Cdio::ISO9660::FS - Class for ISO 9660 CD reading
 
 =head1 SYNOPSIS
 
-This encapsulates IS9660 filesystem handling. This library however
-needs to be used in conjunction with Device::Cdio.
+This encapsulates ISO 9660 Filesystem aspects of CD Tracks. 
+As such this is a This library
+however needs to be used in conjunction with Device::Cdio::ISO9660.
 
     use Device::Cdio::ISO9660:FS;
-    ...
+    $cd = Device::Cdio::ISO9660::FS->new(-source=>'/dev/cdrom');
+    $statbuf = $cd->stat ($iso9660_path.$local_filename);
+
+    $blocks = POSIX::ceil($statbuf->{size} / $perlcdio::ISO_BLOCKSIZE);
+    for (my $i = 0; $i < $blocks; $i++) {
+        my $buf = $cd->read_data_blocks ($statbuf->{LSN} + $i);
+        die if !defined($buf);
+    }
+    
+    print $buf;
 
 =head1 DESCRIPTION
 

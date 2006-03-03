@@ -38,10 +38,11 @@ use Device::Cdio;
 use Device::Cdio::Device;
 use Device::Cdio::ISO9660;
 use Device::Cdio::ISO9660::IFS;
+use File::Spec;
 
 # The default ISO 9660 image if none given
-my $ISO9660_IMAGE_PATH="../data/";
-my $ISO9660_IMAGE=$ISO9660_IMAGE_PATH."copying.iso";
+my $ISO9660_IMAGE_PATH="../data";
+my $ISO9660_IMAGE=File::Spec->catfile($ISO9660_IMAGE_PATH, "copying.iso");
 
 # File to extract if none given.
 my $local_filename="copying";

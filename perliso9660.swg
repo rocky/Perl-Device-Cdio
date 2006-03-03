@@ -851,11 +851,15 @@ void iso9660_set_evd (void *pd);
 bool iso9660_ifs_is_xa (const iso9660_t * p_iso);
 
 %perlcode %{
+
+import Device::Cdio::VERSION;
+$VERSION = $Device::Cdio::VERSION;
+
 =pod
 
 =head1 NAME
 
-perliso9660 - lower-level wrappper to libiso9660, CD Input and Control library'sISO9660 library
+perliso9660 - lower-level wrapper to libiso9660, CD Input and Control library'sISO9660 library
 
 =head1 SYNOPSIS
 

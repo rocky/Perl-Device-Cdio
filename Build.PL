@@ -22,6 +22,7 @@ use ExtUtils::PkgConfig;
 use Config;
 
 my $code = <<'EOC';
+use File::Copy;
 
 sub process_swig_files {
     my $self = shift;
@@ -105,6 +106,12 @@ sub compile_swig {
 		     '-perl', @swig_flags, $file)
 	or die "error building $c_file file from '$file'";
     
+    my $pm_file = "${file_base}.pm";
+    my $from = File::Spec->catfile($blib_lib, $pm_file);
+    my $to   = File::Spec->catfile("lib", $pm_file);
+
+    print "Copying from: $from, to: $to; it makes the CPAN indexer happy.\n";
+    copy($from,$to);
     return $c_file;
 }
 

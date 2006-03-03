@@ -26,13 +26,9 @@ require 5.8.6;
 
 Device::Cdio - Base class for CD Input and Control library.
 
-=head1 VERSION
-
-This document describes Cdio version 0.2.0
-
 =cut 
 
-use version; $VERSION = qv('0.2.0');
+use version; $VERSION = qv('0.2.2');
 
 =pod 
 

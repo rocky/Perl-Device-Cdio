@@ -46,10 +46,11 @@ use Device::Cdio;
 use Device::Cdio::Device;
 use Device::Cdio::ISO9660;
 use Device::Cdio::ISO9660::FS;
-
 use Device::Cdio::Device;
-my $cd_image_path="../data/";
-my $cd_image_fname=$cd_image_path."isofs-m1.cue";
+use File::Spec;
+
+my $cd_image_path="../data";
+my $cd_image_fname=File::Spec->catfile($cd_image_path, "isofs-m1.cue");
 
 # File to extract if none given.
 my $iso9660_path="/";
@@ -75,7 +76,7 @@ if (!defined($cd)) {
     exit 1;
 }
 
-my $statbuf = $cd->stat ($iso9660_path.$local_filename);
+my $statbuf = $cd->stat (File::Spec->catfile($iso9660_path, $local_filename));
 
 if (!defined($statbuf))
 {

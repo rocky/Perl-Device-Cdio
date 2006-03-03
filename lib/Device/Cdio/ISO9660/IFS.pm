@@ -24,15 +24,26 @@ require 5.8.6;
 
 =head1 NAME
 
-Device::Cdio::ISO9660::IFS - Class for ISO9660 filesystem reading
+Device::Cdio::ISO9660::IFS - Class for ISO 9660 Filesystem image reading
 
 =head1 SYNOPSIS
 
-This encapsulates IS9660 filesystem handling. This library however
-needs to be used in conjunction with Device::Cdio.
+This encapsulates ISO 9660 filesystem Image handling. The class is
+often used in conjunction with Device::Cdio::ISO9660.
 
-    use Device::Cdio::ISO9660:IFS;
-    ...
+    use Device::Cdio::ISO9660;
+    use Device::Cdio::ISO9660::IFS;
+
+    $iso = Device::Cdio::ISO9660::IFS->new(-source=>'copying.iso');
+    $id = $iso->get_application_id();
+    @file_stats = $iso->readdir($path);
+    foreach my $href (@file_stats) {    
+       printf "%s [LSN %6d] %8d %s%s\n", 
+       $href->{is_dir} ? "d" : "-",
+       $href->{LSN}, $href->{size},
+       $path,
+        Device::Cdio::ISO9660::name_translate($href->{filename});
+    }
 
 =head1 DESCRIPTION
 

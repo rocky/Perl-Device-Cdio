@@ -77,11 +77,14 @@ pycdio, do result in small, but obvious and straightforward changes to
 the abstraction layer cdio.)
 */
 %perlcode %{
+import Device::Cdio::VERSION;
+$VERSION = $Device::Cdio::VERSION;
+
 =pod
 
 =head1 NAME
 
-perlcdio - lower-level wrappper to libcdio, the CD Input and Control library
+perlcdio - lower-level wrapper to libcdio, the CD Input and Control library
 
 =head1 SYNOPSIS
 
