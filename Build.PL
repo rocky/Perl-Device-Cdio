@@ -326,6 +326,7 @@ my $class = Module::Build->subclass( code => $code );
 my $builder = $class->new( 
     module_name         => 'Device::Cdio',
     add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*'  ],
+    create_makefile_pl  => 'passthrough',
     dist_abstract       => 'CD Input and control library',
     dist_author         => 'Rocky Bernstein <rocky@cpan.org>',
     dist_version_from   => 'lib/Device/Cdio.pm',

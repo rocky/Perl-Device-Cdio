@@ -7,9 +7,11 @@ Revision history for Device-Cdio
 
 - Add version numbers for SWIG Perl modules
 
-- Add ISO9660::IFS regression test
+- Add ISO9660::IFS and ISO9660::FS regression tests
 
 - Better "Synopsis" documentation on IFS and FS.
+
+- add create_makefile_pl => passthrough for Makefile.PL compatibility
 
 0.2.0  Mar 2, 2006
 
