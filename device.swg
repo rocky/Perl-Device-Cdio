@@ -446,10 +446,10 @@ An exception is raised if we had an error.
 const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc);
 
 %inline %{
-static cdio_hwinfo_t hw_info;
 const 
 HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
 {
+  static cdio_hwinfo_t hw_info;
   static const char *hwinfo[4] = {
     hw_info.psz_vendor,
     hw_info.psz_model,
