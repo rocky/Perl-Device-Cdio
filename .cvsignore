@@ -2,9 +2,10 @@
 .lwpcookies
 Build
 Device-Cdio-*
-Makefile
-Makefile.old
 META.yml
+Makefile
+Makefile.PL
+Makefile.old
 _build*
 blib*
 cover_db
@@ -14,4 +15,3 @@ perliso9660_wrap.c
 perliso9660_wrap.o
 pm_to_blib*
 tmp*
-
