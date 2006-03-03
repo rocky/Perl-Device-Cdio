@@ -24,15 +24,17 @@ require 5.8.6;
 
 =head1 NAME
 
-Device::Cdio::ISO9660 - Base class for ISO9660 handling
+Device::Cdio::ISO9660 - Module for ISO9660 handling
 
 =head1 SYNOPSIS
 
 This encapsulates IS9660 filesystem handling. This library however
-needs to be used in conjunction with Device::Cdio.
+needs to be used in conjunction with L<Device::Cdio>,
+L<Device::Cdio::ISO9660::IFS> and L<Device::Cdio::ISO::FS>.
 
     use Device::Cdio::ISO9660;
-    ...
+    Device::Cdio::ISO9660::name_translate('COPYING.;1');
+    Device::Cdio::ISO9660::is_achar('A')
 
 =head1 DESCRIPTION
 
@@ -218,7 +220,7 @@ file prefix and 3 characters in the extension (or portion after a
 dot). There should be exactly one dot somewhere in the filename
 portion and the filename should be composed of only DCHARs.
   
-True is returned if path is valid.
+1 is returned if path is valid.
 
 =cut
 

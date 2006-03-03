@@ -27,7 +27,7 @@ my $iso_image_fname=File::Spec->catfile($ISO9660_IMAGE_PATH, "copying.iso");
 
 my $iso = Device::Cdio::ISO9660::IFS->new(-source=>$iso_image_fname);
   
-ok(defined($iso), "Open iso image $iso_image_fname") ;
+ok(defined($iso), "Open ISO 9660 image $iso_image_fname") ;
 
 ok($iso->get_application_id() eq 
 "MKISOFS ISO 9660/HFS FILESYSTEM BUILDER & CDRECORD CD-R/DVD CREATOR (C) 1993 E.YOUNGDALE (C) 1997 J.PEARSON/J.SCHILLING",

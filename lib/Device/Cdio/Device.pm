@@ -26,7 +26,19 @@ require 5.8.6;
 
 =head1 NAME
 
-Cdio::Device handles disc and device aspects of Cdio.
+Device::Cdio::Device - Class for disc and device aspects of Cdio.
+
+=head1 SYNOPSIS
+
+    use Device::Cdio::Device;
+    $d = Device::Cdio::Device->new(-driver_id=>$perlcdio::DRIVER_DEVICE);
+    $drive_name = $d->get_device();
+    ($i_read_cap, $i_write_cap, $i_misc_cap) =  $d->get_drive_cap();
+
+    $start_lsn = $d->get_first_track()->get_lsn();
+    $end_lsn=$d->get_disc_last_lsn();
+    $drc = $d->audio_play_lsn($start_lsn, $end_lsn);
+    ($vendor, $model, $release, $drc) = $d->get_hwinfo();
 
 =cut
 
@@ -773,7 +785,7 @@ __END__
 
 =head1 SEE ALSO
 
-L<Device::Cdio> for the top-level routines and L<Device::Cdio::Track>
+L<Device::Cdio> for the top-level module and L<Device::Cdio::Track>
 for track objects.
 
 L<perlcdio> is the lower-level interface to libcdio.

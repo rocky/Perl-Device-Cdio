@@ -25,7 +25,19 @@ require 5.8.6;
 
 =head1 NAME
 
-Cdio:Track handles track aspects of Cdio.
+Device::Cdio::Track - Class for track aspects of Device::Cdio.
+
+=head1 SYNOPSIS
+
+    use Device::Cdio::Device;
+    use Device::Cdio::Track;
+
+    $device = Device::Cdio::Device->new(-source=>'/dev/cdrom');
+    $track  = $device->get_last_track();
+    print "track: %d, last lsn: %d\n", $track->{track}, track->get_last_lsn();
+
+    $track = $device->get_first_track();
+    $format = $rackt->get_format();
 
 =cut 
 
@@ -283,13 +295,13 @@ __END__
 
 =head1 SEE ALSO
 
-L<Device::Cdio> for the top-level routines and L<Device::Cdio::Device>
-for device objects.
+L<Device::Cdio> is the top-level module and L<Device::Cdio::Device>
+is a class device objects.
 
 L<perlcdio> is the lower-level interface to libcdio.
 
-L<http://www.gnu.org/software/libcdio> has documentation on
-libcdio including the a manual and the API via doxygen.
+L<http://www.gnu.org/software/libcdio/doxygen/track_8h.html> is
+documentation via doxygen of C<libiso9660>. 
 
 =head1 AUTHORS
 
