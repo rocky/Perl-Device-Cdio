@@ -289,19 +289,14 @@ if ($?) {
     my $errno = $? >> 8;
     print "
 *** I don't see SWIG installed. I'll use the SWIG-generated file
-*** that comes with the distribution, but that sometimes has problems
-*** on other OS's. If the regression tests don't work you should get SWIG
-**  from http://www.swig.org and install it.
+*** that comes with the distribution. If you want SWIG, get it
+*** from http://www.swig.org
 "; 
     print "*** Output was:
 	@swig_version
 " if @swig_version;
 } else {
     $swig_installed = 1;
-    unlink 
-	File::Spec->catdir("lib", "perlcdio.pm"), 
-	File::Spec->catdir("lib", "perliso9660.pm"),
-	"perlcdio_wrap.c", "perliso9660_wrap.c";
     print "ok\n";
 }
 
