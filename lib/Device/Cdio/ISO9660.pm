@@ -24,7 +24,7 @@ require 5.8.6;
 
 =head1 NAME
 
-Device::Cdio::ISO9660 - Module for ISO9660 handling
+Device::Cdio::ISO9660 - Module for ISO 9660 handling
 
 =head1 SYNOPSIS
 

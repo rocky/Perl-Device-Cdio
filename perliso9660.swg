@@ -57,7 +57,14 @@ typedef uint8_t iso_extension_mask_t;
 %constant long int DIRECTORY            = ISO_DIRECTORY;
 %constant long int ASSOCIATED           = ISO_ASSOCIATED;
 %constant long int RECORD               = ISO_RECORD;
-%constant long int PROECTION            = ISO_PROECTION;
+
+/* When version 0.77 comes out, require it and fix this fix this. */
+#if 0
+%constant long int PROTECTION           = ISO_PROTECTION;
+#else 
+%constant long int PROTECTION           = 16;
+#endif
+
 %constant long int DRESERVED1           = ISO_DRESERVED1;
 %constant long int DRESERVED2           = ISO_DRESERVED2;
 %constant long int MULTIEXTENT          = ISO_MULTIEXTENT;
@@ -574,11 +581,13 @@ IsoStat_t *iso9660_fs_stat (CdIo_t *p_cdio, const char psz_path[]);
   Return file status for path name psz_path. NULL is returned on error.
   pathname version numbers in the ISO 9660 name are dropped, i.e. ;1
   is removed and if level 1 ISO-9660 names are lowercased.
+
+  The b_mode2 parameter is not used.
  */
 %rename iso9660_fs_stat_translate fs_stat_translate;
 IsoStat_t *iso9660_fs_stat_translate (CdIo_t *p_cdio, 
 				      const char psz_path[], 
-				      bool b_mode2);
+				      bool b_mode2=false);
 
 /*!  
   Return file status for pathname. NULL is returned on error.
@@ -599,13 +608,12 @@ IsoStat_t *iso9660_ifs_stat_translate (iso9660_t *p_iso,
   pointers for the files inside that directory. The caller must free the
   returned result.
 */
-IsoStatList_t *fs_readdir (CdIo_t *p_cdio, const char psz_path[], 
-			   bool b_mode2);
+IsoStatList_t *fs_readdir (CdIo_t *p_cdio, const char psz_path[]);
+
 %inline %{
-IsoStatList_t *fs_readdir (CdIo_t *p_cdio, const char psz_path[], 
-			   bool b_mode2)
+IsoStatList_t *fs_readdir (CdIo_t *p_cdio, const char psz_path[])
 {
-  CdioList_t *p_statlist = iso9660_fs_readdir (p_cdio, psz_path, b_mode2);
+  CdioList_t *p_statlist = iso9660_fs_readdir (p_cdio, psz_path, false);
   return p_statlist;
 }
 %}
