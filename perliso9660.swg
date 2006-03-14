@@ -1,5 +1,5 @@
 /* -*- c -*-
-    $Id%
+    $Id$
 
     Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
 
@@ -15,7 +15,8 @@
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301 USA.
 */
 %define DOCSTRING 
 "This is a wrapper for The CD Input and Control library's ISO-9660 library
@@ -524,7 +525,7 @@ bool iso9660_dirname_valid_p (const char psz_path[]);
 
 /*!  
   Take psz_path and a version number and turn that into a ISO-9660
-  pathname.  (That's just the pathname followd by ";" and the version
+  pathname.  (That's just the pathname followed by ";" and the version
   number. For example, mydir/file.ext -> MYDIR/FILE.EXT;1 for version
   1. The resulting ISO-9660 pathname is returned.
 */
@@ -641,7 +642,7 @@ char * iso9660_get_application_id(iso9660_pvd_t *p_pvd);
   
 /*!  
   Get the application ID.  Return NULL if there
-  is some problem in getting this and false is returned.
+  is some problem in getting this.
 */
 %newobject get_application_id; // free malloc'd return value
 char *ifs_get_application_id(iso9660_t *p_iso);
@@ -667,10 +668,9 @@ uint8_t iso9660_get_dir_len(const iso9660_dir_t *p_idr);
 
 /*!
   Return the directory name stored in the iso9660_dir_t
-  
-  A string is allocated: the caller must deallocate.
 */
 %rename iso9660_get_to_name get_to_name;
+%newobject iso9660_dir_to_name; // free malloc'd return value
 char * iso9660_dir_to_name (const iso9660_dir_t *p_iso9660_dir);
   
 #if LIBCDIO_VERSION_NUM > 76
@@ -689,7 +689,7 @@ mode_t iso9660_get_posix_filemode(const iso9660_stat_t *p_iso_dirent);
 char *iso9660_get_preparer_id(const iso9660_pvd_t *p_pvd);
 
 /*!  Get the preparer ID.  Return NULL if there is some problem in
-  getting this and false is returned.
+  getting this.
 */
 %newobject ifs_get_preparer_id; // free malloc'd return value
 char *ifs_get_preparer_id(iso9660_t *p_iso);
@@ -712,7 +712,7 @@ char *iso9660_get_publisher_id(const iso9660_pvd_t *p_pvd);
 
 /*!  
   Get the publisher ID.  return NULL if there
-  is some problem in getting this and false is returned.
+  is some problem in getting this.
 */
 %newobject ifs_get_publisher_id; // free malloc'd return value
 char *ifs_get_publisher_id(iso9660_t *p_iso);
@@ -753,7 +753,7 @@ char *iso9660_get_system_id(const iso9660_pvd_t *p_pvd);
 
 /*!  
   Get the system ID.  return NULL if there
-  is some problem in getting this and false is returned.
+  is some problem in getting this.
 */
 %newobject ifs_get_system_id; // free malloc'd return value
 char *ifs_get_system_id(iso9660_t *p_iso);
@@ -781,7 +781,7 @@ char *iso9660_get_volume_id(const iso9660_pvd_t *p_pvd);
 
 /*!  
   Get the system ID.  return NULL if there
-  is some problem in getting this and false is returned.
+  is some problem in getting this.
 */
 %newobject ifs_get_volume_id; // free malloc'd return value
 char *ifs_get_volume_id(iso9660_t *p_iso);
@@ -804,7 +804,7 @@ char *iso9660_get_volumeset_id(const iso9660_pvd_t *p_pvd);
 
 /*!  
   Get the volumeset ID.  return NULL if there
-  is some problem in getting this and false is returned.
+  is some problem in getting this.
 */
 %newobject ifs_get_volumeset_id; // free malloc'd return value
 char *ifs_get_volumeset_id(iso9660_t *p_iso);
@@ -1068,7 +1068,7 @@ Enumeration in strncpy_pad for checking entry has only DCHARs.
 
 =head2 Input Output
 
-=head3 open
+=head3 open_iso
 
 Open an ISO 9660 image for reading. Maybe in the future we will have
 mode. undef is returned on error.
@@ -1088,7 +1088,7 @@ i_fuzz).
 
 Maybe in the future we will have a mode. undef is returned on error.
 
-See also open
+See also open_iso
 
 =head3 open_fuzzy_ext
 
@@ -1216,7 +1216,7 @@ which is separated by a /, and consist of only DCHARs.
 =head3 pathname_isofy
 
 Take psz_path and a version number and turn that into a ISO-9660
-pathname.  (That is just the pathname followd by ";" and the version
+pathname.  (That is just the pathname followed by ";" and the version
 number. For example, mydir/file.ext -> MYDIR/FILE.EXT;1 for version
 1. The resulting ISO-9660 pathname is returned.
 

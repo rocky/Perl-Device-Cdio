@@ -17,7 +17,8 @@ require 5.8.6;
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+#    02110-1301 USA.
 #
 
 =pod
@@ -141,7 +142,7 @@ sub dirname_valid_p {
     my (@p) = @_;
     my($path, @args) = _rearrange(['PATH'], @p);
     return 0 if _extra_args(@args);
-    return perlcdio::dirname_valid($path);
+    return perliso9660::dirname_valid($path);
 }
 
 =pod
@@ -172,7 +173,7 @@ sub is_achar {
 	# Is an integer. Is it too large?
 	return 0 if $achar > 255;
     }
-    return perlcdio::is_achar($achar);
+    return perlis9660::is_achar($achar);
 }
 
 =pod
@@ -203,7 +204,7 @@ sub is_dchar {
 	# Is an integer. Is it too large?
 	return 0 if $dchar > 255;
     }
-    return perlcdio::is_dchar($dchar);
+    return perliso9660::is_dchar($dchar);
 }
 
 =pod
@@ -228,7 +229,7 @@ sub pathname_valid_p {
     my (@p) = @_;
     my($path, @args) = _rearrange(['PATH'], @p);
     return 0 if _extra_args(@args);
-    return perlcdio::pathame_valid($path);
+    return perliso9660::pathame_valid($path);
 }
 
 
@@ -296,13 +297,13 @@ sub stat_array_to_href {
 
 =head2 strncpy_pad
 
-strncpy_pad(src, len, check='nocheck')->str
+strncpy_pad(name, len, check='nocheck')->str
 
-Pad string I<src> with spaces to size len and return this. If
-len is less than the length of src, dst will be truncated to the
-first len characters of I<src>.
+Pad string I<name> with spaces to size len and return this. If len is
+less than the length of I<name>, the return value will be truncated to
+the first I<len> characters of I<name>.
 
-I<src> can also be scanned to see if it contains only ACHARs, DCHARs,
+I<name> can also be scanned to see if it contains only ACHARs, DCHARs,
 or 7-bit ASCII chars, and this is specified via the I<check> parameter. 
 If the I<check> parameter is given it must be one of the 'nocheck',
 '7bit', 'achars' or 'dchars'. Case is not significant. 
@@ -332,8 +333,8 @@ sub strncpy_pad {
       return undef;
     }
 
-    return perlcdio::strncpy_pad($name, $len, 
-				 $Device::Cdio::ISO9660::check{$check_key});
+    return perliso9660::strncpy_pad($name, $len, 
+				    $Device::Cdio::ISO9660::check{$check_key});
 }
  
 1; # Magic true value requred at the end of a module
