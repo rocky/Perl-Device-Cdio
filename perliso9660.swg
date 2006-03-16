@@ -311,17 +311,16 @@ bool iso9660_ifs_read_superblock (iso9660_t *p_iso,
   from a Unix time structure. */
 iso9660_dtime_t *
 set_dtime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
-	    int tm_year, int tm_wday, int tm_yday, int tm_isdst);
+	    int tm_year);
 %inline %{
 iso9660_dtime_t *
 set_dtime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
-	    int tm_year, int tm_wday, int tm_yday, int tm_isdst)
+	    int tm_year)
 {
-  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, tm_wday,
-		   tm_isdst };
-  static iso9660_dtime_t idr_date;
-  iso9660_set_dtime (&tm, &idr_date);
-  return &idr_date;
+  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, 0, 0 };
+  static iso9660_dtime_t dtime;
+  iso9660_set_dtime (&tm, &dtime);
+  return &dtime;
 }
 %}
 
@@ -330,26 +329,25 @@ set_dtime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon,
   from a Unix time structure. */
 iso9660_ltime_t *
 set_ltime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
-	    int tm_year, int tm_wday, int tm_yday, int tm_isdst);
+	    int tm_year);
 
 %inline %{
 iso9660_ltime_t *
 set_ltime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
-	    int tm_year, int tm_wday, int tm_yday, int tm_isdst)
+	    int tm_year)
 
 {
-  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, tm_wday,
-		   tm_isdst };
-  static iso9660_ltime_t pvd_date;
-  iso9660_set_ltime (&tm, &pvd_date);
-  return &pvd_date;
+  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, 0, 0 };
+  static iso9660_ltime_t ldate;
+  iso9660_set_ltime (&tm, &ldate);
+  return &ldate;
 }
 %}
 
 /*!
   Get Unix time structure from format use in an ISO 9660 directory index 
   record. Even though tm_wday and tm_yday fields are not explicitly in
-  idr_date, they are calculated from the other fields.
+  dtime, they are calculated from the other fields.
 
   If tm is to reflect the localtime, set "use_localtime" true, otherwise
   tm will reported in GMT.
@@ -358,19 +356,19 @@ set_ltime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon,
                      int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
                      int *tm_isdst };
 
-bool get_dtime (const iso9660_dtime_t *idr_date, bool use_localtime,
+bool get_dtime (const iso9660_dtime_t *dtime, bool use_localtime,
 		int *tm_sec, int *tm_min,  int *tm_hour, int *tm_mday,
 		int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
 		int *tm_isdst);
 
 %inline %{
-bool get_dtime (const iso9660_dtime_t *idr_date, bool use_localtime,
+bool get_dtime (const iso9660_dtime_t *dtime, bool use_localtime,
 		int *tm_sec, int *tm_min,  int *tm_hour, int *tm_mday,
 		int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
 		int *tm_isdst) 
 {
   struct tm tm;
-  bool b_okay = iso9660_get_dtime (idr_date, use_localtime, &tm);
+  bool b_okay = iso9660_get_dtime (dtime, use_localtime, &tm);
   if (b_okay) {
     *tm_sec   = tm.tm_sec;
     *tm_min   = tm.tm_min;
@@ -390,7 +388,7 @@ bool get_dtime (const iso9660_dtime_t *idr_date, bool use_localtime,
   Get "long" time in format used in ISO 9660 primary volume descriptor
   from a Unix time structure. 
 */
-bool get_ltime (const iso9660_ltime_t *idr_date, 
+bool get_ltime (const iso9660_ltime_t *dtime, 
 		int *tm_sec, int *tm_min,  int *tm_hour, int *tm_mday,
 		int *tm_mon, int *tm_year, int *tm_wday, int *tm_yday,
 		int *tm_isdst);
@@ -1154,7 +1152,7 @@ from a Unix time structure.
 
 Get Unix time structure from format use in an ISO 9660 directory index 
 record. Even though tm_wday and tm_yday fields are not explicitly in
-idr_date, they are calculated from the other fields.
+dtime, they are calculated from the other fields.
 
 If tm is to reflect the localtime, set "use_localtime" 1, otherwise
 tm will reported in GMT.

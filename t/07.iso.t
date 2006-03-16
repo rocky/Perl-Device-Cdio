@@ -21,7 +21,7 @@ sub is_eq($$) {
     return 0 if @$a_ref != @$b_ref;
     for (my $i=0; $i<@$a_ref; $i++) {
 	if ($a_ref->[$i] != $b_ref->[$i]) {
-	    printf "position %d: %d != %d\n", $i, $a_ref->[$i] != $b_ref->[$i];
+	    printf "position %d: %d != %d\n", $i, $a_ref->[$i], $b_ref->[$i];
 	    return 0 ;
 	}
     }
@@ -47,7 +47,7 @@ for (my $c=ord('A'); $c<=ord('Z'); $c++ ) {
     }
 }
 
-ok($bad==0, 'is_dchar & isarch A..Z');
+ok($bad==0, 'is_dchar & is_achar A..Z');
 
 $bad=0;
 for (my $c=ord('0'); $c<=ord('9'); $c++ ) {
@@ -162,10 +162,11 @@ ok($bad==0, 'perliso9660::pathname_isofy');
 
 my @tm = gmtime(0);
 my $dtime = perliso9660::set_dtime($tm[0], $tm[1], $tm[2], $tm[3], $tm[4],
-				   $tm[5], $tm[6], $tm[7], $tm[8]);
+				   $tm[5]);
 my ($bool, @new_tm) = perliso9660::get_dtime($dtime, 0);
 
-### FIXME Don't know why the discrepancy, but there is a 5 hour difference.
+### FIXME Don't know why the discrepancy, but there is a 5-hour
+### difference. Or is it TZ which for me is 5 hours?
 $new_tm[2] = $tm[2]; 
 
 ok(is_eq(\@new_tm, \@tm), 'get_dtime != set_dtime');
