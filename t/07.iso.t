@@ -168,7 +168,9 @@ my ($bool, @new_tm) = perliso9660::get_dtime($dtime, 1);
 ### FIXME Don't know why the discrepancy, but there is an hour
 ### difference, perhaps daylight savings time.
 ### Versions before 0.77 have other bugs.
-$new_tm[2] = $tm[2]; 
+if ($perliso9660::VERSION_NUM < 77) {
+    $new_tm[2] = $tm[2]; 
+}
 
 ok(is_eq(\@new_tm, \@tm), 'get_dtime(set_dtime())');
 
