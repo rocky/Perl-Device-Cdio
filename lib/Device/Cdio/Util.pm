@@ -148,7 +148,7 @@ __END__
 
 =head1 NAME
 
-Device::Cdio::Util - Internal utilities used by CGI module
+Device::Cdio::Util - Internal utilities used by Cdio modules
 
 =head1 SYNOPSIS
 
