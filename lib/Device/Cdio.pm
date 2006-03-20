@@ -85,14 +85,14 @@ example:
     Device::Cdio::have_driver(-driver_id=>'GNU/Linux')
 
 Each argument name is preceded by a dash.  Neither case nor order
-matters in the argument list.  -driver_id, -Driver_ID, and -DRIVER_ID
-are all acceptable.  In fact, only the first argument needs to begin
-with a dash.  If a dash is present in the first argument, we assume
-dashes for the subsequent parameters.
+matters in the argument list.  C<-driver_id>, C<-Driver_ID>, and
+C<-DRIVER_ID> are all acceptable.  In fact, only the first argument
+needs to begin with a dash.  If a dash is present in the first
+argument, we assume dashes for the subsequent parameters.
 
 In the documentation below and elsewhere in this package the parameter
 name that can be used in this style of call is given in the parameter
-list. For example, for "close tray the documentation below reads:
+list. For example, for C<close_tray> the documentation below reads:
 
    close_tray(drive=undef, driver_id=$perlcdio::DRIVER_UNKNOWN) 
     -> ($drc, $driver_id)
