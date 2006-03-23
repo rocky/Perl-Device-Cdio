@@ -1,5 +1,12 @@
 Revision history for Device-Cdio
 
+0.2.3  Mar 22, 2006
+
+- Take advantage of bugs fixed upstream in libcdio 0.77. In particular
+  some of the time setting/getting routines
+
+- Misc Documentation fixups
+
 0.2.2  Mar 3, 2006
 
 - Changes dictated by CPAN: copy of SWIG-generated files from blib/lib
