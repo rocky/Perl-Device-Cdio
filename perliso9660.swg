@@ -865,7 +865,7 @@ $VERSION = $Device::Cdio::VERSION;
 
 =head1 NAME
 
-perliso9660 - lower-level wrapper to libiso9660, the ISO 9660 library the CD Input and Control package
+perliso9660 - lower-level wrapper to libiso9660, the ISO 9660 library of the CD Input and Control package
 
 =head1 SYNOPSIS
 

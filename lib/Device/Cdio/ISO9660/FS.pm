@@ -113,7 +113,7 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 =head2 find_lsn
 
-find_lsn(lsn)->$stat_href
+  find_lsn(lsn)->$stat_href
 
 Find the filesystem entry that contains LSN and statu 
 return information about it. Undef is returned on error.
@@ -138,7 +138,7 @@ sub find_lsn {
 
 =head2 readdir
 
-readdir(dirname)->@iso_stat
+  readdir(dirname)->@iso_stat
 
 Read path (a directory) and return a list of iso9660 stat references
 
@@ -206,7 +206,7 @@ sub readdir {
 
 =head2 read_pvd
 
-read_pvd()->pvd
+  read_pvd()->pvd
 
 Read the Super block of an ISO 9660 image. This is the rimary Volume
 Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
@@ -226,7 +226,7 @@ sub read_pvd {
 
 =head2 read_superblock
 
-read_superblock(iso_mask=$libiso9660::EXTENSION_NONE)->bool
+  read_superblock(iso_mask=$libiso9660::EXTENSION_NONE)->bool
 
 Read the Super block of an ISO 9660 image. This is the rimary Volume
 Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
@@ -247,7 +247,7 @@ sub read_superblock {
 
 =head2 stat
 
-stat(path, translate=0)->\%stat
+  stat(path, translate=0)->\%stat
 
 Return file status for path name psz_path. NULL is returned on error.
 

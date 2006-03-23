@@ -60,7 +60,7 @@ $Device::Cdio::Device::VERSION = $Device::Cdio::VERSION;
 
 =head2 new
 
-new(device, track)->object
+  new(device, track)->object
 
 Creates a new track object.
 
@@ -104,8 +104,8 @@ sub new {
 
 =head2 get_audio_channels
 
-get_audio_channels(cdio, track)->int
-    
+  get_audio_channels(cdio, track)->int
+
 Return number of channels in track: 2 or 4.
 Not meaningful if track is not an audio track.
 -1 is returned on error and -2 if the driver doesn't support the
@@ -124,7 +124,7 @@ sub get_audio_channels {
 
 =head2 get_copy_permit
 
-get_copy_permit(cdio, track)->int
+  get_copy_permit(cdio, track)->int
 
 Return copy protection status on a track. Is this meaningful 
 not an audio track?
@@ -141,8 +141,8 @@ sub get_copy_permit {
 
 =head2 get_format
 
-get_format()->$format
-       
+  get_format()->$format
+
 Get the format (e.g. 'audio', 'mode2', 'mode1') of track. 
 
 =cut
@@ -157,10 +157,10 @@ sub get_format {
 
 =head2 get_last_lsn
 
-get_last_lsn()->lsn
-        
+  get_last_lsn()->lsn
+
 Return the ending LSN for a track 
-$perlcdio::INVALID_LSN is returned on error.
+C<$perlcdio::INVALID_LSN> is returned on error.
 
 =cut
 
@@ -174,10 +174,10 @@ sub get_last_lsn {
 
 =head2 get_lba
 
-get_lba()->lba
-       
+  get_lba()->lba
+
 Return the starting LBA for a track
-$perlcdio::INVALID_LBAN is returned on error.
+C<$perlcdio::INVALID_LBA> is returned on error.
 
 =cut
 
@@ -191,10 +191,10 @@ sub get_lba {
 
 =head2 get_lsn
 
-get_lsn()->lsn
-       
+  get_lsn()->lsn
+
 Return the starting LSN for a track
-$perlcdio::INVALID_LSN is returned on error.
+C<$perlcdio::INVALID_LSN> is returned on error.
 
 =cut
 
@@ -208,8 +208,8 @@ sub get_lsn {
 
 =head2 get_preemphasis
 
-get_preemphasis()->result
-       
+  get_preemphasis()->result
+
 Get linear preemphasis status on an audio track.
 This is not meaningful if not an audio track?
 
@@ -239,8 +239,8 @@ Get the number of sectors between this track an the next.  This
 includes any pregap sectors before the start of the next track.
 Track numbers usually start at something 
 greater than 0, usually 1.
-       
-$perlcdio::INVALID_LSN is returned on error.
+
+C<$perlcdio::INVALID_LSN> is returned on error.
 
 =cut 
 
@@ -254,12 +254,13 @@ sub get_track_sec_count {
 
 =head2 is_track_green
 
-is_track_green(cdio, track) -> bool
-       
+  is_track_green(cdio, track) -> bool
+
 Return True if we have XA data (green, mode2 form1) or
 XA data (green, mode2 form2). That is track begins:
-sync - header - subheader
-12     4      -  8
+
+  sync - header - subheader
+  12     4      -  8
 
 =cut
 
@@ -273,7 +274,7 @@ sub is_track_green {
 
 =head2 set_track
 
-set_track(track_num)
+  set_track(track_num)
 
 Set a new track number.
 
@@ -295,8 +296,9 @@ __END__
 
 =head1 SEE ALSO
 
-L<Device::Cdio> is the top-level module and L<Device::Cdio::Device>
-is a class device objects.
+L<Device::Cdio> is the top-level module, L<Device::Cdio::Device> is a
+class device objects, and L<Device::Cdio::ISO9660> for working with
+ISO9660 systems.
 
 L<perlcdio> is the lower-level interface to libcdio.
 

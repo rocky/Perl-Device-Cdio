@@ -23,7 +23,7 @@ eject.pl      A program eject a CD from a CD-ROM drive and then close the door
 	      again.
 
 iso1.pl:      A program to show using Device::Cdio::ISO9660 to list files in a
-	     directory of an ISO-9660 image.
+	      directory of an ISO-9660 image.
 
 iso2.pl:      A program to show using Device::Cdio::ISO9660 to extract a file
 	      from a CDRWIN cue/bin CD image.

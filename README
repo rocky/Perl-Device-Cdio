@@ -22,9 +22,9 @@ I'm not that much of a SWIG expert. Second it looks as though the
 resulting SWIG code would be more complex. Third the separation makes
 translation very straight forward to understand and maintain: first we
 get what's in C into Perl as a one-to-one translation. Then we
-implement some nice abstraction off of that. The abstraction can be
-modified without having to redo the underlying translation. (But the
-reverse is generally not true: usually changes to the C-to-Perl
+implement some nice Perl abstraction off of that. The abstraction can
+be modified without having to redo the underlying translation. (But
+the reverse is generally not true: usually changes to the C-to-Perl
 translation, perlcdio or perliso9660, do result in small, but obvious
 and straightforward changes to the abstraction layer cdio.)
 
@@ -59,7 +59,7 @@ To install this module, run the following commands:
     ./Build install
 
 
-For compatibility the older methood is tolerated:
+For compatibility, the older idiom is tolerated:
 
     perl Makefile.PL
     make

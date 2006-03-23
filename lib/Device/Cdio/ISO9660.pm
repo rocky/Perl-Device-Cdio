@@ -125,7 +125,7 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 =head2 dirname_valid_p
 
-dirname_valid_p(path)->bool
+  dirname_valid_p(path)->bool
 
 Check that path is a valid ISO-9660 directory name.
 
@@ -149,7 +149,7 @@ sub dirname_valid_p {
 
 =head2 is_achar
 
-is_dchar(achar)->bool
+  is_dchar(achar)->bool
 
 Return 1 if $achar is an ACHAR. $achar should either be a string of 
 length one or the ord() of a string of length 1.
@@ -180,7 +180,7 @@ sub is_achar {
 
 =head2 is_dchar
 
-is_dchar(dchar)->bool
+  is_dchar(dchar)->bool
 
 Return 1 if $dchar is a DCHAR - a character that can appear in an an
 ISO-9600 level 1 directory name. These are the ASCII capital
@@ -211,7 +211,7 @@ sub is_dchar {
 
 =head2 pathname_valid_p
 
-pathname_valid_p(path)->bool
+    pathname_valid_p(path)->bool
 
 Check that path is a valid ISO-9660 pathname.  
 
@@ -237,7 +237,7 @@ sub pathname_valid_p {
 
 =head2 name_translate
 
-name_translate(name, joliet_level=0)->str
+    name_translate(name, joliet_level=0)->str
 
 Convert an ISO-9660 file name of the kind that is that stored in a ISO
 9660 directory entry into what's usually listed as the file name in a
@@ -269,7 +269,7 @@ sub name_translate {
 
 =head2 stat_array_to_href
 
-stat_array_to_href(values)->href
+  stat_array_to_href(values)->href
 
 Convert a ISO 9660 array to an hash reference of the values.
 
@@ -297,7 +297,7 @@ sub stat_array_to_href {
 
 =head2 strncpy_pad
 
-strncpy_pad(name, len, check='nocheck')->str
+  strncpy_pad(name, len, check='nocheck')->str
 
 Pad string I<name> with spaces to size len and return this. If len is
 less than the length of I<name>, the return value will be truncated to
