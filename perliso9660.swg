@@ -607,6 +607,7 @@ IsoStat_t *iso9660_ifs_stat_translate (iso9660_t *p_iso,
   pointers for the files inside that directory. The caller must free the
   returned result.
 */
+%newobject fs_readdir; // free malloc'd return value
 IsoStatList_t *fs_readdir (CdIo_t *p_cdio, const char psz_path[]);
 
 %inline %{
@@ -621,6 +622,7 @@ IsoStatList_t *fs_readdir (CdIo_t *p_cdio, const char psz_path[])
   pointers for the files inside that directory. The caller must free
   the returned result.
 */
+%newobject ifs_readdir; // free malloc'd return value
 IsoStatList_t *ifs_readdir (iso9660_t *p_iso, const char psz_path[]);
 
 %inline %{

@@ -479,7 +479,7 @@ sub get_mcn {
 
 =pod
 
-0=head2 get_media_changed
+=head2 get_media_changed
 
   get_media_changed() -> int
 
