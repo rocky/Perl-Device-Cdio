@@ -499,7 +499,7 @@ char *strncpy_pad(const char src[], size_t len, enum strncpy_pad_check _check);
 %inline %{
 char *
 strncpy_pad(const char src[], size_t len, enum strncpy_pad_check _check) {
-  char *dst = calloc(sizeof(char), len);
+  char *dst = calloc(sizeof(char), len+1);
   return iso9660_strncpy_pad(dst, src, len, _check);
 }
 %}
