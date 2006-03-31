@@ -85,7 +85,7 @@ my $dst;
 
 SKIP: 
 {
-    skip("strncpy_pad broken too often. Volunteers for fixing?.", 2);
+    # skip("strncpy_pad broken too often. Volunteers for fixing?.", 2);
 	# if 'cygwin' eq $Config{osname};
 
     $dst = perliso9660::strncpy_pad("1_3", 5, $perliso9660::DCHARS);
