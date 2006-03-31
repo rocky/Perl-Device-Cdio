@@ -18,19 +18,11 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # Simple program to show using Device::Cdio::ISO9660 to extract a file
-# from an ISO-9660 image.
+# from an CD image.
 #
 # If a single argument is given, it is used as the ISO 9660 image to
 # use in the extraction. Otherwise a compiled in default ISO 9660
 # image name (that comes with the libcdio distribution) will be used.
-
-# Simple program to show using libiso9660 to extract a file from a
-# CUE/BIN CD image.
-
-# If a single argument is given, it is used as the CUE file of a CD
-# image to use. Otherwise a compiled-in default image name (that comes
-# with the libcdio distribution) will be used.
-
 
 use strict;
 
@@ -49,6 +41,7 @@ use Device::Cdio::ISO9660::FS;
 use Device::Cdio::Device;
 use File::Spec;
 
+# The default CD image if none given
 my $cd_image_path="../data";
 my $cd_image_fname=File::Spec->catfile($cd_image_path, "isofs-m1.cue");
 
@@ -62,7 +55,7 @@ if (@ARGV >= 1) {
 	$local_filename = $ARGV[1];
 	if (@ARGV >= 3) {
 	    print "
-usage: $0 [CD_ROM-or-image [filename]]
+usage: $0 [CD-ROM-or-image [filename]]
 Extracts filename from CD-ROM-or-image.
 ";
 	    exit 1;

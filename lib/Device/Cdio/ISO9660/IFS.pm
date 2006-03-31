@@ -118,7 +118,7 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 =head2 new
 
-new(source, iso_mask)->$track_object
+  new(source, iso_mask)->$iso9660_object
 
 Create a new ISO 9660 object. Source or iso_mask is optional. 
 
@@ -156,7 +156,7 @@ sub new {
 
 =head2 close
 
-close()->bool
+  close()->bool
 
 Close previously opened ISO 9660 image and free resources associated
 with ISO9660.  Call this when done using using an ISO 9660 image.
@@ -179,10 +179,10 @@ sub close {
 
 =head2 find_lsn
 
-find_lsn(lsn)->$stat_href
+  find_lsn(lsn)->$stat_href
 
-Find the filesystem entry that contains LSN and statu 
-return information about it. Undef is returned on error.
+Find the filesystem entry that contains LSN and return file stat
+information about it. C<undef> is returned on error.
 
 =cut
 
@@ -208,7 +208,7 @@ sub find_lsn {
 
 =head2 get_application_id
 
-get_application_id()->$id
+  get_application_id()->$id
 
 Get the application ID stored in the Primary Volume Descriptor.
 undef is returned if there is some problem.
@@ -226,7 +226,7 @@ sub get_application_id {
 
 =head2 get_preparer_id
 
-get_perparer_id()->$id
+  get_preparer_id()->$id
 
 Get the preparer ID stored in the Primary Volume Descriptor.
 undef is returned if there is some problem.
@@ -244,7 +244,7 @@ sub get_preparer_id {
 
 =head2 get_publisher_id
 
-get_publisher_id()->$id
+  get_publisher_id()->$id
 
 Get the publisher ID stored in the Primary Volume Descriptor.
 undef is returned if there is some problem.
@@ -262,7 +262,7 @@ sub get_publisher_id {
 
 =head2 get_root_lsn
 
-get_root_lsn()->$lsn
+  get_root_lsn()->$lsn
 
 Get the Root LSN stored in the Primary Volume Descriptor.
 undef is returned if there is some problem.
@@ -280,7 +280,7 @@ sub get_root_lsn {
 
 =head2 get_system_id
 
-get_system_id()->$id
+  get_system_id()->$id
 
 Get the Volume ID stored in the Primary Volume Descriptor.
 undef is returned if there is some problem.
@@ -298,7 +298,7 @@ sub get_system_id {
 
 =head2 get_volume_id
 
-get_volume_id()->$id
+  get_volume_id()->$id
 
 Get the Volume ID stored in the Primary Volume Descriptor.
 undef is returned if there is some problem.
@@ -316,7 +316,7 @@ sub get_volume_id {
 
 =head2 get_volumeset_id
 
-get_volume_id()->$id
+  get_volume_id()->$id
 
 Get the Volume ID stored in the Primary Volume Descriptor.
 undef is returned if there is some problem.
@@ -334,7 +334,7 @@ sub get_volumeset_id {
 
 =head2 open
 
-open(source, iso_mask=$libiso9660::EXTENSION_NONE)->bool
+  open(source, iso_mask=$pyiso9660::EXTENSION_NONE)->bool
 
 Open an ISO 9660 image for reading. Subsequent operations will read
 from this ISO 9660 image.
@@ -367,7 +367,7 @@ sub open {
 
 =head2 open_fuzzy
 
-open_fuzzy(source, iso_mask=$libiso9660::EXTENSION_NONE, fuzz=20)->bool
+open_fuzzy(source, iso_mask=$perliso9660::EXTENSION_NONE, fuzz=20)->bool
 
 Open an ISO 9660 image for reading. Subsequent operations will read
 from this ISO 9660 image. Some tolerence allowed for positioning the
@@ -405,7 +405,7 @@ sub open_fuzzy {
 
 =head2 read_fuzzy_superblock
 
-read_fuzzy_superblock(iso_mask=$libiso9660::EXTENSION_NONE, fuzz=20)->bool
+read_fuzzy_superblock(iso_mask=$perliso9660::EXTENSION_NONE, fuzz=20)->bool
 
 Read the Super block of an ISO 9660 image but determine framesize
 and datastart and a possible additional offset. Generally here we are
@@ -504,7 +504,7 @@ sub readdir {
 
 =head2 read_pvd
 
-read_pvd()->pvd
+  read_pvd()->pvd
 
 Read the Super block of an ISO 9660 image. This is the Primary Volume
 Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
@@ -524,7 +524,7 @@ sub read_pvd {
 
 =head2 read_superblock
 
-read_superblock(iso_mask=$libiso9660::EXTENSION_NONE)->bool
+  read_superblock(iso_mask=$perliso9660::EXTENSION_NONE)->bool
 
 Read the Super block of an ISO 9660 image. This is the Primary Volume
 Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
@@ -569,7 +569,7 @@ sub seek_read {
 
 stat(path, translate=0)->\%stat
 
-Return file status for path name psz_path. NULL is returned on error.
+Return file status for path name psz_path. C<undef> is returned on error.
 
 If translate is 1,  version numbers in the ISO 9660 name are dropped, i.e. ;1
 is removed and if level 1 ISO-9660 names are lowercased.
@@ -600,7 +600,7 @@ if the file has XA attributes; 0 if not
 
 =item is_dir 
 
-1 if a directory; 0 if a not;
+1 if a directory; 0 if a not.
 
 =back
 
