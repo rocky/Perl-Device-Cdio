@@ -1,5 +1,11 @@
 Revision history for Device-Cdio
 
+0.2.4  ?? ??, 2006
+
+- Fix bad allocation in strncpy_pad
+
+- Small documentation and example changes
+
 0.2.3  Mar 22, 2006
 
 - Take advantage of bugs fixed upstream in libcdio 0.77. In particular
