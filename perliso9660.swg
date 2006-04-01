@@ -19,7 +19,7 @@
     02110-1301 USA.
 */
 %define DOCSTRING 
-"This is a wrapper for The CD Input and Control library's ISO-9660 library
+"A Perl wrapper for The CD Input and Control library's ISO-9660 library
 See also the ISO-9660 specification. The freely available European
 equivalant standard is called ECMA-119."
 %enddef

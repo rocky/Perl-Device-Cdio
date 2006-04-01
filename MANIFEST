@@ -33,6 +33,7 @@ examples/iso3.pl
 examples/tracks.pl
 lib/perlcdio.pm
 lib/perliso9660.pm
+lib/perlmmc.pm
 lib/Device/Cdio.pm
 lib/Device/Cdio/Device.pm
 lib/Device/Cdio/ISO9660/FS.pm
@@ -44,6 +45,8 @@ perlcdio.swg
 perlcdio_wrap.c
 perliso9660.swg
 perliso9660_wrap.c
+perlmmc.swg
+perlmmc_wrap.c
 read.swg
 t/00.load.t
 t/01.pod-coverage.t

@@ -346,6 +346,8 @@ my $builder = $class->new(
 			       'disc.swg', 'device_const.swg', 'disc.swg',
 			       'read.swg', 'track.swg', 'types.swg']],
 			     ['perliso9660.swg', 
+			      ['types.swg']],
+			     ['perlmmc.swg', 
 			      ['types.swg']] ],
 			   );
 
