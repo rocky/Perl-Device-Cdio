@@ -126,11 +126,15 @@ sub find_lsn {
     return undef if _extra_args(@args);
 
     if (!defined($lsn)) {
-      print "*** An LSN paramater must be given\n";
+      print "*** An LSN parameter must be given\n";
       return undef;
     }
 
-    my @values = perliso9660::fs_find_lsn($self->{iso9660}, $lsn);
+    my @values = perliso9660::fs_find_lsn($self->{cd}, $lsn);
+
+    # Remove the two input parameters
+    splice(@values, 0, 2) if @values > 2;
+
     return Device::Cdio::ISO9660::stat_array_to_href(@values);
 }
 
@@ -189,7 +193,7 @@ sub readdir {
       return undef;
     }
 
-    my @values = perliso9660::fs_readdir($self->{iso9660}, $dirname);
+    my @values = perliso9660::fs_readdir($self->{cd}, $dirname);
 
     # Remove the two input parameters
     splice(@values, 0, 2) if @values > 2;

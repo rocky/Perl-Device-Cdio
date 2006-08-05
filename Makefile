@@ -1,39 +1,65 @@
-#=============================================================
-# $Id$
-#=============================================================
-# Invariably there will be folks who just haven't gotten with 
-# the program. In fact they may never learn. This file is for them. 
-BUILD_TARGETS = build clean code config_data diff dist distclean \
-	distdir distmeta distsign disttest docs fakeinstall help html \
-	install manifest ppd ppmdis realclean skipcheck test testcover \
-	testdb testpod versioninstall
+#     PREREQ_PM => { Test::More=>q[0], version=>q[0], ExtUtils::PkgConfig=>q[1.03] }
 
-.PHONY: all check $(BUILD_TARGETS)
+all : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1
+realclean : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 realclean
+	/usr/bin/perl -e unlink -e shift Makefile
 
-all: Build
-	@echo "We use 'perl Build' here. Don't count on too much, but"
-	@echo "I'll try transferring your request."
-	perl Build
+force_do_it :
+	@ true
+build : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 build
+clean : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 clean
+code : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 code
+config_data : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 config_data
+diff : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 diff
+dist : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 dist
+distcheck : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 distcheck
+distclean : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 distclean
+distdir : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 distdir
+distmeta : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 distmeta
+distsign : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 distsign
+disttest : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 disttest
+docs : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 docs
+fakeinstall : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 fakeinstall
+help : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 help
+html : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 html
+install : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 install
+manifest : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 manifest
+ppd : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 ppd
+ppmdist : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 ppmdist
+skipcheck : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 skipcheck
+test : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 test
+testcover : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 testcover
+testdb : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 testdb
+testpod : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 testpod
+versioninstall : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 versioninstall
 
-Build:: Build.PL
-	perl Build.PL
+.EXPORT : INSTALLDIRS TEST_VERBOSE LIB INC PREFIX POLLUTE VERBINST
 
-# There is a "Build distcheck", but it doesn't work like "make distcheck".
-# "make disttest" is more similar. So if you want "Build distcheck"
-# you'll have to issue that *not* via "make".
-distcheck:
-	perl Build disttest
-
-dist: all
-
-$(BUILD_TARGETS): Build
-	@echo "We use perl Build here. Don't count on too much, but"
-	@echo "I'll try transferring your request."
-	perl Build $@
-
-check: Build
-	perl Build test
-.PHONY: ChangeLog
-
-ChangeLog:
-	cvs2cl -W 450 --header cvs2cl_header --utc -w -I ChangeLog --usermap cvs2cl_usermap -P 

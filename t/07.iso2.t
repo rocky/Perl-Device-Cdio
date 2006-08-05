@@ -20,7 +20,7 @@ use Device::Cdio::ISO9660::FS;
 use File::Spec;
 
 use POSIX;
-use Test::More tests => 3;
+use Test::More tests => 5;
 
 # The test CD image
 my $CD_IMAGE_PATH="../data";
@@ -31,12 +31,29 @@ my $cd = Device::Cdio::ISO9660::FS->new(-source=>$cd_image_fname);
   
 ok(defined($cd), "Open CD image $cd_image_fname") ;
 
-my $statbuf = $cd->stat (File::Spec->catfile("/", $local_filename));
-
 my $good_stat = { LSN=>26, 'filename'=>'COPYING', is_dir=>'', 
 		  sec_size=>9, size=>17992 };
 
-is_deeply($statbuf, $good_stat, 'CD 9660 file stats');
+my $stat_href = $cd->find_lsn(26);
+
+is_deeply($stat_href, $good_stat, 'CD 9660 file stats: find_lsn(26)');
+
+my $statbuf = $cd->stat (File::Spec->catfile("/", $local_filename));
+
+is_deeply($statbuf, $good_stat, "CD 9660 file stats: stat('$local_filename)'");
+
+my @iso_stat = $cd->readdir ("/");
+
+my @good_stat = ( { LSN=>23, 'filename'=>'.', is_dir=>1, 
+		  sec_size=>1, size=>2048 },
+		  { LSN=>23, 'filename'=>'..', is_dir=>1, 
+		  sec_size=>1, size=>2048 },
+		  { LSN=>26, 'filename'=>'COPYING', is_dir=>'', 
+		    sec_size=>9, size=>17992 },
+		  { LSN=>24, 'filename'=>'doc', is_dir=>1, 
+		    sec_size=>1, size=>2048 } );
+
+is_deeply(\@iso_stat, \@good_stat, "Read directory: readdir('/')");
 
 # Get file
 my $buf ='';
