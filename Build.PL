@@ -131,8 +131,6 @@ sub link_c {
   my $objects = $p->{objects} || [];
   
   unless ($self->up_to_date([$obj_file, @$objects], $lib_file)) {
-    $self->prelink_c($to, $file_base) if $self->need_prelink_c;
-
     my @linker_flags = $self->split_like_shell($p->{extra_linker_flags});
     my @lddlflags = $self->split_like_shell($cf->{lddlflags});
     my @shrp = $self->split_like_shell($cf->{shrpenv});

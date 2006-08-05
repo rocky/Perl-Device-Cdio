@@ -14,7 +14,7 @@ use lib '../lib';
 use blib;
 
 use perliso9660;
-use Test::More tests => 15;
+use Test::More tests => 14;
 
 sub is_eq($$) {
     my ($a_ref, $b_ref) = @_;
@@ -174,13 +174,13 @@ if ($perliso9660::VERSION_NUM < 77) {
 
 ok(is_eq(\@new_tm, \@tm), 'get_dtime(set_dtime())');
 
-if ($perliso9660::VERSION_NUM >= 77) {
-    @tm = gmtime(0);
-    my $ltime = perliso9660::set_ltime($tm[0], $tm[1], $tm[2], $tm[3], $tm[4],
-				       $tm[5]);
-    ($bool, @new_tm) =  perliso9660::get_ltime($ltime);
-    ok(is_eq(\@new_tm, \@tm), 'get_ltime(set_ltime())');
-}
+#if ($perliso9660::VERSION_NUM >= 77) {
+#    @tm = gmtime(0);
+#    my $ltime = perliso9660::set_ltime($tm[0], $tm[1], $tm[2], $tm[3], $tm[4],
+#				       $tm[5]);
+#    ($bool, @new_tm) =  perliso9660::get_ltime($ltime);
+#    ok(is_eq(\@new_tm, \@tm), 'get_ltime(set_ltime())');
+#}
 
 
 exit 0;

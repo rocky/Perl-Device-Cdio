@@ -13,5 +13,6 @@ perlcdio_wrap.c
 perlcdio_wrap.o
 perliso9660_wrap.c
 perliso9660_wrap.o
+perlmmc_wrap.o
 pm_to_blib*
 tmp*
