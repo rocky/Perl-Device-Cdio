@@ -34,5 +34,5 @@ ok($device->get_track_for_lsn($t->get_last_lsn())->{track} == $t->{track},
 $t=$device->get_first_track();
 ok($t->{track} == 1, 'get_first_track');
 ok($t->get_format() eq 'audio', 'get_track_format');
-ok($t->get_track_msf() eq "00:02:00", "get_track_msf");
+ok($t->get_msf() eq "00:02:00", "get_msf");
 $device->close();

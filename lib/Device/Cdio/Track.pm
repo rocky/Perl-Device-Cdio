@@ -206,6 +206,26 @@ sub get_lsn {
 
 =pod
 
+=head2 get_msf
+
+  get_msf()
+
+Return the starting MSF (minutes/secs/frames) for track number track.
+Track numbers usually start at something greater than 0, usually 1.
+
+Returns string of the form mm:ss:ff if all good, or string 'error' on
+error.
+
+=cut 
+
+sub get_msf {
+    my ($self, @p) = @_;
+    return 0 if !_check_arg_count($#_, 0);
+    return perlcdio::get_track_msf($self->{device}, $self->{track});
+}
+
+=pod
+
 =head2 get_preemphasis
 
   get_preemphasis()->result
@@ -228,26 +248,6 @@ sub get_preemphasis {
     } else {
 	return 'invalid';
     }
-}
-
-=pod
-
-=head2 get_track_msf
-
-  get_track_msf()
-
-Return the starting MSF (minutes/secs/frames) for track number track.
-Track numbers usually start at something greater than 0, usually 1.
-
-Returns string of the form mm:ss:ff if all good, or string 'error' on
-error.
-
-=cut 
-
-sub get_track_msf {
-    my ($self, @p) = @_;
-    return 0 if !_check_arg_count($#_, 0);
-    return perlcdio::get_track_msf($self->{device}, $self->{track});
 }
 
 =pod

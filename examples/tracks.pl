@@ -70,10 +70,11 @@ printf("Track format is %s.\n", $d->get_disc_mode());
 my $mcn = $d->get_mcn();
 printf "Media Catalog Number: %s\n", $mcn if $mcn;
     
-printf "%3s: %-6s  %s\n", "#", "LSN", "Format";
+printf "%3s: %-6s  %-6s   %s\n", "#", "LSN", "MSF", "Format";
 for (my $i=$first_track; $i <= $last_track; $i++) {
     my $t = $d->Device::Cdio::Device::get_track($i);
-    printf("%3d: %06lu  %s\n", $t->{track}, $t->get_lsn(), $t->get_format())
+    printf("%3d: %06lu  %-6s %s\n", $t->{track}, $t->get_lsn(), 
+	   $t->get_msf(), $t->get_format())
 	if defined($t);
 }
 
