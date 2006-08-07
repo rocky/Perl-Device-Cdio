@@ -55,7 +55,7 @@ typedef int track_flag_t;
 "get_first_track_num(p_cdio) -> int
 Get the number of the first track. 
 
-return the track number or pycdio.INVALID_TRACK if there was
+return the track number or $perlcdio.INVALID_TRACK if there was
 a problem.");
 track_t cdio_get_first_track_num(const CdIo_t *p_cdio);
 
@@ -63,7 +63,7 @@ track_t cdio_get_first_track_num(const CdIo_t *p_cdio);
 %feature("autodoc",
 "get_last_track_num 
 Return the last track number.
-pycdio.INVALID_TRACK is if there was a problem.");
+$perlcdio.INVALID_TRACK is if there was a problem.");
 track_t cdio_get_last_track_num (const CdIo_t *p_cdio);
 
 %rename cdio_get_track get_track;
@@ -71,7 +71,7 @@ track_t cdio_get_last_track_num (const CdIo_t *p_cdio);
 "cdio_get_track(lsn)->int
 
     Find the track which contains lsn.
-    pycdio.INVALID_TRACK is returned if the lsn outside of the CD or
+    $perlcdio.INVALID_TRACK is returned if the lsn outside of the CD or
     if there was some error. 
     
     If the lsn is before the pregap of the first track, 0 is returned.
@@ -129,8 +129,9 @@ lsn_t cdio_get_track_last_lsn(const CdIo_t *p_cdio, track_t i_track);
     i_track in p_cdio.  Track numbers usually start at something 
     greater than 0, usually 1.
 
-    The 'leadout' track is specified either by
-    using i_track CDIO_CDROM_LEADOUT_TRACK or the total tracks+1.
+    The 'leadout' track is specified either by setting i_track
+    to $perl::CDIO_CDROM_LEADOUT_TRACK or one more than the 
+    number of tracks.
 
     @param p_cdio object to get information from
     @param i_track  the track number we want the LSN for
@@ -145,27 +146,37 @@ Return the starting LSN for track number.
 Track numbers usually start at something greater than 0, usually 1.
 
 The 'leadout' track is specified either by
-using i_track pycdio.CDROM_LEADOUT_TRACK or the total tracks+1.
+using i_track CDROM_LEADOUT_TRACK or the total tracks+1.
 
-pycdio.INVALID_LSN is returned on error.");
+$perlcdio::INVALID_LSN is returned on error.");
 lsn_t cdio_get_track_lsn(const CdIo_t *p_cdio, track_t i_track);
 
-#if FIXED
-%rename cdio_get_track_msf get_track_msf;
 %feature("autodoc",
-"cdio_get_track_msf  
-    Return the starting MSF (minutes/secs/frames) for track number
-    i_track in p_cdio.  Track numbers usually start at something 
-    greater than 0, usually 1.
+"get_track_msf(cdio,track)->string
 
-    The 'leadout' track is specified either by
-    using i_track CDIO_CDROM_LEADOUT_TRACK or the total tracks+1.
-    
-    @return true if things worked or false if there is no track entry.");
-bool cdio_get_track_msf(const CdIo_t *p_cdio, track_t i_track, 
-			/*out*/ msf_t *msf);
-#endif
+  Return the starting MSF (minutes/secs/frames) for track number
+  track.  Track numbers usually start at something 
+  greater than 0, usually 1.
 
+  The 'leadout' track is specified either by
+  using i_track $perlcdio::CDROM_LEADOUT_TRACK or the total tracks+1.
+
+@return string mm:ss:ff if all good, or string 'error' on error.");
+const char *get_track_msf(const CdIo_t *p_cdio, track_t i_track);
+%inline %{
+const char *get_track_msf(const CdIo_t *p_cdio, track_t i_track)
+{
+	msf_t msf;
+	char *psz_msf;
+
+	if (!cdio_get_track_msf( p_cdio, i_track, &msf )) {
+		return "error";
+	}
+	psz_msf = cdio_msf_to_str( &msf );
+	return psz_msf;
+}
+%}
+	
 %rename cdio_get_track_preemphasis get_track_preemphasis;
 %feature("autodoc",
 "cdio_get_track_preemphasis(cdio, track)

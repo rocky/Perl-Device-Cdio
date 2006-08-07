@@ -39,7 +39,7 @@
 "get_disc_last_lsn(cdio)->lsn
 Get the LSN of the end of the CD.
 
-pycdio.INVALID_LSN is returned on error.");
+perlcdio.INVALID_LSN is returned on error.");
 lsn_t cdio_get_disc_last_lsn(const CdIo_t *p_cdio);
   
 
@@ -79,7 +79,7 @@ char * cdio_get_mcn (const CdIo_t *p_cdio);
 "get_num_tracks(p_cdio)->int
 
 Return the number of tracks on the CD. 
-On error pycdio.INVALID_TRACK is returned.");
+On error $perlcdio::INVALID_TRACK is returned.");
 track_t cdio_get_num_tracks (const CdIo_t *p_cdio);
 
 /*========================INLINE======================================*/
