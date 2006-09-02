@@ -624,7 +624,7 @@ filesystems.
 L<perlcdio> is the lower-level interface to libcdio.
 
 L<http://www.gnu.org/software/libcdio/doxygen/files.html> is 
-documentation via doxygen for C<libiso9660>.
+documentation via doxygen for C<libcdio>.
 
 =head1 AUTHORS
 
