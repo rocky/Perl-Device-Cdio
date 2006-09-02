@@ -1,6 +1,6 @@
 Revision history for Device-Cdio
 
-0.2.4  Aug 6, 2006
+0.2.4  Sept 2, 2006
 
 - Fix bad allocation in strncpy_pad
 

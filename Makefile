@@ -44,10 +44,16 @@ install : force_do_it
 	/usr/bin/perl Build --makefile_env_macros 1 install
 manifest : force_do_it
 	/usr/bin/perl Build --makefile_env_macros 1 manifest
+manpages : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 manpages
 ppd : force_do_it
 	/usr/bin/perl Build --makefile_env_macros 1 ppd
 ppmdist : force_do_it
 	/usr/bin/perl Build --makefile_env_macros 1 ppmdist
+prereq_report : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 prereq_report
+pure_install : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 pure_install
 skipcheck : force_do_it
 	/usr/bin/perl Build --makefile_env_macros 1 skipcheck
 test : force_do_it
@@ -58,8 +64,10 @@ testdb : force_do_it
 	/usr/bin/perl Build --makefile_env_macros 1 testdb
 testpod : force_do_it
 	/usr/bin/perl Build --makefile_env_macros 1 testpod
+testpodcoverage : force_do_it
+	/usr/bin/perl Build --makefile_env_macros 1 testpodcoverage
 versioninstall : force_do_it
 	/usr/bin/perl Build --makefile_env_macros 1 versioninstall
 
-.EXPORT : INSTALLDIRS TEST_VERBOSE LIB INC PREFIX POLLUTE VERBINST
+.EXPORT : INC PREFIX DESTDIR VERBINST INSTALLDIRS TEST_VERBOSE LIB UNINST INSTALL_BASE POLLUTE
 
