@@ -73,20 +73,16 @@ dashes for the subsequent parameters.
 
 In the documentation below and elsewhere in this package the parameter
 name that can be used in this style of call is given in the parameter
-list. For example, for "close tray the documentation below reads:
+list. For example, for C<name_translate> the documentation below reads:
 
-   close_tray(drive=undef, driver_id=$perlcdio::DRIVER_UNKNOWN) 
-    -> ($drc, $driver_id)
+   name_translate(name, joliet_level=0) -> $str
 
-So the parameter names are "drive", and "driver_id". Neither parameter
-is required. If "drive" is not specified, a value of "undef" will be
-used. And if "driver_id" is not specified, a value of
-$perlcdio::DRIVER_UNKNOWN is used.
+So the parameter names are "name" and "joliet_level". Only the "name"
+parameter is required. If "joliet_level" is not specified, a value of
+0 will be used. The return value is a string.
 
 The older, more traditional style of positional parameters is also
-supported. So the "have_driver example from above can also be written:
-
-    Cdio::have_driver('GNU/Linux')
+supported which is shown in the synopsis above.
 
 Finally, since no parameter name can be confused with a an integer,
 negative values will not get confused as a named parameter.
@@ -237,7 +233,7 @@ sub pathname_valid_p {
 
 =head2 name_translate
 
-    name_translate(name, joliet_level=0)->str
+    name_translate(name, joliet_level=0)->$str
 
 Convert an ISO-9660 file name of the kind that is that stored in a ISO
 9660 directory entry into what's usually listed as the file name in a

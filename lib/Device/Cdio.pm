@@ -102,7 +102,7 @@ used. And if "driver_id" is not specified, a value of
 $perlcdio::DRIVER_UNKNOWN is used.
 
 The older, more traditional style of positional parameters is also
-supported. So the "have_driver" example from above can also be written:
+supported. So the C<have_driver> example from above can also be written:
 
     Device::Cdio::have_driver('GNU/Linux')
 
