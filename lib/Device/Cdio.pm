@@ -286,7 +286,7 @@ get_devices_ret($driver_id)->(@devices, $driver_id)
 
 Like get_devices, but we may change the p_driver_id if we were given
 $perlcdio::DRIVER_DEVICE or $perlcdio::DRIVER_UNKNOWN.  This is
-because often one wants to get a drive name and then *open* it
+because often one wants to get a drive name and then I<open> it
 afterwords. Giving the driver back facilitates this, and speeds things
 up for libcdio as well.
 
