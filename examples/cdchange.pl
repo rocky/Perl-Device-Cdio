@@ -20,6 +20,8 @@
 
 ## Program to show CD media changing
 
+use strict;
+
 BEGIN {
     chdir 'example' if -d 'example';
     use lib '../lib';
@@ -30,8 +32,7 @@ use Device::Cdio;
 use Device::Cdio::Device;
 
 my $sleep_time = 15;
-
-my $d;
+my ($d, $drive_name);
 if ($ARGV[0]) {
     $drive_name=$ARGV[0];
     $d = Device::Cdio::Device->new(-source=>$drive_name);

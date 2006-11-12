@@ -495,6 +495,7 @@ typedef long int cdio_mmc_level_t;
 
 import Device::Cdio::VERSION;
 $VERSION = $Device::Cdio::VERSION;
+use strict;
 
 =pod
 

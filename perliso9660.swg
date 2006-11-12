@@ -862,7 +862,7 @@ bool iso9660_ifs_is_xa (const iso9660_t * p_iso);
 
 import Device::Cdio::VERSION;
 $VERSION = $Device::Cdio::VERSION;
-
+use strict;
 =pod
 
 =head1 NAME

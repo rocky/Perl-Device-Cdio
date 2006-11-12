@@ -79,7 +79,7 @@ the abstraction layer cdio.)
 %perlcode %{
 import Device::Cdio::VERSION;
 $VERSION = $Device::Cdio::VERSION;
-
+use strict;
 =pod
 
 =head1 NAME
