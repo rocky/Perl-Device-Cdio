@@ -229,7 +229,7 @@ sub  get_arg {
 Get the default CD device.
 
 If the CD object has an opened CD, return the name of the device used.
-(In fact this is the same thing as issuing C<d->get_arg("source")>.
+(In fact this is the same thing as issuing C<d-E<gt>get_arg("source")>).
 
 If we haven't initialized a specific device driver, then find a
 suitable one and return the default device for that.  
