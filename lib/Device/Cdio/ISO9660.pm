@@ -31,7 +31,7 @@ Device::Cdio::ISO9660 - Module for ISO 9660 handling
 
 This encapsulates IS9660 filesystem handling. This library however
 needs to be used in conjunction with L<Device::Cdio>,
-L<Device::Cdio::ISO9660::IFS> and L<Device::Cdio::ISO::FS>.
+L<Device::Cdio::ISO9660::IFS> and L<Device::Cdio::ISO9660::FS>.
 
     use Device::Cdio::ISO9660;
     $name = Device::Cdio::ISO9660::name_translate('COPYING.;1');
