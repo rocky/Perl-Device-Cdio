@@ -106,6 +106,32 @@ sub process_options() {
   }
 }
 
+# Standard C library's isprint() in Ruby
+sub isprint($) {
+    return $_[0] =~ m{^[: -~]$} ;
+}
+
+# Print a hex dump and string interpretation of buffer.
+# If just_hex is true, then show only the hex dump.
+sub hexdump ($) {
+    my $buffer = $_[0];
+    foreach my $i (0 .. length($buffer) - 1) {
+	printf "0x%04x: ", $i if $i % 16 == 0;
+	printf "%02x", ord(substr($buffer, $i, 1));
+	printf " " if $i % 2 == 1;
+	if ($i % 16 == 15) {
+	    printf "  ";
+	    foreach my $j ($i-15 .. $i) {
+		printf "%s", 
+		isprint(substr($buffer, $j, 1)) ?
+		    substr($buffer, $j, 1) : '.';
+	    }
+	    print "\n";
+	}
+    }
+    print "\n";
+}
+
 init();
 process_options();
 
@@ -136,7 +162,7 @@ if (defined($read_mode)) {
 	$d->read_data_blocks($opts{start}, $opts{number});
 }
 if ($perlcdio::DRIVER_OP_SUCCESS == $drc) {
-    print $data, "\n";
+    hexdump($data);
 } else {
     print "Error reading block $opts{start} mode $opts{mode} on $drive_name\n";
     printf "Return code message: %s", Device::Cdio::driver_strerror($drc);
