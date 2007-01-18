@@ -72,7 +72,7 @@ dashes for the subsequent parameters.
 
 In the documentation below and elsewhere in this package the parameter
 name that can be used in this style of call is given in the parameter
-list. For example, for "close tray the documentation below reads:
+list. For example, for "close_tray" the documentation below reads:
 
    close_tray(drive=undef, driver_id=$perlcdio::DRIVER_UNKNOWN) 
     -> ($drc, $driver_id)
@@ -83,9 +83,9 @@ used. And if "driver_id" is not specified, a value of
 $perlcdio::DRIVER_UNKNOWN is used.
 
 The older, more traditional style of positional parameters is also
-supported. So the "have_driver example from above can also be written:
+supported. So the "new" example from above can also be written:
 
-    Cdio::have_driver('GNU/Linux')
+    Device::Cdio::ISO9660::FS->new('MYISO.CUE')
 
 Finally, since no parameter name can be confused with a an integer,
 negative values will not get confused as a named parameter.
@@ -115,8 +115,8 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
   find_lsn(lsn)->$stat_href
 
-Find the filesystem entry that contains LSN and statu 
-return information about it. Undef is returned on error.
+Find the filesystem entry that contains LSN and return information
+about it. Undef is returned on error.
 
 =cut
 
@@ -212,7 +212,7 @@ sub readdir {
 
   read_pvd()->pvd
 
-Read the Super block of an ISO 9660 image. This is the rimary Volume
+Read the Super block of an ISO 9660 image. This is the Primary Volume
 Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
 (Joliet) extensions are acceptable.
 

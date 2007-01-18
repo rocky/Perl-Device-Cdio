@@ -49,7 +49,7 @@ read_cd(const CdIo_t *p_cdio, my_ssize_t i_size,
 %}
 
 typedef char * buf_t;
-%typemap(perl5,out) buf_t {   
+%typemap(out) buf_t {   
   /* $1 is of type buf_t */
   ST(argvi) = sv_newmortal();
   if (result) {
@@ -63,12 +63,12 @@ typedef char * buf_t;
   }
 }
 
-%apply long unsigned int *OUTPUT { long unsigned int *drc };
+%apply long int *OUTPUT { long int *drc };
 /* NOTE: arg 4 *must* be the size of the buf for the buf_t typemap. */
 buf_t read_sectors(const CdIo_t *p_cdio, lsn_t i_lsn, 
 		       cdio_read_mode_t read_mode, my_ssize_t i_size, 
 		       /*out*/ my_ssize_t *pi_size, 
-		       /*out*/ long unsigned int *drc);
+		       /*out*/ long int *drc);
 
 %inline %{
 typedef char *buf_t;
@@ -77,7 +77,7 @@ buf_t
 read_sectors(const CdIo_t *p_cdio, lsn_t i_lsn, 
 	     cdio_read_mode_t read_mode,  my_ssize_t i_size, 
 	     /*out*/ my_ssize_t *pi_size, 
-	     /*out*/ long unsigned int *drc)
+	     /*out*/ long int *drc)
 {
 
   char *p_buf;
@@ -122,7 +122,7 @@ buf_t
 read_data_bytes(const CdIo_t *p_cdio, lsn_t i_lsn, int16_t i_blocksize, 
 		my_ssize_t i_size, 
 		/*out*/ my_ssize_t *pi_size,
-		long unsigned int *drc);
+		long int *drc);
 
 %inline %{
 /* NOTE: arg 4 *must* be the size of the buf for the buf_t typemap. */
@@ -130,7 +130,7 @@ buf_t
 read_data_bytes(const CdIo_t *p_cdio, lsn_t i_lsn, 
 		int16_t i_blocksize, my_ssize_t i_size, 
 		/*out*/ my_ssize_t *pi_size,
-		/*out*/ long unsigned int *drc) {
+		/*out*/ long int *drc) {
   uint32_t i_blocks = i_size / i_blocksize;
   char *p_buf;
 

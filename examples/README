@@ -19,8 +19,8 @@ drives.pl:    A program list CD-ROMs and CD properties in the drives.
               information correctly. (Perhaps someday libcdio will figure
 	      out enough work arounds. voluneteers welcome!)
 
-eject.pl      A program eject a CD from a CD-ROM drive and then close the door
-	      again.
+eject.pl      A program to eject a CD from a CD-ROM drive and then close the 
+              door again.
 
 iso1.pl:      A program to show using Device::Cdio::ISO9660 to list files in a
 	      directory of an ISO-9660 image.
