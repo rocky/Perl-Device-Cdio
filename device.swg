@@ -30,7 +30,7 @@
 typedef char ** DeviceList_t;
 %}
 
-%typemap(perl5,out) DeviceList_t {   
+%typemap(out) DeviceList_t {   
     // $1 is of type DeviceList_t
     char **p   = result;
     unsigned int num = 0;
@@ -412,7 +412,7 @@ int cdio_get_media_changed(CdIo_t *p_cdio);
 typedef char ** HWInfo_t;
 %}
 
-%typemap(perl5,out) HWInfo_t {   // All functions returning char ** 
+%typemap(out) HWInfo_t {   // All functions returning char ** 
                                 // get this typemap
     // $1 is of type char **
     char **p   = $1;
