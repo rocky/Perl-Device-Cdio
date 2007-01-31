@@ -3,7 +3,7 @@ require 5.8.6;
 #
 #    $Id$
 #
-#    Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
+#    Copyright (C) 2006, 2007 Rocky Bernstein <rocky@cpan.org>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -70,22 +70,20 @@ dashes for the subsequent parameters.
 
 In the documentation below and elsewhere in this package the parameter
 name that can be used in this style of call is given in the parameter
-list. For example, for "close tray the documentation below reads:
+list. For example, for "open" the documentation below reads:
 
-   close_tray(drive=undef, driver_id=$perlcdio::DRIVER_UNKNOWN) 
-    -> ($drc, $driver_id)
+   open(source, iso_mask=$pyiso9660::EXTENSION_NONE)->bool
 
-So the parameter names are "drive", and "driver_id". Neither parameter
-is required. If "drive" is not specified, a value of "undef" will be
-used. And if "driver_id" is not specified, a value of
-$perlcdio::DRIVER_UNKNOWN is used.
+So the parameters are "source", and "is_mask". The iso_mask parameter
+is not required and if not specified a value of
+$perliso9660:EXTENSION_NON will be used.
 
 The older, more traditional style of positional parameters is also
 supported. So the "have_driver example from above can also be written:
 
-    Cdio::have_driver('GNU/Linux')
+    Cdio::open($s, $i)
 
-Finally, since no parameter name can be confused with a an integer,
+Finally, since no parameter name can be confused with an integer,
 negative values will not get confused as a named parameter.
 
 =cut
@@ -334,7 +332,7 @@ sub get_volumeset_id {
 
 =head2 open
 
-  open(source, iso_mask=$pyiso9660::EXTENSION_NONE)->bool
+  open(source, iso_mask=$perliso9660::EXTENSION_NONE)->bool
 
 Open an ISO 9660 image for reading. Subsequent operations will read
 from this ISO 9660 image.
