@@ -1,7 +1,7 @@
 /* -*- c -*-
     $Id$
 
-    Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
+    Copyright (C) 2006, 2007 Rocky Bernstein <rocky@cpan.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ typedef iso9660_stat_t IsoStat_t;
 typedef CdioList_t IsoStatList_t;
 typedef iso9660_stat_t IsoStat_t;
 
-%typemap(perl5,out) IsoStat_t *{   
+%typemap(out) IsoStat_t *{   
     // $1 is of type IsoStatList_t
     iso9660_stat_t *p_statbuf = result;
 
@@ -125,7 +125,7 @@ typedef iso9660_stat_t IsoStat_t;
  out: ;
 }
 
-%typemap(perl5,out) IsoStatList_t *{   
+%typemap(out) IsoStatList_t *{   
     // $1 is of type IsoStatList_t
     CdioList_t *p_entlist   = result;
     CdioListNode_t *p_entnode;
@@ -217,7 +217,7 @@ bool iso9660_ifs_fuzzy_read_superblock (iso9660_t *p_iso,
 %rename iso9660_close close;
 bool iso9660_close (iso9660_t * p_iso);
 
-%typemap(perl5,out) buf_t {   
+%typemap(out) buf_t {   
   /* $1 is of type buf_t */
   ST(argvi) = sv_newmortal();
   if (result) {
