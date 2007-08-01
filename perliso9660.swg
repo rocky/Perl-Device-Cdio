@@ -452,7 +452,7 @@ char * name_translate(const char *psz_oldname);
 %inline %{
 char *
 name_translate(const char *psz_oldname) {
-  char *psz_newname=calloc(sizeof(char), strlen(psz_oldname));
+  char *psz_newname=calloc(sizeof(char), strlen(psz_oldname)+1);
   iso9660_name_translate(psz_oldname, psz_newname);
   return psz_newname;
 }
@@ -477,7 +477,7 @@ char * name_translate_ext(const char *psz_oldname, uint8_t i_joliet_level);
 %inline %{
 char * 
 name_translate_ext(const char *psz_oldname, uint8_t i_joliet_level) {
-  char *psz_newname=calloc(sizeof(char), strlen(psz_oldname));
+  char *psz_newname=calloc(sizeof(char), strlen(psz_oldname)+1);
   iso9660_name_translate_ext(psz_oldname, psz_newname, i_joliet_level);
   return psz_newname;
 }
