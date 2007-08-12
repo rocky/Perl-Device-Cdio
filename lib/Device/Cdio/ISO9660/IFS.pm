@@ -28,7 +28,7 @@ Device::Cdio::ISO9660::IFS - Class for ISO 9660 Filesystem image reading
 
 =head1 SYNOPSIS
 
-This encapsulates ISO 9660 filesystem Image handling. The class is
+This encapsulates ISO 9660 Filesystem Image handling. The class is
 often used in conjunction with Device::Cdio::ISO9660.
 
     use Device::Cdio::ISO9660;
@@ -49,10 +49,15 @@ often used in conjunction with Device::Cdio::ISO9660.
 
 This is an Object-Oriented interface to the GNU CD Input and Control
 library (C<libcdio>) which is written in C. This class handles ISO
-9660 aspects of an ISO 9600 image. An ISO 9660 image is distinct from
-a CD or a CD iamge in that the latter contains other CD-like
-information (e.g. tracks, information or assocated with the CD). See
-also L<Device::Cdio::ISO9660::FS> for working with a CD or CD image.
+9660 aspects of an ISO 9600 image. 
+
+An ISO-9660 image is distinct from a CD in a CD-ROM which has ISO-9660
+tracks; the latter contains other CD-like information (e.g. tracks,
+information or assocated with the CD). An ISO-9660 filesystem image on
+the other hand doesn't and is generally file in some file system,
+sometimes with the file extension ".iso"; perhaps it can be burned
+into a CD with a suitable tool, perhaps is can be "mounted" as a
+filesystem on some OS's.
 
 =head2 CALLING ROUTINES
 
@@ -638,7 +643,7 @@ __END__
 
 =head1 SEE ALSO
 
-<Device::Cdio> for module information, L<Device::Cdio::ISO9660::FS>
+See also L<Device::Cdio> for module information, L<Device::Cdio::ISO9660::FS>
 and L<Device::Cdio::Device> for device objects and
 L<Device::Cdio::Track> for track objects.
 
@@ -655,7 +660,7 @@ Rocky Bernstein C<< <rocky at cpan.org> >>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
+Copyright (C) 2006, 2007 Rocky Bernstein <rocky@cpan.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

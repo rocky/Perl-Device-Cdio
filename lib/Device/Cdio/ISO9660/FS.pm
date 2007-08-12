@@ -3,7 +3,7 @@ require 5.8.6;
 #
 #    $Id$
 #
-#    Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
+#    Copyright (C) 2006, 2007 Rocky Bernstein <rocky@cpan.org>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -48,13 +48,13 @@ however needs to be used in conjunction with Device::Cdio::ISO9660.
 
 This is an Object-Oriented interface to the GNU CD Input and Control
 library (C<libcdio>) which is written in C. This class handles ISO
-9660 aspects of a tracks from a CD in a CD-ROM or as a track of a CD
-image. A CD image is distinct from an ISO 9660 image in that a CD
-image contains other CD-line information (e.g. tracks, information or
-assocated with the CD). See also L<Device::Cdio::ISO9660::IFS> for
-working with an ISO 9660 image.
+9660 tracks on a CD or in a CD-ROM.
 
-This is a subclass of L<Device::Cdio::Device>.
+Note that working with a CD in a CD-ROM which has tracks in the
+ISO-9660 format is distinct working with a I<file> in a filesystem
+which contains an ISO-9660 image. See also
+L<Device::Cdio::ISO9660::IFS> for working with an ISO 9660 image
+stored as a file in a fileystem.
 
 =head2 CALLING ROUTINES
 
@@ -325,7 +325,8 @@ __END__
 
 =head1 SEE ALSO
 
-This is a sublcass of L<Device::Cdio::Device>. See
+This is a subclass of Device::Cdio::Device. See also
+L<Device::Cdio::Device>. See
 L<Device::Cdio::ISO9660::IFS> for working with ISO 9660
 images.
 
@@ -342,7 +343,7 @@ Rocky Bernstein C<< <rocky at cpan.org> >>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
+Copyright (C) 2006, 2007 Rocky Bernstein <rocky@cpan.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
