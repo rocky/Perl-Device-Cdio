@@ -64,7 +64,6 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
             my @p = @_;
             ##print Dumper($self);
             my $swigfiles = $self->rscan_dir('./', qr/\.swg/);
-            print @$swigfiles,"\n";
             if($self->up_to_date($swigfiles,
                     $self->rscan_dir('blib',qr/\.so/))) {
                 print "swig modules up to date\n" if $verb;
