@@ -33,6 +33,16 @@ use this library."
 %include "read.swg"
 %include "track.swg"
 
+%feature("autodoc",
+"Returns the libcdio version string, i.e. the library Device::Cdio
+is currently using.");
+%inline %{
+const char * cdio_version()
+{
+    return cdio_version_string;
+}
+%}
+
 /* In the presence of the exception handling, the order is important. 
    The below use %exception.
 */
@@ -520,6 +530,12 @@ leadout track.
 =back 
 
 =head1 METHODS
+
+=head2 cdio_version
+
+    perlcdio::cdio_version
+
+Returns the libcdio version string Device::Cdio is currently linked with.
 
 =head2 this
 

@@ -89,5 +89,44 @@ get_disc_mode (CdIo_t *p_cdio)
   if (CDIO_DISC_MODE_ERROR == discmode) return NULL;
   return discmode2str[discmode];
 }
+%}
 
+
+%typemap(out) cdtext_t * {
+    char **p   = (char **)result;
+    //printf("%p %p argvi %d items %d\n",SP, &ST(0), argvi, items);
+    //while(items--)  // hacky adjust SP - skip arguments
+    //    SP--;
+    if (!result) goto out;
+    unsigned int num;
+    EXTEND(SP, MAX_CDTEXT_FIELDS-items);// adjust Stack - skip arguments
+    for (num=0; num<MAX_CDTEXT_FIELDS; num++) {
+        //XPUSHs(sv_2mortal(newSVpv(*p, 0))); // works on local SP (dXSARGS;)
+        ST(num)=(sv_2mortal(newSVpv(*p, 0)));
+        free (*p);
+        p++;
+    }
+    argvi = MAX_CDTEXT_FIELDS;
+    out: ;
+}
+
+cdtext_t * get_cdtext (CdIo_t *p_cdio, int track);
+%inline %{
+cdtext_t * get_cdtext (CdIo_t *p_cdio, int track)
+{
+    char text[1024];
+    char **cdtext; char *str; int num; int l=0;
+    cdtext = ( char **)cdio_get_cdtext (p_cdio, (track_t) track);
+    if(!cdtext)
+        return NULL;
+    for (num=0; num<MAX_CDTEXT_FIELDS; num++) {
+        if(cdtext[num]) {
+            l = sprintf(text, "%s %s",
+                    cdtext_field2str(num), cdtext[num]);
+            str = malloc(++l);
+            cdtext[num] = strcpy(str, text);
+        }
+    }
+    return l?(cdtext_t *)cdtext:NULL;
+}
 %}

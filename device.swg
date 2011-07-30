@@ -420,17 +420,17 @@ typedef char ** HWInfo_t;
       num++;
     }
 
-    if (argvi >= items) {            
-      /* Extend the stack by num objects */
-      EXTEND(sp, num);
+    if (num+argvi >= items) {            
+      /* Extend the stack by (num - items) objects */
+      EXTEND(sp, num-items);
     }
     /* For each element in the array of strings, create a new
      * mortalscalar, and stuff it into the above array. */
-    for (p = $1; *p; p++) {
+    for (num=0,p = $1; *p; p++) {
       /* Have perl compute the length of the string using strlen() */
-      PUSHs(sv_2mortal(newSVpv(*p, 0)));
+      //PUSHs(sv_2mortal(newSVpv(*p, 0))); // uses SP, modified by dSP (XS)
+      ST(num++)=(sv_2mortal(newSVpv(*p, 0)));
     }
-    /* FIXME: the + 1 is because p_cdio is still on the stack. */
     argvi += num + 1;
 }
 
@@ -459,6 +459,9 @@ HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
   return (const HWInfo_t) hwinfo;
 }
 %}
+
+%rename mmc_get_tray_status get_tray_status;
+int mmc_get_tray_status(const CdIo_t *p_cdio);
 
 %rename cdio_set_blocksize set_blocksize;
 %feature("autodoc", 

@@ -386,10 +386,154 @@ sub get_hwinfo {
     return $perlcdio::BAD_PARAMETER if !_check_arg_count($#_, 0);
     # There's a bug I don't understand where p_cdio gets returned
     # and it shouldn't. So we just ignore that below.
-    my (undef, $vendor, $model, $release, $drc) = 
-	perlcdio::get_hwinfo($self->{cd});
+    # my (undef, $vendor, $model, $release,$drc) =
+    # changed by jerry to overwrite the argument $self->{cd}
+    # see device.swg 425 ...
+    my ($vendor, $model, $release, $drc) = 
+	       perlcdio::get_hwinfo($self->{cd});
     return ($vendor, $model, $release, $drc);
 }
+
+=pod
+
+=head2 audio_get_volume
+
+    my($arr, $rc) = $dev->audio_get_volume;
+
+Returns the volume settings of device's 4 channels and the device return code.
+In scalar environmet only the device return code!
+See perlcdio::driver_errmsg($rc) if $rc. 
+
+=cut
+
+sub audio_get_volume {
+    my($self,@p) = @_;
+    my ($vol,$drc) = perlcdio::audio_get_volume_levels($self->{cd});
+    return ($vol,$drc) if wantarray;
+    return $drc;
+}
+
+=pod
+
+=head2 audio_set_volume
+
+    $drc = $dev->audio_set_volume(lvl1, ...lvl4);
+
+Set the volume levels of the channels 1-4. values from 0-255 are possible.
+Use -1 when the value should be kept.
+See perlcdio::driver_errmsg($drc) for return values (!= 0).
+
+=cut
+
+sub audio_set_volume {
+    my($self,@p) = @_;
+    my $vol = perlcdio::audio_get_volume_levels($self->{cd});
+    for(my $i =0;$i<4;$i++) {
+        if(defined $p[$i]) {
+            @$vol[$i] = $p[$i] if $p[$i] > -1;
+            @$vol[$i] = 255 if $p[$i] > 255;
+        }
+    }
+    return perlcdio::audio_set_volume_levels($self->{cd}, @$vol[0], @$vol[1], 
+        @$vol[2], @$vol[3]);
+}
+
+=pod 
+
+=head2 get_disk_cdtext, get_track_cdtext
+
+    $hash = $dev->get_disk_cdtext;
+    $hash = $dev->get_track_cdtext(track);
+
+Returns a hash reference hash->{cdtext_field}="text" 
+if found any cdtext on disk;
+
+=cut
+
+sub get_disk_cdtext {
+    my($self,@p) = @_;
+    my (@text) = perlcdio::get_cdtext($self->{cd},0);
+    return _text2hash(@text);
+}
+
+sub get_track_cdtext {
+    my($self,$t, @p) = @_;
+    $t = 1 if !defined $t;
+    my (@text) = perlcdio::get_cdtext($self->{cd},$t);
+    return _text2hash(@text);
+}
+
+sub _text2hash {
+    my @text = @_;
+    my %hash;
+    foreach my $line (@text) {
+        next if !$line;
+        my ($k,$t) = split(' ',$line,2);
+        $hash{$k}=$t;
+    }
+    return \%hash;
+}
+=pod
+
+=head2 audio_get_status
+
+    my($hash, $drc) = $dev->audio_get_status;
+
+Returns a hash reference with the audio-subchannel-mmc status values:
+
+    audio_status : value
+    status_text  : audio_status as text
+    track : track number
+    index : index in track
+msf time values as ints minutes, seconds,frames :
+    abs_m,abs_s,abs_f  : total disk time played
+    rel_m,rel_s,el_f   : track time played
+    address
+    control
+
+=cut
+
+sub audio_get_status {
+    my($self,@p) = @_;
+    my ($ptr, $drc) = perlcdio::audio_get_status($self->{cd});
+    my %CDIO_MMC_READ_SUB_ST = (0x00 => 'INVALID',0x11 => 'playing',
+        0x12 => 'paused', 0x13 => 'completed', 0x14 => 'ERROR',
+        0x15 => 'NO_STATUS');
+    my %subch;
+    $subch{format} = perlcdioc::SUBChannel_format_get($ptr);
+    $subch{audio_status} = perlcdioc::SUBChannel_audio_status_get($ptr);
+    $subch{status_text} = $CDIO_MMC_READ_SUB_ST{$subch{audio_status}};
+    $subch{status_text} = 'UNKNWON' if ! defined $subch{status_text};
+    $subch{address} = perlcdioc::SUBChannel_address_get($ptr);
+    $subch{control} = perlcdioc::SUBChannel_control_get($ptr);
+    $subch{track} = perlcdioc::SUBChannel_track_get($ptr);
+    $subch{index} = perlcdioc::SUBChannel_index_get($ptr);
+    $subch{abs_m} = perlcdioc::SUBChannel_abs_m_get($ptr);
+    $subch{abs_s} = perlcdioc::SUBChannel_abs_s_get($ptr);
+    $subch{abs_f} = perlcdioc::SUBChannel_abs_f_get($ptr);
+    $subch{rel_m} = perlcdioc::SUBChannel_rel_m_get($ptr);
+    $subch{rel_s} = perlcdioc::SUBChannel_rel_s_get($ptr);
+    $subch{rel_f} = perlcdioc::SUBChannel_rel_f_get($ptr);
+    return \%subch, $drc;
+}
+
+=pod
+
+=head2 is_tray_open
+
+    $dev->is_tray_open
+
+returns true if tray seems open, 0 otherwise.
+
+=cut
+
+sub is_tray_open {
+    my($self,@p) = @_;
+    return perlcdio::get_tray_status($self->{cd});
+}
+
+
+
 
 =pod
 
