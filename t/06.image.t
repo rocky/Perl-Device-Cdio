@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 # Test that we have image drivers
 
 use strict;

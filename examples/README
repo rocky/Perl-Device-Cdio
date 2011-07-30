@@ -33,5 +33,3 @@ iso3.pl:      A program to show using Device::Cdio::ISO9660 to extract a file
 
 tracks.pl     A program to list track numbers and logical sector
 	      numbers of a Compact Disc
-
-$Id$

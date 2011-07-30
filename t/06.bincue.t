@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 #Test functioning of BIN/CUE image routines
 
 use strict;

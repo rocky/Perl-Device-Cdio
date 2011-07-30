@@ -1,7 +1,6 @@
 #!/usr/bin/perl -w
-my $vcid ='$Id$';
 #
-#  Copyright (C) 2006, 2008 Rocky Bernstein <rocky@cpan.org>
+#  Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -52,7 +51,7 @@ sub init() {
 
 # Show the CVS version id string and quit.
 sub show_version() {
-    print "$program version $vcid\n";
+    print "$program version $Device::Cdio::VERSION\n";
     exit 1;
 }
 

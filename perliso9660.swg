@@ -1,5 +1,4 @@
 /* -*- c -*-
-  $Id$
   See end for copyright and license.
 */
 %define DOCSTRING 
@@ -1396,7 +1395,7 @@ Rocky Bernstein C<< <rocky at cpan.org> >>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006, 2008 Rocky Bernstein <rocky@cpan.org>
+Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

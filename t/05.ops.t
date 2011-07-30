@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 # Test running miscellaneous operations
 # No assumption about the CD-ROM drives is made, so
 # we're just going to run operations and see that they

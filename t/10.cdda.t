@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 ##Test functioning CD-DA
 
 use strict;

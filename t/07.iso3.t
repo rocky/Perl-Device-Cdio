@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 # Test of some ISO9660::IFS routines
 # This is similar to example/iso2.pl
 

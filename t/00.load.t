@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 use strict;
 BEGIN {
     chdir 't' if -d 't';

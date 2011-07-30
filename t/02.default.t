@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 # Test getting default device
 
 use strict;

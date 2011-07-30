@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 #Test functioning of cdrdao image routines
 
 use strict;

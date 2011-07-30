@@ -1,5 +1,5 @@
 package Device::Cdio;
-require 5.8.10;
+require 5.10.1;
 #
 #  See end for copyright and license.
 
@@ -93,14 +93,12 @@ negative values will not get confused as a named parameter.
 
 =cut
 
-$revision = '$Id$';
-
 use warnings;
 use strict;
 use perlcdio;
 use Carp;
 
-use vars qw($VERSION $revision @EXPORT_OK @EXPORT @ISA %drivers);
+use vars qw($VERSION @EXPORT_OK @EXPORT @ISA %drivers);
 use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 @ISA = qw(Exporter);

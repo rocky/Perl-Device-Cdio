@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-#  $Id$
-#
 #  Copyright (C) 2006, 2008 Rocky Bernstein <rocky@cpan.org>
 #  
 #  This program is free software: you can redistribute it and/or modify
