@@ -6,7 +6,6 @@ build_requires:
   ExtUtils::CBuilder: 0
 configure_requires:
   Module::Build: 0.36
-dynamic_config: 0
 generated_by: 'Module::Build version 0.3607'
 license: gpl
 meta-spec:
@@ -19,23 +18,24 @@ provides:
     version: v0.3.0
   Device::Cdio::Device:
     file: lib/Device/Cdio/Device.pm
-    version: v0.3.0
+    version: 0
   Device::Cdio::ISO9660:
     file: lib/Device/Cdio/ISO9660.pm
-    version: v0.3.0
+    version: 0
   Device::Cdio::ISO9660::FS:
     file: lib/Device/Cdio/ISO9660/FS.pm
-    version: v0.3.0
+    version: 0
   Device::Cdio::ISO9660::IFS:
     file: lib/Device/Cdio/ISO9660/IFS.pm
-    version: v0.3.0
+    version: 0
   Device::Cdio::Track:
     file: lib/Device/Cdio/Track.pm
   Device::Cdio::Util:
     file: lib/Device/Cdio/Util.pm
-    version: v0.3.0
+    version: 0
 requires:
   ExtUtils::PkgConfig: 1.03
+  Test::More: 0
   version: 0
 resources:
   license: http://opensource.org/licenses/gpl-license.php

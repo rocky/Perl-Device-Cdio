@@ -94,10 +94,12 @@ pure_install:
 skipcheck :
 	perl Build --makefile_env_macros 1 skipcheck
 
+check: test
+
 test:
 	perl Build --makefile_env_macros 1 test
 
-testcover :
+testcover:
 	perl Build --makefile_env_macros 1 testcover
 
 testdb:
@@ -114,4 +116,4 @@ versioninstall:
 
 .EXPORT: INC PREFIX DESTDIR VERBINST INSTALLDIRS TEST_VERBOSE LIB UNINST INSTALL_BASE POLLUTE
 
-.PHONY: all realclean build clean test testcover testdb testpod testpodcoverage
+.PHONY: all realclean build clean check test testcover testdb testpod testpodcoverage

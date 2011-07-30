@@ -13,3 +13,4 @@ CVS
 ^lib/perliso9660\.pm
 ~$
 tmp\d+$
+^MYMETA.yml$
