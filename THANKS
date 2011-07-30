@@ -1,1 +1,11 @@
+Many thanks to Jerry G Geiger for resurrecting this project from the dead. He added:
+
+- audio_get_volume
+- audio_set_volume
+- get_disk_cdtext, get_track_cdtext
+- audio_get_status
+- is_tray_open
+- cdio_version (version string of linked library)
+
+
 Thanks to Martín Ferrari for making this available on Debian *and* for finding and fixing the bugs needed to do so.

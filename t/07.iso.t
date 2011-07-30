@@ -1,6 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
-
 # Test some low-level ISO9660 routines
 # This is basically the same thing as libcdio's testiso9660.c
 
@@ -168,9 +166,20 @@ my ($bool, @new_tm) = perliso9660::get_dtime($dtime, 1);
 ### FIXME Don't know why the discrepancy, but there is an hour
 ### difference, perhaps daylight savings time.
 ### Versions before 0.77 have other bugs.
-if ($perliso9660::VERSION_NUM < 77) {
+## if ($perliso9660::VERSION_NUM < 77) {
     $new_tm[2] = $tm[2]; 
-}
+## }
+
+# print "tm: \n";
+# foreach my $tm_i (@tm) {
+#     print $tm_i, " ";
+# }
+# print "\n";
+# print "new tm: \n";
+# foreach my $tm_i (@new_tm) {
+#     print $tm_i, " ";
+# }
+# print "\n";
 
 ok(is_eq(\@new_tm, \@tm), 'get_dtime(set_dtime())');
 

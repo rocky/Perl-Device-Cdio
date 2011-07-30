@@ -1,0 +1,10 @@
+/*.c
+/*.o
+/*.so
+/*~
+/_build
+/blib
+/tmp*
+/Build
+/*.tar.gz
+/*.tar.bz2

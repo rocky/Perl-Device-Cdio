@@ -1,7 +1,6 @@
 package Device::Cdio;
-require 5.8.6;
+require 5.8.10;
 #
-#  $Id$
 #  See end for copyright and license.
 
 =pod
@@ -12,7 +11,7 @@ Device::Cdio - Module for CD Input and Control library.
 
 =cut 
 
-use version; $VERSION = qv('0.2.4');
+use version; $VERSION = qv('0.3.0');
 
 =pod 
 
@@ -615,7 +614,7 @@ Rocky Bernstein C<< <rocky at cpan.org> >>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
+Copyright (C) 2006, 2011 Rocky Bernstein <rocky@cpan.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

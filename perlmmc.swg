@@ -1,6 +1,5 @@
 /* -*- c -*-
-  $Id$
-  Copyright (C) 2006, 2008 Rocky Bernstein <rocky@cpan.org>
+  Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
   See end for license.
 */
 %define DOCSTRING 
@@ -160,7 +159,6 @@ typedef long int cdio_mmc_level_t;
 %constant long int FEATURE_PROF_DDCD_ROM   = CDIO_MMC_FEATURE_PROF_DDCD_ROM;
 %constant long int FEATURE_PROF_DDCD_R     = CDIO_MMC_FEATURE_PROF_DDCD_R;
 %constant long int FEATURE_PROF_DDCD_RW    = CDIO_MMC_FEATURE_PROF_DDCD_RW;
-%constant long int FEATURE_PROF_DVD_PR2    = CDIO_MMC_FEATURE_PROF_DVD_PR2;
 %constant long int FEATURE_PROF_NON_CONFORM= CDIO_MMC_FEATURE_PROF_NON_CONFORM;
 %constant long int FEATURE_INTERFACE_UNSPECIFIED = CDIO_MMC_FEATURE_INTERFACE_UNSPECIFIED;
 %constant long int FEATURE_INTERFACE_SCSI  = CDIO_MMC_FEATURE_INTERFACE_SCSI;
@@ -514,7 +512,7 @@ Rocky Bernstein C<< <rocky at cpan.org> >>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006, 2008 Rocky Bernstein <rocky@cpan.org>
+Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
