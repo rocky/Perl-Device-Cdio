@@ -458,6 +458,7 @@ HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
   *drc = b_got_hwinfo;
   return (const HWInfo_t) hwinfo;
 }
+#include <cdio/mmc.h>
 %}
 
 %rename mmc_get_tray_status get_tray_status;

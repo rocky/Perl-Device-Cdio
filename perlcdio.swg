@@ -37,7 +37,7 @@ use this library."
 "Returns the libcdio version string, i.e. the library Device::Cdio
 is currently using.");
 %inline %{
-const char * cdio_version()
+const char * cdio_version(void)
 {
     return cdio_version_string;
 }

@@ -142,6 +142,7 @@ int audio_set_volume_levels(CdIo_t *p_cdio, int vol1, int vol2, int vol3, int vo
 %apply int *OUTPUT { int *drc };
 const SUBChannel * audio_get_status ( CdIo_t *p_cdio, int *drc);
 %inline %{
+#include <cdio/util.h>
 //static cdio_subchannel_t cdio_subchannel;
 const SUBChannel * audio_get_status ( CdIo_t *p_cdio, int *drc)
 {
