@@ -15,6 +15,11 @@
 
 #     PREREQ_PM => { Test::More=>q[0], version=>q[0], ExtUtils::PkgConfig=>q[1.03] }
 
+# Note: remake (GNU make with debugging) has a --tasks option which
+# will show important targets. In remake, to give a target a 
+# user-friendly description, one starts a comment line with #:
+
+#: Build everything
 all:
 	perl Build --makefile_env_macros 1
 
