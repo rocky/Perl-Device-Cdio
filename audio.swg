@@ -58,7 +58,6 @@ driver_return_code_t cdio_audio_resume (CdIo_t *p_cdio);
 Stop playing an audio CD.");
 driver_return_code_t cdio_audio_stop (CdIo_t *p_cdio);
 
-
 %feature("autodoc",
 "return audio volume levels array");
     
@@ -121,47 +120,78 @@ int audio_set_volume_levels(CdIo_t *p_cdio, int vol1, int vol2, int vol3, int vo
     return cdio_audio_set_volume(p_cdio, &audio_volume);
 }
 %}
-    
-%inline %{
-    typedef struct {
-        uint8_t format;
-        uint8_t audio_status;
-        uint8_t address:    4;
-        uint8_t control:    4;
-        uint8_t track;
-        uint8_t index;
-        uint8_t abs_m; // msft_t abs_addr;
-        uint8_t abs_s;
-        uint8_t abs_f;
-        uint8_t rel_m; // msft_t rel_addr;
-        uint8_t rel_s;
-        uint8_t rel_f;
-    }  SUBChannel;
-%}
-    
+
+
 %apply int *OUTPUT { int *drc };
-const SUBChannel * audio_get_status ( CdIo_t *p_cdio, int *drc);
+SV * audio_get_status ( CdIo_t *p_cdio, int *drc);
 %inline %{
-#include <cdio/util.h>
 //static cdio_subchannel_t cdio_subchannel;
-const SUBChannel * audio_get_status ( CdIo_t *p_cdio, int *drc)
+SV * audio_get_status ( CdIo_t *p_cdio, int *drc)
 {
     static cdio_subchannel_t sub;
     driver_return_code_t rc;
-
+    HV * audio_st;
+    char *a_s_t;
     rc = cdio_audio_read_subchannel(p_cdio, &sub);
     *drc = rc;
+    audio_st = newHV();
     /* unsigned int msf_seconds(msf_t *msf) or
      * uint8_t cdio_from_bcd8(uint8_t p) 
      */
-    sub.abs_addr.m = cdio_from_bcd8(sub.abs_addr.m);
-    sub.abs_addr.s = cdio_from_bcd8(sub.abs_addr.s);
-    sub.abs_addr.f = cdio_from_bcd8(sub.abs_addr.f);
-    sub.rel_addr.m = cdio_from_bcd8(sub.rel_addr.m);
-    sub.rel_addr.s = cdio_from_bcd8(sub.rel_addr.s);
-    sub.rel_addr.f = cdio_from_bcd8(sub.rel_addr.f);
+    switch(sub.audio_status) {
+        case 0x00:
+            a_s_t = "INVALID";
+            break;
+        case 0x11:
+            a_s_t = "playing";
+            break;
+        case 0x12:
+            a_s_t = "paused";
+            break;
+        case 0x13:
+            a_s_t = "completed";
+            break;
+        case 0x14:
+            a_s_t = "ERROR";
+            break;
+        case 0x15:
+            a_s_t = "NO_STATUS";
+            break;
+        default:
+            a_s_t = "UNKNWON";
+    }
+    hv_store(audio_st, "format", 6,
+            newSVuv(sub.format), 0);
+    hv_store(audio_st, "audio_status", 12,
+            newSVuv(sub.audio_status), 0);
+    hv_store(audio_st, "status_text", 11,
+            newSVpv(a_s_t, 0), 0);
+    hv_store(audio_st, "address", 7,
+            newSVuv(sub.address), 0);
+    hv_store(audio_st, "control", 7,
+            newSVuv(sub.control), 0);
+    hv_store(audio_st, "track", 5,
+            newSVuv(sub.track), 0);
+    hv_store(audio_st, "index", 5,
+            newSVuv(sub.index), 0);
+    hv_store(audio_st, "abs_m", 5,
+            newSVuv(cdio_from_bcd8(sub.abs_addr.m)), 0);
+    hv_store(audio_st, "abs_s", 5,
+            newSVuv(cdio_from_bcd8(sub.abs_addr.s)), 0);
+    hv_store(audio_st, "abs_f", 5,
+            newSVuv(cdio_from_bcd8(sub.abs_addr.f)), 0);
+    hv_store(audio_st, "disk_s", 6,
+            newSVuv(cdio_audio_get_msf_seconds(&sub.abs_addr)),0);
+    hv_store(audio_st, "rel_m", 5,
+            newSVuv(cdio_from_bcd8(sub.rel_addr.m)), 0);
+    hv_store(audio_st, "rel_s", 5,
+            newSVuv(cdio_from_bcd8(sub.rel_addr.s)), 0);
+    hv_store(audio_st, "rel_f", 5,
+            newSVuv(cdio_from_bcd8(sub.rel_addr.f)), 0);
+    hv_store(audio_st, "track_s", 7,
+            newSVuv(cdio_audio_get_msf_seconds(&sub.rel_addr)),0);
 
-    return (const SUBChannel *) &sub;
+    return newRV_noinc(sv_2mortal((SV*)audio_st));
 }
 %}
-    
+

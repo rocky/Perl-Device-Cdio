@@ -431,7 +431,8 @@ typedef char ** HWInfo_t;
       //PUSHs(sv_2mortal(newSVpv(*p, 0))); // uses SP, modified by dSP (XS)
       ST(num++)=(sv_2mortal(newSVpv(*p, 0)));
     }
-    argvi += num + 1;
+    /* FIXME: the + 1 is because p_cdio is still on the stack. */
+    argvi += num;  // fixed ??
 }
 
 /* 
@@ -458,9 +459,9 @@ HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
   *drc = b_got_hwinfo;
   return (const HWInfo_t) hwinfo;
 }
-#include <cdio/mmc.h>
 %}
 
+#include <cdio/mmc.h>
 %rename mmc_get_tray_status get_tray_status;
 int mmc_get_tray_status(const CdIo_t *p_cdio);
 

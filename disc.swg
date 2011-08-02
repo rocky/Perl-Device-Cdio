@@ -86,47 +86,74 @@ const char *
 get_disc_mode (CdIo_t *p_cdio) 
 {
   discmode_t discmode = cdio_get_discmode(p_cdio);
-  if (CDIO_DISC_MODE_ERROR == discmode) return NULL;
+  if (CDIO_DISC_MODE_ERROR == discmode)
+    return (const char *)newSV(0);
   return discmode2str[discmode];
 }
+
 %}
 
 
-%typemap(out) cdtext_t * {
-    char **p   = (char **)result;
-    //printf("%p %p argvi %d items %d\n",SP, &ST(0), argvi, items);
-    //while(items--)  // hacky adjust SP - skip arguments
-    //    SP--;
-    if (!result) goto out;
-    unsigned int num;
-    EXTEND(SP, MAX_CDTEXT_FIELDS-items);// adjust Stack - skip arguments
-    for (num=0; num<MAX_CDTEXT_FIELDS; num++) {
-        //XPUSHs(sv_2mortal(newSVpv(*p, 0))); // works on local SP (dXSARGS;)
-        ST(num)=(sv_2mortal(newSVpv(*p, 0)));
-        free (*p);
-        p++;
-    }
-    argvi = MAX_CDTEXT_FIELDS;
-    out: ;
-}
-
-cdtext_t * get_cdtext (CdIo_t *p_cdio, int track);
+SV * get_cdtext (CdIo_t *p_cdio, int track);
 %inline %{
-cdtext_t * get_cdtext (CdIo_t *p_cdio, int track)
+SV * get_cdtext (CdIo_t *p_cdio, int track)
 {
-    char text[1024];
-    char **cdtext; char *str; int num; int l=0;
+    HV * cdtext_hash;
+    char **cdtext; const char *str; int num; unsigned int l=0;
     cdtext = ( char **)cdio_get_cdtext (p_cdio, (track_t) track);
     if(!cdtext)
-        return NULL;
+        return newSV(0); //we return undef if there is no cdtext on the disk
+    cdtext_hash = newHV();
     for (num=0; num<MAX_CDTEXT_FIELDS; num++) {
         if(cdtext[num]) {
-            l = sprintf(text, "%s %s",
-                    cdtext_field2str(num), cdtext[num]);
-            str = malloc(++l);
-            cdtext[num] = strcpy(str, text);
+            l++;
+            str = cdtext_field2str(num);
+            hv_store(cdtext_hash, str, strlen(str),
+                newSVpv(cdtext[num], 0), 0);
         }
     }
-    return l?(cdtext_t *)cdtext:NULL;
+    if(!l) {
+        SvREFCNT_dec((SV*)cdtext_hash);
+        return newSV(0);
+    } // we could easily return the number of strings, too.
+    return newRV_noinc(sv_2mortal((SV*)cdtext_hash));
 }
 %}
+
+uint32_t get_cddb_discid(CdIo_t *p_cdio);
+%inline %{
+static int
+cddb_dec_digit_sum(int n)
+{
+  int ret=0;
+  
+  for (;;) {
+    ret += n%10;
+    n    = n/10;
+    if (!n) return ret;
+  }
+}
+
+uint32_t get_cddb_discid(CdIo_t *p_cdio)
+{
+    int i,t,n=0;
+    msf_t start_msf;
+    msf_t msf;
+    track_t i_tracks = cdio_get_num_tracks (p_cdio);
+    if(i_tracks == CDIO_INVALID_TRACK)
+        return 0;
+
+    for (i = 1; i <= i_tracks; i++) {
+        cdio_get_track_msf(p_cdio, i, &msf);
+        n += cddb_dec_digit_sum(cdio_audio_get_msf_seconds(&msf));
+    }
+
+    cdio_get_track_msf(p_cdio, 1, &start_msf);
+    cdio_get_track_msf(p_cdio, CDIO_CDROM_LEADOUT_TRACK, &msf);
+  
+    t = cdio_audio_get_msf_seconds(&msf)-cdio_audio_get_msf_seconds(&start_msf);
+  
+    return ((n % 0xff) << 24 | t << 8 | i_tracks);
+}
+%}
+

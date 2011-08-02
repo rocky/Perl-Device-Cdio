@@ -33,16 +33,6 @@ use this library."
 %include "read.swg"
 %include "track.swg"
 
-%feature("autodoc",
-"Returns the libcdio version string, i.e. the library Device::Cdio
-is currently using.");
-%inline %{
-const char * cdio_version(void)
-{
-    return cdio_version_string;
-}
-%}
-
 /* In the presence of the exception handling, the order is important. 
    The below use %exception.
 */
@@ -71,6 +61,18 @@ generally not true: usually changes to the C-to-python translation,
 pycdio, do result in small, but obvious and straightforward changes to
 the abstraction layer cdio.)
 */
+
+%feature("autodoc",
+"Returns the libcdio version string, i.e. the library Device::Cdio
+is currently using.");
+%inline %{
+const char * cdio_version()
+{
+    return cdio_version_string;
+}
+%}
+
+
 %perlcode %{
 import Device::Cdio::VERSION;
 $VERSION = $Device::Cdio::VERSION;
