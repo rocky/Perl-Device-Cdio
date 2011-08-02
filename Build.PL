@@ -61,46 +61,64 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
         sub process_swig_files {
             my $self = shift;
             my $verb = $self->runtime_params('verbose');
-            my @p = @_;
-            ##print Dumper($self);
-            my $swigfiles = $self->rscan_dir('./', qr/\.swg/);
-            if($self->up_to_date($swigfiles,
-                    $self->rscan_dir('blib',qr/\.so/))) {
-                print "swig modules up to date\n" if $verb;
-                return 1;
-            }
-            print "proces swig files\n" if $verb;
+            $verb = 0 if $self->runtime_params('quiet');
+            #my @p = @_;
+            print "process swig files\n" if $verb;
             my $swigdeps = $self->config('swig_source');
             my @swig_flags = $self->split_like_shell($self->config('swig_flags'));
             my @swigsource = keys %$swigdeps;
-            my $blib_lib = File::Spec->catfile('blib', 'lib');
-            my $blib_arch = File::Spec->catfile('blib', 'arch');
-            my $cb = $self->cbuilder();
-            print "CBuilder: ",$cb->VERSION,"\n" if $verb;
+            my $lib = 'lib';
+            #my $blib_lib = File::Spec->catfile('blib', 'lib');
             foreach my $file (@swigsource) {
-                print $file, ': ', @{$swigdeps->{$file}}, "\n" if $verb;
-                ##check up todate
+                #FIXME add dir $self->config('swig_files')
                 my $basename = basename($file, '.swg');
                 my $cfile = $basename."_wrap.c";
+                my $pmfile = File::Spec->catfile($lib,"$basename.pm");
+                ##check up todate pmfile? libfile?
+                if($self->up_to_date($swigdeps->{$file}, $cfile)) {
+                    next if $self->up_to_date($file, $cfile);
+                }
+                print "swig: $file -> $cfile\n" if $verb;
                 $self->do_system('swig', '-o', $cfile, '-perl', '-outdir',
-                    $blib_lib, @swig_flags, $file);
-                my $obj = $cb->compile(source => $cfile, 
+                    $lib, @swig_flags, $file);
+                $self->copy_if_modified(from => $pmfile, to_dir => 'blib');
+            }
+            return 1;
+        }
+        sub process_c_files {
+            my $self = shift;
+            my $verb = $self->runtime_params('verbose');
+            $verb = 0 if $self->runtime_params('quiet');
+            #my @p = @_;
+            print "procces c files\n" if $verb;
+            my $cfiles = $self->rscan_dir('./',qr/\.c$/);
+            # if none return
+            #set $self->quiet() for CBuilder->new
+            $self->quiet($verb?0:1);
+            my $cb = $self->cbuilder(); # get a ExtUtils::CBuilder object
+            print "  CBuilder: ",$cb->VERSION,"\n" if $verb;
+            #setenv TMPDIR for cc ??
+            foreach my $file (@$cfiles) {
+                my $basename = basename($file, '_wrap.c');
+                $basename = basename($file, '.c') if not defined $basename;
+                my $libname = $basename.".".$self->config('dlext');
+                $libname = File::Spec->catfile('blib', 'arch',$libname);
+                next if $self->up_to_date($file,$libname); 
+                print "(CC) $file -> $basename.so\n" if $verb;
+                my $obj = $cb->compile(source => $file, 
                     ## include_dirs => $self->config('include_dirs'),
                     extra_compiler_flags => $self->config('extra_compiler_flags'));
                 print "CB compiled: $obj\n" if $verb;
                 my $lib = $cb->link(objects => $obj,
                     extra_linker_flags => $self->config('extra_linker_flags'));
                 print "CB generated: $lib\n" if $verb;
-                $self->copy_if_modified(from => $lib, to_dir => $blib_arch);
+                $self->copy_if_modified(from => $lib, to => $libname);
             }
             return 1;
         }
     !);
 #
 
-#my $code = <<'EOC';
-#;
-#EOC
 my $builder = $class->new( 
     module_name         => 'Device::Cdio',
     add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*'  ],
@@ -116,6 +134,7 @@ my $builder = $class->new(
 	'ExtUtils::PkgConfig'     => '1.03',
         'Test::More'              => 0,
         'version'                 => 0,
+        'ExtUtils::CBuilder'      => '0.28',
     },
     sign                => 1,
     swig_files          => ['./']);
@@ -130,38 +149,43 @@ $builder->config(swig_source => {   # with dependencies as hash value
 if($builder->have_c_compiler()) {
     $builder->notes('c_compiler' => 1);
     print "C compiler found - check swig\n" if $builder->config('verbose');
+    if(!$builder->config('obj_ext')) {
+        $builder->config('obj_ext','.o');
+    }
+    if(!$builder->config('dlext')) {
+        $builder->config('dlext','so');
+    }
     my $swig_installed = check_swig(
         verbose => $builder->config('verbose'));
     $builder->notes(swig_installed => $swig_installed);
     my ($ccflags, $ldflags,$swig_flags) = check_c_compiler(
-        verbose => $builder->config('verbose'));
+        $builder->config('cc'));
     $builder->config(extra_linker_flags  => $ldflags);
     $builder->config(extra_compiler_flags=> $ccflags);
     if($swig_installed) {
         $builder->config(swig_flags          => $swig_flags);
         $builder->add_build_element('swig');
     }
-    $builder->add_to_cleanup(['*.o']);
+    $builder->add_build_element('c');
+    $builder->add_to_cleanup('*.o','*_wrap.so','tmp*');
+    # better: $builder->config('dlext') $builder->config('obj_ext')
+    #add a cleanup build_element ??
     #rearrange order of the build process
     my @el = @{$builder->build_elements};
-    my ($i) = grep {$el[$_] eq 'swig'} 0..$#el;
+    my $i = grep {$el[$_] eq 'c'} 0..$#el;
     unshift @el, splice @el, $i, 1;
-    foreach my $i (@el) {
-        print " $i ";
+    @el = @{$builder->build_elements};
+    $i = grep {$el[$_] eq 'swig'} 0..$#el;
+    unshift @el, splice @el, $i, 1;
+    if ($builder->config('verbose')) {
+	foreach my $i (@el) {
+	    print " $i ";
+	}
+	print "\n";
     }
-    print "\n";
 }
-#distclean : lib/perliso9660.pm, lib/perlmmc.pm lib/perlcdio.pm
-#$builder->cbuilder();
-#depends_on(@actions)
-#config($key) config($key, $value)
-#config_data($name) config_data($name => $value)
-#do_system($cmd, @args)
-#have_c_compiler()
-#notes() notes($key) notes($key => $value)
-#rscan_dir($dir, $pattern)
-#up_to_date($source_file, $derived_file)
-#up_to_date(\@source_files, \@derived_files
+#distclean : unlink lib/perliso9660.pm, lib/perlmmc.pm lib/perlcdio.pm
+# c files?
 $builder->create_build_script();
 
 sub try_compile {
@@ -251,6 +275,7 @@ sub check_c_compiler {
     my $cc= shift;
 
     my $ccflags = $libcdio_pkgcfg{cflags}; #this doesn't wokt at all??
+    #FIXME
     $ccflags = "-fPIC -D_REENTRANT -D_GNU_SOURCE -DDEBIAN -fno-strict-aliasing -pipe -fstack-protector -I/usr/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 ";
 $ccflags = "-I/usr/include -D_GNU_SOURCE "; #that seems enough
     ## Swig produces a number of GCC warnings. Turn them off if we can.
@@ -271,6 +296,7 @@ if ('cygwin' eq $Config{osname} &&
 } elsif ('darwin' eq $Config{osname}) {
     $ldflags .= " -bundle -flat_namespace";
 }
+#lddlflags ??
 $ccflags =~ s/^\s+//;
 $ccflags =~ s/\s+$//;
 $ldflags =~ s/^\s+//;
