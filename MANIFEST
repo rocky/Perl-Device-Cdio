@@ -10,7 +10,6 @@ Makefile.PL
 README
 THANKS
 audio.swg
-compat.swg
 configure
 data/cdda.bin
 data/cdda.cue
