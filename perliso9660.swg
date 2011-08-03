@@ -21,7 +21,6 @@ equivalant standard is called ECMA-119."
 
 /* Various libcdio constants and typedefs */
 %include "types.swg"
-%include "compat.swg"
 
 %include "typemaps.i"
 

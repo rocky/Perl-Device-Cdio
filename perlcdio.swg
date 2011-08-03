@@ -19,8 +19,6 @@ use this library."
 #include <cdio/cdio.h> 
 #include <cdio/audio.h>
 
-%include "compat.swg"
-
 %include "typemaps.i"
 /*%include "cstring.i"*/
 

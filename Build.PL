@@ -140,7 +140,7 @@ my $builder = $class->new(
     swig_files          => ['./']);
 $builder->config(swig_source => {   # with dependencies as hash value
     'perlcdio.swg' =>
-        ['audio.swg', 'compat.swg', 'device.swg',
+        ['audio.swg', 'device.swg',
         'disc.swg', 'device_const.swg', 'disc.swg',
         'read.swg', 'track.swg', 'types.swg'],
     'perliso9660.swg' => ['types.swg'],
