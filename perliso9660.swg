@@ -21,7 +21,6 @@ equivalant standard is called ECMA-119."
 
 /* Various libcdio constants and typedefs */
 %include "types.swg"
-%include "compat.swg"
 
 %include "typemaps.i"
 
@@ -300,7 +299,7 @@ iso9660_dtime_t *
 set_dtime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon, 
 	    int tm_year)
 {
-  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, 0, 0 };
+  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, 0, 0, 0 };
   static iso9660_dtime_t dtime;
   iso9660_set_dtime (&tm, &dtime);
   return &dtime;
@@ -320,7 +319,7 @@ set_ltime ( int tm_sec, int tm_min, int tm_hour, int tm_mday, int tm_mon,
 	    int tm_year)
 
 {
-  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, 0, 0 };
+  struct tm tm = { tm_sec, tm_min, tm_hour, tm_mday, tm_mon, tm_year, 0, 0, 0 };
   static iso9660_ltime_t ldate;
   iso9660_set_ltime (&tm, &ldate);
   return &ldate;

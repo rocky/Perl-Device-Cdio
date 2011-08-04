@@ -386,11 +386,9 @@ sub get_hwinfo {
     return $perlcdio::BAD_PARAMETER if !_check_arg_count($#_, 0);
     # There's a bug I don't understand where p_cdio gets returned
     # and it shouldn't. So we just ignore that below.
-    # my (undef, $vendor, $model, $release,$drc) =
     # changed by jerry to overwrite the argument $self->{cd}
-    # see device.swg 425 ...
     my ($vendor, $model, $release, $drc) = 
-	       perlcdio::get_hwinfo($self->{cd});
+        perlcdio::get_hwinfo($self->{cd});
     return ($vendor, $model, $release, $drc);
 }
 
@@ -452,27 +450,30 @@ if found any cdtext on disk;
 
 sub get_disk_cdtext {
     my($self,@p) = @_;
-    my (@text) = perlcdio::get_cdtext($self->{cd},0);
-    return _text2hash(@text);
+    return perlcdio::get_cdtext($self->{cd},0);
 }
 
 sub get_track_cdtext {
     my($self,$t, @p) = @_;
     $t = 1 if !defined $t;
-    my (@text) = perlcdio::get_cdtext($self->{cd},$t);
-    return _text2hash(@text);
+    return perlcdio::get_cdtext($self->{cd},$t);
 }
 
-sub _text2hash {
-    my @text = @_;
-    my %hash;
-    foreach my $line (@text) {
-        next if !$line;
-        my ($k,$t) = split(' ',$line,2);
-        $hash{$k}=$t;
-    }
-    return \%hash;
+=pod
+
+=head2 get_cddb_discid
+
+    $discid = $dev->get_cddb_discid;
+
+Returns the calculated cddb discid integer. Usually used as hexstring!
+
+=cut
+
+sub get_cddb_discid {
+    my($self,@p) = @_;
+    return perlcdio::get_cddb_discid($self->{cd});
 }
+
 =pod
 
 =head2 audio_get_status
@@ -483,11 +484,14 @@ Returns a hash reference with the audio-subchannel-mmc status values:
 
     audio_status : value
     status_text  : audio_status as text
+                (INVALID,ERROR,NO_STATUS,UNKNWON,playing,paused,completed)
     track : track number
     index : index in track
-msf time values as ints minutes, seconds,frames :
-    abs_m,abs_s,abs_f  : total disk time played
-    rel_m,rel_s,el_f   : track time played
+    msf time values as ints minutes, seconds,frames :
+        abs_m,abs_s,abs_f  : total disk time played
+        rel_m,rel_s,el_f   : track time played
+    disk_s  : seconds disk played
+    track_s : seconds track played
     address
     control
 
@@ -496,25 +500,7 @@ msf time values as ints minutes, seconds,frames :
 sub audio_get_status {
     my($self,@p) = @_;
     my ($ptr, $drc) = perlcdio::audio_get_status($self->{cd});
-    my %CDIO_MMC_READ_SUB_ST = (0x00 => 'INVALID',0x11 => 'playing',
-        0x12 => 'paused', 0x13 => 'completed', 0x14 => 'ERROR',
-        0x15 => 'NO_STATUS');
-    my %subch;
-    $subch{format} = perlcdioc::SUBChannel_format_get($ptr);
-    $subch{audio_status} = perlcdioc::SUBChannel_audio_status_get($ptr);
-    $subch{status_text} = $CDIO_MMC_READ_SUB_ST{$subch{audio_status}};
-    $subch{status_text} = 'UNKNWON' if ! defined $subch{status_text};
-    $subch{address} = perlcdioc::SUBChannel_address_get($ptr);
-    $subch{control} = perlcdioc::SUBChannel_control_get($ptr);
-    $subch{track} = perlcdioc::SUBChannel_track_get($ptr);
-    $subch{index} = perlcdioc::SUBChannel_index_get($ptr);
-    $subch{abs_m} = perlcdioc::SUBChannel_abs_m_get($ptr);
-    $subch{abs_s} = perlcdioc::SUBChannel_abs_s_get($ptr);
-    $subch{abs_f} = perlcdioc::SUBChannel_abs_f_get($ptr);
-    $subch{rel_m} = perlcdioc::SUBChannel_rel_m_get($ptr);
-    $subch{rel_s} = perlcdioc::SUBChannel_rel_s_get($ptr);
-    $subch{rel_f} = perlcdioc::SUBChannel_rel_f_get($ptr);
-    return \%subch, $drc;
+    return $ptr, $drc;
 }
 
 =pod
@@ -531,8 +517,6 @@ sub is_tray_open {
     my($self,@p) = @_;
     return perlcdio::get_tray_status($self->{cd});
 }
-
-
 
 
 =pod

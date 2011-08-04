@@ -224,7 +224,7 @@ Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
 
 sub read_superblock {
     my($self,@p) = @_;
-    my($iso_mask) = rearrange(['ISO_MASK'], @p);
+    my($iso_mask) = _rearrange(['ISO_MASK'], @p);
     
     $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
 
