@@ -41,6 +41,7 @@ sub init() {
   $opts{resume}=0;
   $opts{stop}=0;
   $opts{get_audio_volume}=0;
+  $opts{set_audio_volume}='';
   $opts{set_audio}=0;
 }
 
@@ -60,16 +61,17 @@ usage:
     Issue analog audio CD controls - like playing
 
 options:
-    --help                 -- print this help and exit
-    --version              -- show a CVS version string and exit
-    --eject DEVICE         -- eject disc from DEVICE
-    --close DEVICE         -- close CD tray of DEVICE
-    -P | --pause           -- pause playing
-    --play                 -- play entire CD
-    --resume               -- resume playing
-    --stop                 -- stop playing
-    --track=N              -- play track N
-    --levels               -- get audio volume levels
+    --help          -- print this help and exit
+    --version       -- show a CVS version string and exit
+    --eject DEVICE  -- eject disc from DEVICE
+    --close DEVICE  -- close CD tray of DEVICE
+    -P | --pause    -- pause playing
+    --play          -- play entire CD
+    --resume        -- resume playing
+    --stop          -- stop playing
+    --track=N       -- play track N
+    --volume        -- get audio volume levels
+    --set-volume=s  -- set audio volume levels
 ";
   exit 100;
 }
@@ -93,6 +95,7 @@ sub process_options() {
      'stop'           => \$opts{stop},
      'volume'         => \$opts{get_audio_volume},
      'track=n'        => \$opts{track},
+     'set-volume=s'   => \$opts{set_audio_volume},
     );
   show_version() if $show_version;
 
@@ -176,6 +179,12 @@ if ($opts{play}) {
 } elsif ($opts{get_audio_volume}) {
     my($vol, $rc) = $d->audio_get_volume();
     printf "Audio volume levels: %s\n", join(', ', @$vol);
+} elsif ($opts{set_audio_volume}) {
+    my @levels=split(/,\s*/, $opts{set_audio_volume});
+    # $d->audio_set_volume(@levels);
+    $d->audio_set_volume($levels[0], $levels[1], $levels[2], $levels[3]);
+     my($vol, $rc) = $d->audio_get_volume();
+     printf "Audio volume levels are now: %s\n", join(', ', @$vol);
 } elsif ($opts{pause}) {
     printf "Pausing playing in drive %s\n", $device_name;
     $drc = $d->audio_pause();
