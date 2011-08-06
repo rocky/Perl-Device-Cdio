@@ -40,6 +40,9 @@ sub init() {
   $opts{play}=0;
   $opts{resume}=0;
   $opts{stop}=0;
+  $opts{get_audio_volume}=0;
+  $opts{set_audio_volume}='';
+  $opts{set_audio}=0;
 }
 
 # Show the CVS version id string and quit.
@@ -58,15 +61,17 @@ usage:
     Issue analog audio CD controls - like playing
 
 options:
-    --help                 -- print this help and exit
-    --version              -- show a CVS version string and exit
-    --eject DEVICE         -- eject disc from DEVICE
-    --close DEVICE         -- close CD tray of DEVICE
-    -P | --pause           -- pause playing
-    --play                 -- play entire CD
-    --resume               -- resume playing
-    --stop                 -- stop playing
-    --track=N              -- play track N
+    --help          -- print this help and exit
+    --version       -- show a CVS version string and exit
+    --eject DEVICE  -- eject disc from DEVICE
+    --close DEVICE  -- close CD tray of DEVICE
+    -P | --pause    -- pause playing
+    --play          -- play entire CD
+    --resume        -- resume playing
+    --stop          -- stop playing
+    --track=N       -- play track N
+    --volume        -- get audio volume levels
+    --set-volume=s  -- set audio volume levels
 ";
   exit 100;
 }
@@ -88,7 +93,9 @@ sub process_options() {
      'play'           => \$opts{play},
      'resume'         => \$opts{resume},
      'stop'           => \$opts{stop},
+     'volume'         => \$opts{get_audio_volume},
      'track=n'        => \$opts{track},
+     'set-volume=s'   => \$opts{set_audio_volume},
     );
   show_version() if $show_version;
 
@@ -169,6 +176,15 @@ if ($opts{play}) {
     my $end_lsn = $d->get_track($opts{track}+1)->get_lsn();
     $drc = $d->audio_play_lsn($start_lsn, $end_lsn);
     printf "Error closing: %s\n", perlcdio::driver_errmsg($drc) if ($drc);
+} elsif ($opts{get_audio_volume}) {
+    my($vol, $rc) = $d->audio_get_volume();
+    printf "Audio volume levels: %s\n", join(', ', @$vol);
+} elsif ($opts{set_audio_volume}) {
+    my @levels=split(/,\s*/, $opts{set_audio_volume});
+    # $d->audio_set_volume(@levels);
+    $d->audio_set_volume($levels[0], $levels[1], $levels[2], $levels[3]);
+     my($vol, $rc) = $d->audio_get_volume();
+     printf "Audio volume levels are now: %s\n", join(', ', @$vol);
 } elsif ($opts{pause}) {
     printf "Pausing playing in drive %s\n", $device_name;
     $drc = $d->audio_pause();
