@@ -1,16 +1,19 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 #Test functioning of BIN/CUE image routines
 
 use strict;
+use warnings;
 
 BEGIN {
-    chdir 't' if -d 't';
+    use File::Basename;
+    chdir basename(__FILE__);
 }
 use lib '../lib';
 use blib;
 
 use Device::Cdio::Device;
-use Test::Simple tests => 14;
+use Test::More tests => 14;
+note "Test BIN/CUE image routines";
 
 my $cuefile="data/cdda.cue";
 $cuefile = '../data/cdda.cue' if ! -f $cuefile;

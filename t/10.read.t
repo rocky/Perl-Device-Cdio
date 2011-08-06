@@ -1,7 +1,8 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 # Test functioning of read routines
 
 use strict;
+use warnings;
 
 BEGIN {
     chdir 't' if -d 't';
@@ -10,7 +11,8 @@ use lib '../lib';
 use blib;
 
 use Device::Cdio::Device;
-use Test::Simple tests => 6;
+use Test::More tests => 6;
+note "Test functioning of read routines";
 
 my $cuefile="../data/isofs-m1.cue";
 my $device = Device::Cdio::Device->new(-source=>$cuefile);

@@ -1,8 +1,9 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 # Test of some ISO9660::IFS routines
 # This is similar to example/iso1.pl
 
 use strict;
+use warnings;
 use Config;
 
 BEGIN {
@@ -18,6 +19,7 @@ use Device::Cdio::ISO9660::IFS;
 use File::Spec;
 
 use Test::More tests => 5;
+note 'Test ISO9660::IFS routines';
 
 # The test ISO 9660 image
 my $ISO9660_IMAGE_PATH="../data";
@@ -46,4 +48,3 @@ my @okay_stats = (
 
 is_deeply(\@file_stats, \@okay_stats, 'ISO 9660 file stats');
 $iso->close();
-exit 0;

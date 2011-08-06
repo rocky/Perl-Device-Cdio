@@ -1,7 +1,8 @@
 #!/usr/bin/perl -T
 use strict;
 BEGIN {
-    chdir '..' if ! -d 't';
+    use File::Basename;
+    chdir basename(__FILE__);
     push @INC, ('blib/lib', 'blib/arch');
 }
 

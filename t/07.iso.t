@@ -1,18 +1,21 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 # Test some low-level ISO9660 routines
 # This is basically the same thing as libcdio's testiso9660.c
 
 use strict;
+use warnings;
 use Config;
 
 BEGIN {
-    chdir 't' if -d 't';
+    use File::Basename;
+    chdir basename(__FILE__);
 }
 use lib '../lib';
 use blib;
 
 use perliso9660;
 use Test::More tests => 14;
+note 'Test low-level ISO9660 routines';
 
 sub is_eq($$) {
     my ($a_ref, $b_ref) = @_;
@@ -183,13 +186,10 @@ my ($bool, @new_tm) = perliso9660::get_dtime($dtime, 1);
 
 ok(is_eq(\@new_tm, \@tm), 'get_dtime(set_dtime())');
 
-#if ($perliso9660::VERSION_NUM >= 77) {
-#    @tm = gmtime(0);
-#    my $ltime = perliso9660::set_ltime($tm[0], $tm[1], $tm[2], $tm[3], $tm[4],
-#				       $tm[5]);
-#    ($bool, @new_tm) =  perliso9660::get_ltime($ltime);
-#    ok(is_eq(\@new_tm, \@tm), 'get_ltime(set_ltime())');
-#}
+# @tm = gmtime(0);
+# my $ltime = perliso9660::set_ltime($tm[0], $tm[1], $tm[2], $tm[3], $tm[4],
+# 				   $tm[5]);
+# ($bool, @new_tm) =  perliso9660::get_ltime($ltime);
+# ok(is_eq(\@new_tm, \@tm), 'get_ltime(set_ltime())');
 
 
-exit 0;

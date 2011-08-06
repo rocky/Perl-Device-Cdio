@@ -1,7 +1,8 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 ##Test functioning CD-DA
 
 use strict;
+use warnings;
 
 BEGIN {
     chdir 't' if -d 't';
@@ -10,7 +11,8 @@ use lib '../lib';
 use blib;
 
 use Device::Cdio::Device;
-use Test::Simple tests => 10;
+use Test::More tests => 10;
+note('Test functioning CD-DA');
 
 my $cuefile = '../data/cdda.cue';
 my $device = Device::Cdio::Device->new(-source=>$cuefile);

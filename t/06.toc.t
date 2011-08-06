@@ -1,16 +1,19 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 #Test functioning of cdrdao image routines
 
 use strict;
+use warnings;
 
 BEGIN {
-    chdir 't' if -d 't';
+    use File::Basename;
+    chdir basename(__FILE__);
 }
 use lib '../lib';
 use blib;
 
 use Device::Cdio::Device;
-use Test::Simple tests => 12;
+use Test::More tests => 12;
+note "Test cdrdao image routines";
 
 ## TOC reading needs to be done in the directory where the
 ## TOC/BIN files reside.
@@ -55,4 +58,3 @@ ok($perlcdio::DRIVER_OP_UNSUPPORTED == $drc, "set blocksize");
 $drc = $device->set_speed(5);
 ok($perlcdio::DRIVER_OP_UNSUPPORTED == $drc, "set speed");
 $device->close();
-

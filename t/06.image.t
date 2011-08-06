@@ -1,16 +1,19 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 # Test that we have image drivers
 
 use strict;
+use warnings;
 
 BEGIN {
-    chdir 't' if -d 't';
+    use File::Basename;
+    chdir basename(__FILE__);
 }
 use lib '../lib';
 use blib;
 
 use Device::Cdio::Device;
-use Test::Simple tests => 6;
+use Test::More tests => 6;
+note "Test we have image drivers";
 
 my $result = Device::Cdio::have_driver('CDRDAO');
 ok($result, "Have cdrdrao driver via string");
@@ -24,4 +27,3 @@ $result = Device::Cdio::have_driver('BIN/CUE');
 ok($result, "Have BIN/CUE driver via string");
 $result = Device::Cdio::have_driver($perlcdio::DRIVER_BINCUE);
 ok($result, "Have BIN/CUE driver via driver_id");
-

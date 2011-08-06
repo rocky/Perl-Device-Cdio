@@ -1,15 +1,18 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 use strict;
+use warnings;
 BEGIN {
-    chdir 't' if -d 't';
+    use File::Basename;
+    chdir basename(__FILE__);
 }
 use lib '../lib';
 use blib;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
+note( "Testing Device::Cdio $Device::Cdio::VERSION" );
 
 BEGIN {
 use_ok( 'Device::Cdio' );
 }
 
-diag( "Testing Device::Cdio $Device::Cdio::VERSION" );
+ok(defined($Device::Cdio::VERSION), "\$Device::Cdio::VERSION number is set");

@@ -1,20 +1,22 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 # Test running miscellaneous operations
 # No assumption about the CD-ROM drives is made, so
 # we're just going to run operations and see that they
 # don't crash.
 
 use strict;
-
+use warnings;
 BEGIN {
-    chdir 't' if -d 't';
+    use File::Basename;
+    chdir basename(__FILE__);
 }
 use lib '../lib';
 use blib;
 
 use Device::Cdio;
 use Device::Cdio::Device;
-use Test::Simple tests => 6;
+use Test::More tests => 6;
+note 'Test running miscellaneous operations';
 
 my @drives = Device::Cdio::get_devices();
 ok ( 1 , 'Device::Cdio::get_devices');
