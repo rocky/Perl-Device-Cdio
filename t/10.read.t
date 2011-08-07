@@ -14,7 +14,8 @@ use Device::Cdio::Device;
 use Test::More tests => 6;
 note "Test functioning of read routines";
 
-my $cuefile="../data/isofs-m1.cue";
+use Cwd;
+my $cuefile= Cwd::abs_path("../data/isofs-m1.cue");
 my $device = Device::Cdio::Device->new(-source=>$cuefile);
 
 # Read the ISO Primary Volume descriptor

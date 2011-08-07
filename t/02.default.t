@@ -3,8 +3,6 @@
 use strict;
 use warnings;
 BEGIN {
-    use File::Basename;
-    chdir basename(__FILE__);
     push @INC, ('blib/lib', 'blib/arch');
 }
 use lib '../lib';

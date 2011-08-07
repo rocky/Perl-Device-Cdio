@@ -5,11 +5,6 @@
 use strict;
 use warnings;
 use Config;
-
-BEGIN {
-    use File::Basename;
-    chdir basename(__FILE__);
-}
 use lib '../lib';
 use blib;
 

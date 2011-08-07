@@ -3,16 +3,11 @@
 
 use strict;
 use warnings;
-
-BEGIN {
-    use File::Basename;
-    chdir basename(__FILE__);
-}
 use lib '../lib';
 use blib;
 
 use Device::Cdio::Device;
-use Test::More tests => 6;
+use Test::More;
 note "Test we have image drivers";
 
 my $result = Device::Cdio::have_driver('CDRDAO');
@@ -27,3 +22,4 @@ $result = Device::Cdio::have_driver('BIN/CUE');
 ok($result, "Have BIN/CUE driver via string");
 $result = Device::Cdio::have_driver($perlcdio::DRIVER_BINCUE);
 ok($result, "Have BIN/CUE driver via driver_id");
+done_testing();
