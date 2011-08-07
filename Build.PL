@@ -90,7 +90,7 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
             my $verb = $self->runtime_params('verbose');
             $verb = 0 if $self->runtime_params('quiet');
             #my @p = @_;
-            print "procces c files\n" if $verb;
+            print "process c files\n" if $verb;
             my $cfiles = $self->rscan_dir('./',qr/\.c$/);
             # if none return
             #set $self->quiet() for CBuilder->new
@@ -139,12 +139,12 @@ my $builder = $class->new(
     sign                => 1,
     swig_files          => ['./']);
 $builder->config(swig_source => {   # with dependencies as hash value
-    'perlcdio.swg' =>
-        ['audio.swg', 'device.swg',
-        'disc.swg', 'device_const.swg', 'disc.swg',
-        'read.swg', 'track.swg', 'types.swg'],
-    'perliso9660.swg' => ['types.swg'],
-    'perlmmc.swg', => ['types.swg']} );
+    'swig/perlcdio.swg' =>
+        ['swig/audio.swg', 'swig/device.swg',
+        'swig/disc.swg', 'swig/device_const.swg', 'swig/disc.swg',
+        'swig/read.swg', 'swig/track.swg', 'swig/types.swg'],
+    'swig/perliso9660.swg' => ['swig/types.swg'],
+    'swig/perlmmc.swg', => ['swig/types.swg']} );
 
 if($builder->have_c_compiler()) {
     $builder->notes('c_compiler' => 1);

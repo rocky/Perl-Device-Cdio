@@ -8,9 +8,12 @@ CVS
 ^\.cvsignore
 ^_build
 ^blib
-^lib\.cvsignore
+^lib\.gitignore
+^.git
 ^lib/perlcdio\.pm
 ^lib/perliso9660\.pm
+^lib/perlmmc\.pm
+^cover_db
 ~$
 tmp\d+$
 ^MYMETA.yml$
