@@ -1,5 +1,5 @@
-#!/usr/bin/perl -w
-#  Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@gnu.org>
+#!/usr/bin/env perl
+#  Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rockycpan.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
