@@ -33,7 +33,23 @@ provides:
   Device::Cdio::Util:
     file: lib/Device/Cdio/Util.pm
     version: 0
+  perlcdio:
+    file: lib/perlcdio.pm
+    version: 0
+  perlcdioc:
+    file: lib/perlcdio.pm
+  perliso9660:
+    file: lib/perliso9660.pm
+    version: 0
+  perliso9660c:
+    file: lib/perliso9660.pm
+  perlmmc:
+    file: lib/perlmmc.pm
+    version: 0
+  perlmmcc:
+    file: lib/perlmmc.pm
 requires:
+  ExtUtils::CBuilder: 0.28
   ExtUtils::PkgConfig: 1.03
   Test::More: 0
   version: 0
