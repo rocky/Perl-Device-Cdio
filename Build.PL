@@ -120,9 +120,8 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
 
 my $builder = $class->new( 
     module_name         => 'Device::Cdio',
-    add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*', 'cover_db',
-			     'lib/perlmmc.pm', 'lib/perliso9660.pm',
-			     'lib/perlcdio.pm', '*.so', '*.c', '*.o' ],
+    add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*', 'cover_db', 
+			     'lib/perl*.pm', '*.so', '*.c', '*.o' ],
     create_makefile_pl  => 'passthrough',
     dist_abstract       => 
     'Perl bindings for CD Input and control library (libcdio)',

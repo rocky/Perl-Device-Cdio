@@ -23,8 +23,6 @@ examples/iso2.pl
 examples/iso3.pl
 examples/README
 examples/tracks.pl
-lib/.gitignore
-lib/Device/.gitignore
 lib/Device/Cdio.pm
 lib/Device/Cdio/Device.pm
 lib/Device/Cdio/ISO9660.pm
@@ -32,9 +30,9 @@ lib/Device/Cdio/ISO9660/FS.pm
 lib/Device/Cdio/ISO9660/IFS.pm
 lib/Device/Cdio/Track.pm
 lib/Device/Cdio/Util.pm
-lib/perlcdio.pm                 # Should be creted by swig
-lib/perliso9660.pm              # Should be creted by swig
-lib/perlmmc.pm                  # Should be creted by swig
+lib/perlcdio.pm
+lib/perliso9660.pm
+lib/perlmmc.pm
 Makefile
 Makefile.PL
 MANIFEST
@@ -54,7 +52,6 @@ swig/read.swg
 swig/track.swg
 swig/types.swg
 t/.gdb_history
-t/.gitignore
 t/00.load.t
 t/01.pod-coverage.t
 t/01.pod.t
