@@ -76,7 +76,7 @@ For compatibility, the older idiom is tolerated:
 DEPENDENCIES
 ------------
 
-* libcdio
+* libcdio and development headers
 * C compiler
 * SWIG (optional)
 
