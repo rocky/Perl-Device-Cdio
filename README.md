@@ -1,4 +1,7 @@
-This add Perl bindings for the GNU CD Input and Control library
+Device::Cdio - Perl bindings for libcdio (CD Input and Control library)
+============================================================================
+
+This adds Perl bindings for the GNU CD Input and Control library
 (libcdio) and it's ISO 9660 library (libiso9660) which are written in
 C. The library encapsulates CD-ROM reading and control and ISO 9660
 handling. Perl programs wishing to be oblivious of the OS- and
@@ -50,6 +53,7 @@ programs in the example directory.
 
 
 INSTALLATION
+------------
 
 To install this module, run the following commands:
 
@@ -68,11 +72,15 @@ For compatibility, the older idiom is tolerated:
 
 
 DEPENDENCIES
+------------
 
-libcdio
+* libcdio
+* C compiler
+* SWIG (optional)
 
 
 COPYRIGHT AND LICENSE
+---------------------
 
   Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
 

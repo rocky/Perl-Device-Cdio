@@ -40,7 +40,7 @@ META.yml			# Will be created by "make dist"
 perlcdio_wrap.c
 perliso9660_wrap.c
 perlmmc_wrap.c
-README
+README.md
 swig/audio.swg
 swig/device.swg
 swig/device_const.swg
