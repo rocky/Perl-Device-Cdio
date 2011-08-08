@@ -74,11 +74,10 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
                 my $basename = basename($file, '.swg');
                 my $cfile = $basename."_wrap.c";
                 my $pmfile = File::Spec->catfile($lib,"$basename.pm");
-                ##check up todate pmfile? libfile?
                 if($self->up_to_date($swigdeps->{$file}, $cfile)) {
-                    next if $self->up_to_date($file, $cfile);
+                    next if $self->up_to_date($file, $cfile) && 
+			 $self->up_to_date($cfile, $pmfile);
                 }
-                print "swig: $file -> $cfile\n" if $verb;
                 $self->do_system('swig', '-o', $cfile, '-perl', '-outdir',
                     $lib, @swig_flags, $file);
                 $self->copy_if_modified(from => $pmfile, to_dir => 'blib');
