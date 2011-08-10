@@ -425,7 +425,7 @@ See perlcdio::driver_errmsg($drc) for return values (!= 0).
 
 sub audio_set_volume {
     my($self,@p) = @_;
-    my $vol = perlcdio::audio_get_volume_levels($self->{cd});
+    my ($vol, $drc) = perlcdio::audio_get_volume_levels($self->{cd});
     for(my $i =0;$i<4;$i++) {
         if(defined $p[$i]) {
             @$vol[$i] = $p[$i] if $p[$i] > -1;
