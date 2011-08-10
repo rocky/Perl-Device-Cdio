@@ -74,7 +74,8 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
                 my $basename = basename($file, '.swg');
                 my $cfile = $basename."_wrap.c";
                 my $pmfile = File::Spec->catfile($lib,"$basename.pm");
-                if($self->up_to_date($swigdeps->{$file}, $cfile)) {
+                if ($self->up_to_date($swigdeps->{$file}, $cfile) &&
+                    $self->up_to_date($swigdeps->{$file}, $pmfile)) {
                     next if $self->up_to_date($file, $cfile) && 
                         $self->up_to_date($cfile, $pmfile);
                 }
