@@ -9,7 +9,7 @@ use lib '../lib';
 use blib;
 
 use perliso9660;
-use Test::More tests => 14;
+use Test::More tests => 15;
 note 'Test low-level ISO9660 routines';
 
 sub is_eq($$) {
@@ -159,25 +159,7 @@ ok($bad==0, 'perliso9660::pathname_isofy');
 my @tm = localtime(0);
 my $dtime = perliso9660::set_dtime($tm[0], $tm[1], $tm[2], $tm[3], $tm[4],
 				   $tm[5]);
-my ($bool, @new_tm) = perliso9660::get_dtime($dtime, 1);
-
-### FIXME Don't know why the discrepancy, but there is an hour
-### difference, perhaps daylight savings time.
-### Versions before 0.77 have other bugs.
-## if ($perliso9660::VERSION_NUM < 77) {
-    $new_tm[2] = $tm[2]; 
-## }
-
-# print "tm: \n";
-# foreach my $tm_i (@tm) {
-#     print $tm_i, " ";
-# }
-# print "\n";
-# print "new tm: \n";
-# foreach my $tm_i (@new_tm) {
-#     print $tm_i, " ";
-# }
-# print "\n";
+my ($bool, @new_tm) = perliso9660::get_dtime($dtime, 0);
 
 ok(is_eq(\@new_tm, \@tm), 'get_dtime(set_dtime())');
 
@@ -187,4 +169,13 @@ ok(is_eq(\@new_tm, \@tm), 'get_dtime(set_dtime())');
 # ($bool, @new_tm) =  perliso9660::get_ltime($ltime);
 # ok(is_eq(\@new_tm, \@tm), 'get_ltime(set_ltime())');
 
+@tm = gmtime();
+my $ltime = perliso9660::set_ltime($tm[0], $tm[1], $tm[2], $tm[3], $tm[4],
+				   $tm[5]);
+($bool, @new_tm) =  perliso9660::get_ltime($ltime);
+if($new_tm[8] =! $tm[8]) { #isdst flag
+    diag(' isdst flags differ '. $new_tm[8]. ' '.$tm[8]);
+    $new_tm[8] = $tm[8];
+}
+ok(is_eq(\@new_tm, \@tm), 'get_ltime(set_ltime())');
 

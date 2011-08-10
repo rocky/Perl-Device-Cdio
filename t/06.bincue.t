@@ -47,14 +47,8 @@ $result = Device::Cdio::is_device($cuefile);
 ok(!$result, "is_device(tocfile)");
 $result = $device->get_media_changed();
 ok(!$result, "bincue: get_media_changed");
-if ($perlcdio::VERSION_NUM >= 77) {
-    # There's a bug in libcdio 0.76 that causes these to crash
-    $drc = $device->set_blocksize(2048);
-    ok($perlcdio::DRIVER_OP_UNSUPPORTED == $drc, "set blocksize");
-    $drc = $device->set_speed(5);
-    ok($perlcdio::DRIVER_OP_UNSUPPORTED == $drc, "set speed");
-} else {
-    ok(1, "skip set blocksize");
-    ok(1, "skip set speed");
-}
+$drc = $device->set_blocksize(2048);
+ok($perlcdio::DRIVER_OP_UNSUPPORTED == $drc, "set blocksize");
+$drc = $device->set_speed(5);
+ok($perlcdio::DRIVER_OP_UNSUPPORTED == $drc, "set speed");
 $device->close();

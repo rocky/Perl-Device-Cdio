@@ -76,8 +76,9 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
                 my $pmfile = File::Spec->catfile($lib,"$basename.pm");
                 if($self->up_to_date($swigdeps->{$file}, $cfile)) {
                     next if $self->up_to_date($file, $cfile) && 
-			 $self->up_to_date($cfile, $pmfile);
+                        $self->up_to_date($cfile, $pmfile);
                 }
+                print "swig: $file -> $cfile\n" if $verb;
                 $self->do_system('swig', '-o', $cfile, '-perl', '-outdir',
                     $lib, @swig_flags, $file);
                 $self->copy_if_modified(from => $pmfile, to_dir => 'blib');
@@ -120,8 +121,7 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
 
 my $builder = $class->new( 
     module_name         => 'Device::Cdio',
-    add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*', 'cover_db', 
-			     'lib/perl*.pm', '*.so', '*.c', '*.o' ],
+    add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*', 'cover_db'], 
     create_makefile_pl  => 'passthrough',
     dist_abstract       => 
     'Perl bindings for CD Input and control library (libcdio)',
@@ -131,13 +131,14 @@ my $builder = $class->new(
     needs_compiler      => 1,
     release_status      => 'testing',
     requires => {
-	'ExtUtils::PkgConfig'     => '1.03',
+        'ExtUtils::PkgConfig'     => '1.03',
         'Test::More'              => 0,
         'version'                 => 0,
         'ExtUtils::CBuilder'      => '0.28',
     },
-    sign                => 1,
-    swig_files          => ['./']);
+    sign                => 1);
+
+$builder->config(swig_files          => './');
 $builder->config(swig_source => {   # with dependencies as hash value
     'swig/perlcdio.swg' =>
         ['swig/audio.swg', 'swig/device.swg',
@@ -159,15 +160,16 @@ if($builder->have_c_compiler()) {
         verbose => $builder->config('verbose'));
     $builder->notes(swig_installed => $swig_installed);
     my ($ccflags, $ldflags,$swig_flags) = check_c_compiler(
-        $builder->config('cc'));
+        $builder->config('cc'), $builder->config('ccflags'));
     $builder->config(extra_linker_flags  => $ldflags);
-    $builder->config(extra_compiler_flags=> $ccflags);
+    $builder->config(extra_compiler_flags => $ccflags);
     if($swig_installed) {
-        $builder->config(swig_flags          => $swig_flags);
+        $builder->config(swig_flags => $swig_flags);
         $builder->add_build_element('swig');
+        $builder->add_to_cleanup('lib/perl*.pm','*.c');
     }
     $builder->add_build_element('c');
-    $builder->add_to_cleanup('*.o','*_wrap.so','tmp*');
+    $builder->add_to_cleanup('*.o','*.so','tmp*',);
     # better: $builder->config('dlext') $builder->config('obj_ext')
     #add a cleanup build_element ??
     #rearrange order of the build process
@@ -177,12 +179,12 @@ if($builder->have_c_compiler()) {
     @el = @{$builder->build_elements};
     $i = grep {$el[$_] eq 'swig'} 0..$#el;
     unshift @el, splice @el, $i, 1;
-    if ($builder->config('verbose')) {
-	foreach my $i (@el) {
-	    print " $i ";
-	}
-	print "\n";
-    }
+    #if ($builder->config('verbose')) {
+    #    foreach my $i (@el) {
+    #        print " $i ";
+    #    }
+    #    print "\n";
+    #}
 }
 #distclean : unlink lib/perliso9660.pm, lib/perlmmc.pm lib/perlcdio.pm
 # c files?
@@ -273,11 +275,8 @@ if ($?) {
 
 sub check_c_compiler {
     my $cc= shift;
-
-    my $ccflags = $libcdio_pkgcfg{cflags}; #this doesn't wokt at all??
-    #FIXME
-    $ccflags = "-fPIC -D_REENTRANT -D_GNU_SOURCE -DDEBIAN -fno-strict-aliasing -pipe -fstack-protector -I/usr/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 ";
-$ccflags = "-I/usr/include -D_GNU_SOURCE "; #that seems enough
+    my $ccflags = shift;
+    $ccflags .= ' '. $libcdio_pkgcfg{cflags};
     ## Swig produces a number of GCC warnings. Turn them off if we can.
     $ccflags .= try_cflags("-Wno-strict-aliasing");
     $ccflags .= try_cflags("-Wno-unused-function");
@@ -285,9 +284,10 @@ $ccflags = "-I/usr/include -D_GNU_SOURCE "; #that seems enough
     $ccflags .= try_cflags("-Wno-unused-function");
     $ccflags .= try_cflags("-Wno-unused-variable");
 
-my %libiso9660_pkgcfg = ExtUtils::PkgConfig->find ('libiso9660');
-my $ldflags = "$libcdio_pkgcfg{libs} $libiso9660_pkgcfg{libs} -lcdio";
-my $swig_flags='';
+    my %libiso9660_pkgcfg = ExtUtils::PkgConfig->find ('libiso9660');
+    my $ldflags = "$libcdio_pkgcfg{libs} $libiso9660_pkgcfg{libs} -lcdio";
+    my $swig_flags='';
+
 if ('cygwin' eq $Config{osname} && 
     $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
     $ldflags .= " -L$1 -lperl";
