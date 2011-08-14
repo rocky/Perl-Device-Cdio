@@ -18,19 +18,16 @@ my $device = '/dev/cdrom';
 
 note 'Test running audio device operations';
 
-my $dev = Device::Cdio::Device->new($device);
-ok ( defined $dev , 'Device::Cdio::Device->new()');
+my $dev = Device::Cdio::Device->new(-driver_id=>$perlcdio::DRIVER_DEVICE);
+ok ( defined $dev , 'Device::Cdio::Device->new(-driver_id=>$perlcdio::DRIVER_DEVICE)');
+my $drive_name = $dev->get_device();
+note('Device->new(DRIVER_DEVICE)((i.e.:',$perlcdio::DRIVER_DEVICE,')) found: ',$drive_name);
 
 #my @drives = Device::Cdio::get_devices_with_cap(
 #       -capabilities => $perlcdio::FS_AUDIO,
 #       -any=>0);
 my @drives = Device::Cdio::get_devices($perlcdio::DRIVER_DEVICE);
 SKIP : {
-    skip 'no devices found', 1, unless scalar @drives;
-    ok ( scalar @drives , 'Device::Cdio::get_devices');
-    diag explain @drives;
-    # $device = $drives[0]; ??
-
     my @hwinfo = $dev->get_hwinfo;
     ok ( $hwinfo[3] , 'Device::Cdio::Device->get_hwinfo');
     note("Testing ", $device, ' ', $hwinfo[0],' ',$hwinfo[1]);
