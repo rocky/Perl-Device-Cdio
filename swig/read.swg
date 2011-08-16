@@ -162,3 +162,15 @@ read_data_bytes(const CdIo_t *p_cdio, lsn_t i_lsn,
   return p_buf;
 }
 %}
+
+iso9660_pvd_t *cdio_read_pvd ( const CdIo_t *p_cdio );
+%inline %{
+iso9660_pvd_t *cdio_read_pvd ( const CdIo_t *p_cdio ) {
+  static iso9660_pvd_t pvd;
+  int rc = cdio_read_data_sectors( p_cdio, &pvd, ISO_PVD_SECTOR,
+                ISO_BLOCKSIZE, 1);
+  if (rc < 0) return NULL;
+  return &pvd;
+ }
+%}
+

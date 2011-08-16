@@ -90,7 +90,6 @@ get_disc_mode (CdIo_t *p_cdio)
     return (const char *)newSV(0);
   return discmode2str[discmode];
 }
-
 %}
 
 
@@ -157,3 +156,24 @@ uint32_t get_cddb_discid(CdIo_t *p_cdio)
 }
 %}
 
+SV * guess_cd_type(const CdIo_t *cdio, int start_session, track_t track_num);
+%inline %{
+SV * guess_cd_type(const CdIo_t *cdio, int start_session, track_t track_num) {
+    cdio_iso_analysis_t t;
+    int r;
+    HV * iso_analysis;
+    r = cdio_guess_cd_type (cdio,  start_session, track_num, &t);
+    iso_analysis = newHV();
+    hv_store(iso_analysis, "cdio_fs_t",9, newSViv(r&CDIO_FS_MASK),0);
+    hv_store(iso_analysis, "cdio_fs_cap_t",13, newSViv(r&~CDIO_FS_MASK),0);
+    hv_store(iso_analysis, "joliet_level",12, newSVuv(t.joliet_level),0);
+    hv_store(iso_analysis, "iso_label",9,newSVpv(t.iso_label,0),0);
+    hv_store(iso_analysis, "isofs_size",10, newSVuv(t.isofs_size),0);
+    hv_store(iso_analysis, "UDFVerMinor",11,
+            newSVuv((unsigned int)t.UDFVerMinor),0);
+    hv_store(iso_analysis, "UDFVerMajor",11, 
+        newSVuv((unsigned int)t.UDFVerMajor),0);
+
+    return  newRV_noinc(sv_2mortal((SV*)iso_analysis));
+}
+%}

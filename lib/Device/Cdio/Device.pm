@@ -607,6 +607,33 @@ sub get_media_changed {
 
 =pod
 
+=head2 guess_cd_type
+
+$hash = $dev->guess_cd_type($lsn,$track);
+
+Try to determine what kind of CD-image and/or filesystem we have at 
+track $track. First argument is the start lsn of track $track. Returns a 
+hash reference with following keys:
+
+    cdio_fs_t     (enum cdio_fs_t from libcdio) FIXME: add text
+    cdio_fs_cap_t (enum cdio_fs_cap_t from libcdio) FIXME: add text
+    joliet_level  If has Joliet extensions, this is the associated level 
+                    number (i.e. 1, 2, or 3). 
+    iso_label      32 byte ISO fs label.
+    isofs_size     size of ISO fs.
+    UDFVerMajor    UDF fs version.
+    UDFVerMinor    UDF fs version.
+
+=cut
+
+sub guess_cd_type {
+    my($self, $session, $track, @p) = @_;
+    return $perlcdio::BAD_PARAMETER if !_check_arg_count($#_, 2);
+    return perlcdio::guess_cd_type($self->{cd}, $session, $track);
+}
+
+=pod
+
 =head2 get_num_tracks
 
   get_num_tracks()->int
@@ -884,6 +911,24 @@ sub set_speed {
     return $perlcdio::BAD_PARAMETER if _extra_args(@args);
     return perlcdio::set_speed($self->{cd}, $speed);
 }
+
+=pod
+
+=head2 read_pvd
+
+$pvd = $dev->read_pvd;
+
+Reads and returns the ISO-9660 Primary Volume Descriptor (PVD) from the disk.
+You can use perliso9660::get_pvd_type($pvd) ... methods to get the values.
+
+=cut
+
+
+sub read_pvd {
+    my($self,@p) = @_;
+    return  perlcdio::cdio_read_pvd($self->{cd});
+}
+
 
 1; # Magic true value required at the end of a module
 

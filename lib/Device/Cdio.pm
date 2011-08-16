@@ -251,11 +251,7 @@ sub get_devices {
     my($driver_id, @args) = _rearrange(['DRIVER_ID'], @p);
     return undef if _extra_args(@args);
     $driver_id = $perlcdio::DRIVER_DEVICE if !defined($driver_id);
-    # There's a bug in the swig code in that the input parameter
-    # is left on the stack
-    my @ret = perlcdio::get_devices($driver_id);
-    shift @ret;
-    return @ret;
+    return perlcdio::get_devices($driver_id);
 }
 
 =pod
@@ -277,11 +273,7 @@ sub get_devices_ret {
     my($driver_id, @args) = _rearrange(['DRIVER_ID'], @p);
     return undef if _extra_args(@args);
     $driver_id = $perlcdio::DRIVER_DEVICE if !defined($driver_id);
-    # There's a bug in the swig code in that the input parameter
-    # is left on the stack
-    my @ret = perlcdio::get_devices_ret($driver_id);
-    shift @ret;
-    return @ret;
+    return perlcdio::get_devices_ret($driver_id);
 }
 
 =pod
@@ -311,11 +303,7 @@ sub get_devices_with_cap {
     my($cap, $any, @args) = _rearrange(['CAPABILITIES', 'ANY'], @p);
     return undef if _extra_args(@args);
     $any = 1 if !defined($any);
-    # There's a bug in the swig code in that the input parameters
-    # are left on the stack
-    my @ret = perlcdio::get_devices_with_cap($cap, $any);
-    shift @ret; shift @ret;
-    return @ret;
+    return perlcdio::get_devices_with_cap($cap, $any);
 }
 
 =pod

@@ -14,6 +14,7 @@ use this library."
 #include <cdio/cdio.h>
 #include <cdio/audio.h>
 #include <cdio/cd_types.h>
+#include <cdio/iso9660.h>
 %}
 
 #include <cdio/cdio.h> 

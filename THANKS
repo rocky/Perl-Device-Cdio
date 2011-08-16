@@ -1,14 +1,16 @@
 Many thanks to Jerry G Geiger for resurrecting this project from the dead. He added:
 
+- audio_get_status
 - audio_get_volume
 - audio_set_volume
-- get_disk_cdtext, get_track_cdtext
-- audio_get_status
-- is_tray_open
+- cdio_guess_cd_type 
+- cdio_read_pvd
 - cdio_version (version string of linked library)
 - get_cddb_discid
-- audio_get_status
+- get_disk_cdtext
 - get_joliet_level
+- get_track_cdtext
+- is_tray_open
 
 He also fixed Build.PL so it works again and added many corrections to
 my faulty C interface code.;
