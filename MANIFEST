@@ -14,6 +14,7 @@ examples/.gitignore
 examples/audio.pl
 examples/cd-read.pl
 examples/cdchange.pl
+examples/checkcd.pl
 examples/device.pl
 examples/drives.pl
 examples/eject.pl
@@ -66,4 +67,5 @@ t/07.iso2.t
 t/07.iso3.t
 t/10.cdda.t
 t/10.read.t
+t/11.dev.t
 THANKS
