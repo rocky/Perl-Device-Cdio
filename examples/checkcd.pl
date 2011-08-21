@@ -63,11 +63,13 @@ if(not $dev) {
     die "$program: Can't open device $device_name \n";
 }
 my @hwinfo = $dev->get_hwinfo;
-print "$program: ",perlcdio::driver_errmsg($hwinfo[3]),"\n" if !$hwinfo[3];
-
-printf "$program: device %s %s (rev %s) %s (%s)\n",
-    $hwinfo[0], $hwinfo[1], $hwinfo[2], $device_name, $dev->get_driver_name();
-
+if (!$hwinfo[3]) {
+    print "$program: ",perlcdio::driver_errmsg($hwinfo[3]),"\n";
+} else {
+    printf("$program: device %s %s (rev %s) %s (%s)\n",
+	   $hwinfo[0], $hwinfo[1], $hwinfo[2], $device_name, 
+	   $dev->get_driver_name());
+}
 if($dev->is_tray_open) {
     print "  tray is open?\n";
     # missing tray is open? -> close tray
@@ -256,6 +258,9 @@ sub find_devices {
     my $drives = Device::Cdio::get_devices_with_cap(
         -capabilities => $perlcdio::FS_AUDIO,
         -any=>0);
-    warn "Could not find a CD-ROM device\n" if @$drives <= 0;
+    unless ($drives && @$drives > 0) {
+	warn("Could not find a CD-ROM device\n");
+	return ();
+    }
     return @$drives;
 }
