@@ -204,4 +204,5 @@ const char
 }
 %}
 
- 
+char * cdio_get_track_isrc(const CdIo_t *p_cdio, track_t i_track);
+

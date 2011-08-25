@@ -24,9 +24,9 @@ can use this library.
     use Device::Cdio;
     use Device::Cdio::Device;
 
-    @cd_drives = Device::Cdio::get_devices($perlcdio::DRIVER_DEVICE);
-    @cd_drives = Device::Cdio::get_devices_with_cap($perlcdio::FS_AUDIO, 0);
-    foreach my $drive (@cd_drives) {
+    $cd_drives = Device::Cdio::get_devices($perlcdio::DRIVER_DEVICE);
+    $cd_drives = Device::Cdio::get_devices_with_cap($perlcdio::FS_AUDIO, 0);
+    foreach my $drive (@$cd_drives) {
        print "Drive $drive\n";
     }
     foreach my $driver_name (sort keys(%Device::Cdio::drivers)) {
@@ -232,7 +232,7 @@ sub get_default_device_driver {
 
 =head2 get_devices
 
-get_devices(driver_id=$Cdio::DRIVER_UNKNOWN)->@devices
+$revices = get_devices(driver_id=$Cdio::DRIVER_UNKNOWN);
 
 Return an array of device names. If you want a specific devices for a
 driver, give that device. If you want hardware devices, give
@@ -251,7 +251,8 @@ sub get_devices {
     my($driver_id, @args) = _rearrange(['DRIVER_ID'], @p);
     return undef if _extra_args(@args);
     $driver_id = $perlcdio::DRIVER_DEVICE if !defined($driver_id);
-    return perlcdio::get_devices($driver_id);
+    my $ret = perlcdio::get_devices($driver_id);
+    return wantarray ? @$ret : $ret;
 }
 
 =pod
@@ -273,14 +274,15 @@ sub get_devices_ret {
     my($driver_id, @args) = _rearrange(['DRIVER_ID'], @p);
     return undef if _extra_args(@args);
     $driver_id = $perlcdio::DRIVER_DEVICE if !defined($driver_id);
-    return perlcdio::get_devices_ret($driver_id);
+    my $ret = perlcdio::get_devices_ret($driver_id);
+    return wantarray ? @$ret : $ret;
 }
 
 =pod
 
 =head2 get_devices_with_cap
 
-get_devices_with_cap($capabilities, $any)->@devices
+$devices = get_devices_with_cap($capabilities, $any);
 
 Get an array of device names in search_devices that have at least
 the capabilities listed by the capabilities parameter.
@@ -303,7 +305,8 @@ sub get_devices_with_cap {
     my($cap, $any, @args) = _rearrange(['CAPABILITIES', 'ANY'], @p);
     return undef if _extra_args(@args);
     $any = 1 if !defined($any);
-    return perlcdio::get_devices_with_cap($cap, $any);
+    my $ret = perlcdio::get_devices_with_cap($cap, $any);
+    return wantarray ? @$ret : $ret;
 }
 
 =pod
@@ -322,11 +325,8 @@ sub get_devices_with_cap_ret {
     my($cap, $any, @args) = _rearrange(['CAPABILITIES', 'ANY'], @p);
     return undef if _extra_args(@args);
     $any = 1 if !defined($any);
-    # There's a bug in the swig code in that the input parameters
-    # are left on the stack
-    my @ret = perlcdio::get_devices_with_cap($cap, $any);
-    shift @ret; shift @ret;
-    return @ret;
+    my $ret = perlcdio::get_devices_with_cap($cap, $any);
+    return wantarray ? @$ret : $ret;
 }
 
 =pod

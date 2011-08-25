@@ -1,7 +1,6 @@
 package Device::Cdio::Track;
 require 5.8.6;
 #
-#  $Id$
 #  See end for copyright and license.
 
 ### CD Input and control track class
@@ -224,11 +223,11 @@ sub get_preemphasis {
     my ($self, @p) = @_;
     return 0 if !_check_arg_count($#_, 0);
     my $rc = perlcdio::get_track_preemphasis($self->{device}, $self->{track});
-    if ($rc == $perlcdio::TRACK_FLAG_FALSE) {
-	return 'none';
-    } elsif ($rc == $perlcdio::TRACK_FLAG_TRUE) {
-	return 'preemphasis';
-    } elsif ($rc == $perlcdio::TRACK_FLAG_UNKNOWN) {
+    if ($rc == $perlcdio::CDIO_TRACK_FLAG_FALSE) {
+	return 'no pre-emphasis';
+    } elsif ($rc == $perlcdio::CDIO_TRACK_FLAG_TRUE) {
+	return 'pre-emphasis';
+    } elsif ($rc == $perlcdio::CDIO_TRACK_FLAG_UNKNOWN) {
 	return 'unknown';
     } else {
 	return 'invalid';
@@ -275,6 +274,32 @@ sub is_track_green {
     return perlcdio::is_track_green($self->{device}, $self->{track});
 }
 
+=pod 
+
+=head2 get_track_isrc
+
+$isrc = $track->get_track_isrc;
+
+Returns an empty string or the International Standard Recording Code.
+Which is presented in 4 hyphen seperated substrings: "CC-XXX-YY-NNNNN"
+
+"CC" two-character ISO 3166-1 alpha-2 country code
+"XXX" is a three character alphanumeric registrant code
+"YY" is the last two digits of the year of registration 
+     (NB not necessarily the date the recording was made)
+"NNNNN" is a unique 5-digit number identifying the particular sound recording.
+
+=cut
+
+sub get_track_isrc {
+    my ($self, @p) = @_;
+    my $isrc =  perlcdioc::cdio_get_track_isrc($self->{device}, $self->{track});
+    if(!$isrc) {
+        $isrc =  perlmmcc::mmc_get_isrc($self->{device}, $self->{track});
+    }
+    $isrc =~ s/(\w\w)(\w\w\w)(\w\w)(\w+)/$1-$2-$3-$4/;    #"CC-XXX-YY-NNNNN"
+    return $isrc;
+}
 =pod
 
 =head2 set_track

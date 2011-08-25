@@ -134,24 +134,17 @@ for (my $i =1; $i<=$ntracks; $i++) {
                         $fst_track->set_track($i)->get_lba;
         $secs = int($secs/75);
         my $ctrack = $fst_track->set_track($i);
-        # printf " (%d:%02d)\n    %d channels, %s, copy: %s, ISRC: %s\n",
-        printf " (%d:%02d)\n    %d channels, %s, copy: %s\n",
+        printf " (%d:%02d)\n    %d channels, %s, copy: %s, ISRC: %s\n",
             int($secs/60),$secs%60,
             $ctrack->get_audio_channels,
             $ctrack->get_preemphasis,
-            #perlcdio::get_track_preemphasis($dev->{cd}, $i)?'pre-emphasis':'',
-            $ctrack->get_copy_permit?'yes':'no'
-		;
-	    # FIXME:
-	    # 	,
-            # $ctrack->get_track_isrc;
+            $ctrack->get_copy_permit?'yes':'no',
+            $ctrack->get_track_isrc;
     }
     next if $hash->{cdio_fs_t}==1;
 
-    # FIXME: 
-    # printf " %s ISRC: %s\n", $fst_track->set_track($i)->is_track_green,
-    #        $fst_track->set_track($i)->get_track_isrc;
-    printf " %s\n", $fst_track->set_track($i)->is_track_green;
+    printf " %s ISRC: %s\n", $fst_track->set_track($i)->is_track_green,
+            $fst_track->set_track($i)->get_track_isrc;
 
     foreach my $k ('cdio_fs_t','isofs_size', 'iso_label','UDFVerMajor',
             'UDFVerMinor') {

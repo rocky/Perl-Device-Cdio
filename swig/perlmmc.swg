@@ -481,6 +481,21 @@ int mmc_start_stop_unit (const CdIo_t *p_cdio);
 to eject media / open tray. mmc_eject_media sometimes does not work.");
 int mmc_close_tray(CdIo_t *p_cdio);
 
+
+char * mmc_get_isrc(const CdIo_t *p_cdio, track_t track);
+%inline %{
+char * mmc_get_isrc(const CdIo_t *p_cdio, track_t track) {
+    static cdio_isrc_t isrc;
+    bzero(isrc, sizeof(isrc));
+    int status;
+
+    status = mmc_isrc_track_read_subchannel (p_cdio, track, isrc);
+    if(status != DRIVER_OP_SUCCESS)
+        *isrc = '\0';
+    return isrc;
+}
+%}
+
 %perlcode %{
 
 import Device::Cdio::VERSION;

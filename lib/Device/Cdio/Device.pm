@@ -384,12 +384,8 @@ An exception is raised if we had an error.
 sub get_hwinfo {
     my($self,@p) = @_;
     return $perlcdio::BAD_PARAMETER if !_check_arg_count($#_, 0);
-    # There's a bug I don't understand where p_cdio gets returned
-    # and it shouldn't. So we just ignore that below.
-    # changed by jerry to overwrite the argument $self->{cd}
-    my ($vendor, $model, $release, $drc) = 
-        perlcdio::get_hwinfo($self->{cd});
-    return ($vendor, $model, $release, $drc);
+    my ($hwinfo, $drc) = perlcdio::get_hwinfo($self->{cd});
+    return (@$hwinfo, $drc);
 }
 
 =pod
@@ -407,8 +403,7 @@ See perlcdio::driver_errmsg($rc) if $rc.
 sub audio_get_volume {
     my($self,@p) = @_;
     my ($vol,$drc) = perlcdio::audio_get_volume_levels($self->{cd});
-    return ($vol,$drc) if wantarray;
-    return $drc;
+    return wantarray ? ($vol,$drc) : $drc;
 }
 
 =pod

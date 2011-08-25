@@ -28,40 +28,40 @@ typedef char ** DeviceList_t;
 %}
 
 %typemap(out) DeviceList_t {   
-    // $1 is of type DeviceList_t
-    char **p   = result;
-    unsigned int num = 0;
-
-    if (!result) goto out;
-
-    /* Figure out how many items in the array */
-    for (p = $1; *p; p++) {
-      num++;
-    }
-
-    if (num+argvi >= items) {            
-      /* Extend the stack by (num - items) objects */
-      EXTEND(sp, num-items);
-    }
-    /* For each element in the array of strings, create a new
-     * mortalscalar, and stuff it into the above array. */
-    for (num=0,p = $1; *p; p++) {
-      /* Have perl compute the length of the string using strlen() */
-      //PUSHs(sv_2mortal(newSVpv(*p, 0))); // uses SP, modified by dSP (XS)
-      ST(num++)=(sv_2mortal(newSVpv(*p, 0)));
-    }
-    /* FIXME: the + 1 is because p_cdio is still on the stack. */
-    argvi += num;  // fixed ??
-    /* For each element in the array of strings, create a new
-     * mortalscalar, and stuff it into the above array. 
-    for (p = $1; *p; p++) {
-       Have perl compute the length of the string using strlen() 
-      XPUSHs(sv_2mortal(newSVpv(*p, 0)));
-    }
-    argvi = num;
+    /* char ** to array SVp*/
+    /*
+    AV *myav;
+    SV **svs;
+    int i = 0,len = 0;
     */
+     /* Figure out how many elements we have */
+    /*
+    while ($1[len])
+        len++;
+    svs = (SV **) malloc(len*sizeof(SV *));
+    for (i = 0; i < len ; i++) {
+        svs[i] = sv_newmortal();
+        sv_setpv((SV*)svs[i],$1[i]);
+        //svs[i] = sv_2mortal((SV*)newSVpv($1[i], 0));
+    };
+    myav =	av_make(len,svs);
+    free(svs);
+    $result = newRV_noinc((SV*)myav);
+    sv_2mortal($result);
+    */
+    // or: shorter version
+    AV *myav;
+    int i =0;
+    myav = newAV();
+    char **p = $1;
+    while (*p) {
+        av_store(myav, i, (SV*)newSVpv(*p, 0));
+        i++;p++;
+    }
+    $result = newRV_noinc((SV*)myav);
+    sv_2mortal($result);
+    argvi++;
     cdio_free_device_list($1);
- out: ;
 }
 
 /*
@@ -262,8 +262,6 @@ DeviceList_t get_devices_with_cap (unsigned int capabilities, bool b_any);
 %inline %{
 DeviceList_t 
 get_devices_with_cap (unsigned int capabilities, bool b_any) {
-  /* FIXME: ? libcdio allows one to specify a list (char **) of devices
-     to search. Don't know how to do that via SWIG though. */
   return cdio_get_devices_with_cap (NULL, (cdio_fs_anal_t) capabilities,
 				    b_any);
  }
@@ -282,8 +280,6 @@ DeviceList_t get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
 DeviceList_t
 get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
 			  driver_id_t *p_out_driver_id) {
-  /* FIXME: ? libcdio allows one to specify a list (char **) of devices
-     to search. Don't know how to do that via SWIG though. */
   return cdio_get_devices_with_cap_ret (NULL, 
 					(cdio_fs_anal_t) capabilities, b_any, 
 					p_out_driver_id);
@@ -430,31 +426,29 @@ int cdio_get_media_changed(CdIo_t *p_cdio);
 %inline %{
 typedef char ** HWInfo_t;
 %}
-
-%typemap(out) HWInfo_t {   // All functions returning char ** 
-                                // get this typemap
-    // $1 is of type char **
-    char **p   = $1;
-    unsigned int num = 0;
-
-    /* Figure out how many items in the array */
-    for (p = $1; *p; p++) {
-      num++;
+%typemap(out) HWInfo_t {
+    /* char ** to array SVp*/
+    AV *myav;
+    SV **svs;
+    int i = 0,len = 0;
+    /* no test
+    if(!$1) {
+        $result = newSV(0);
     }
-
-    if (num+argvi >= items) {            
-      /* Extend the stack by (num - items) objects */
-      EXTEND(sp, num-items);
-    }
-    /* For each element in the array of strings, create a new
-     * mortalscalar, and stuff it into the above array. */
-    for (num=0,p = $1; *p; p++) {
-      /* Have perl compute the length of the string using strlen() */
-      //PUSHs(sv_2mortal(newSVpv(*p, 0))); // uses SP, modified by dSP (XS)
-      ST(num++)=(sv_2mortal(newSVpv(*p, 0)));
-    }
-    /* FIXME: the + 1 is because p_cdio is still on the stack. */
-    argvi += num;  // fixed ??
+    */
+    /* Figure out how many elements we have */
+    while ($1[len])
+        len++;
+    svs = (SV **) malloc(len*sizeof(SV *));
+    for (i = 0; i < len ; i++) {
+        svs[i] = sv_newmortal();
+        sv_setpv((SV*)svs[i],$1[i]);
+    };
+    myav =	av_make(len,svs);
+    free(svs);
+    $result = newRV_noinc((SV*)myav);
+    sv_2mortal($result);
+    argvi++;
 }
 
 /* 

@@ -10,7 +10,9 @@ Many thanks to Jerry G Geiger for resurrecting this project from the dead. He ad
 - get_disk_cdtext
 - get_joliet_level
 - get_track_cdtext
+- get_track_isrc
 - is_tray_open
+- example/checkcd.pl to show CD characteristics
 
 He also fixed Build.PL so it works again and added many corrections to
 my faulty C interface code.;
