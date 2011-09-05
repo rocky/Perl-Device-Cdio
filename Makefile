@@ -69,18 +69,22 @@ docs:
 fakeinstall:
 	perl Build --makefile_env_macros 1 fakeinstall
 
+#: Show help
 help:
 	perl Build --makefile_env_macros 1 help
 
 html: 
 	perl Build --makefile_env_macros 1 html
 
+#: Install this puppy
 install:
 	perl Build --makefile_env_macros 1 install
 
+#: Make a MANIFEST file
 manifest:
 	perl Build --makefile_env_macros 1 manifest
 
+#: Generate manual pages
 manpages:
 	perl Build --makefile_env_macros 1 manpages
 
@@ -99,11 +103,14 @@ pure_install:
 skipcheck :
 	perl Build --makefile_env_macros 1 skipcheck
 
+#: Same as "test". "check" is the usual autoconf name
 check: test
 
+#: Run all unit tests
 test:
 	perl Build --makefile_env_macros 1 test
 
+#: Check code coverage
 testcover:
 	perl Build --makefile_env_macros 1 testcover
 
