@@ -123,14 +123,15 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
 my $builder = $class->new( 
     module_name         => 'Device::Cdio',
     add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*', 'cover_db'], 
-    create_makefile_pl  => 'passthrough',
+    configure_requires  => { 'Module::Build' => 0.38 },
+    create_makefile_pl  => 'small',
     dist_abstract       => 
     'Perl bindings for CD Input and control library (libcdio)',
     dist_author         => 'Rocky Bernstein <rocky@cpan.org>',
     dist_version_from   => 'lib/Device/Cdio.pm',
     license             => 'gpl',
     needs_compiler      => 1,
-    release_status      => 'testing',
+    release_status      => 'stable',  # or 'testing' which will append TRIAL to tarball
     requires => {
         'ExtUtils::PkgConfig'     => '1.03',
         'Test::More'              => 0,
