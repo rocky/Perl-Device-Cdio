@@ -69,3 +69,4 @@ t/10.cdda.t
 t/10.read.t
 t/11.dev.t
 THANKS
+META.json

@@ -8,8 +8,7 @@
 ^_build
 ^blib
 ^cover_db
-^cvs2cl_header$
-^cvs2cl_usermap$
+^how-to-make-a-release
 ^lib/\.gitignore
 ^lib/Device/\.gitignore
 ^lib\.gitignore
@@ -18,3 +17,5 @@
 ^t/\.gitignore
 tmp\d+$
 ~$
+^$
+^MYMETA\.json$
