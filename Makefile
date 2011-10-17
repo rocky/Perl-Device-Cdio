@@ -44,6 +44,7 @@ diff:
 dist:
 	perl Build --makefile_env_macros 1 dist
 
+#: "make dist" and check created tarball for common problems
 distcheck:
 	perl Build --makefile_env_macros 1 distcheck
 
