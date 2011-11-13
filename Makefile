@@ -40,11 +40,10 @@ config_data:
 diff: 
 	perl Build --makefile_env_macros 1 diff
 
-#: Create distrubution tarball
+#: Create distribution tarball
 dist:
 	perl Build --makefile_env_macros 1 dist
 
-#: "make dist" and check created tarball for common problems
 distcheck:
 	perl Build --makefile_env_macros 1 distcheck
 
@@ -81,6 +80,10 @@ html:
 install:
 	perl Build --makefile_env_macros 1 install
 
+#: Install other Perl packages that this package needs
+installdeps:
+	perl Build --makefile_env_macros 1 installdeps
+
 #: Make a MANIFEST file
 manifest:
 	perl Build --makefile_env_macros 1 manifest
@@ -115,6 +118,11 @@ test:
 testcover:
 	perl Build --makefile_env_macros 1 testcover
 
+#:Create a log file from the individual commits
+ChangeLog:
+	git log --pretty --numstat --summary | git2cl > $@
+
+#: Calling perl debugger (perldb) on each test
 testdb:
 	perl Build --makefile_env_macros 1 testdb
 
