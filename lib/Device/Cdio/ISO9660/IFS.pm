@@ -1,7 +1,7 @@
 package Device::Cdio::ISO9660::IFS;
+use Device::Cdio::ISO9660;
 require 5.8.6;
 #
-#  $Id$
 #  See end for copyright and license.
 
 =pod
@@ -188,6 +188,9 @@ sub find_lsn {
 	return undef;
     }
     my @values = perliso9660::ifs_find_lsn($self->{iso9660}, $lsn);
+    # Remove the two input parameters
+    splice(@values, 0, 2) if @values > 2;
+
     return Device::Cdio::ISO9660::stat_array_to_href(@values);
 }
 

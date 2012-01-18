@@ -1,7 +1,7 @@
 package Device::Cdio::ISO9660::FS;
+use Device::Cdio::ISO9660;
 require 5.8.6;
 #
-#  $Id$
 #  See end for copyright and license.
 
 =pod

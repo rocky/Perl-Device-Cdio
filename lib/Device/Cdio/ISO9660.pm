@@ -82,7 +82,7 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 
 @ISA = qw(Exporter);
 @EXPORT    = qw( dirname_valid_p is_achar is_dchar pathame_valid_p 
-		 name_translate strncpy_pad %check );
+		 name_translate strncpy_pad %check &stat_array_to_href);
 
 %Device::Cdio::ISO9660::check = (
     'nocheck'   => $perliso9660::NOCHECK,

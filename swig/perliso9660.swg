@@ -535,20 +535,18 @@ bool iso9660_pathname_valid_p (const char psz_path[]);
 
    Returns stat_t of entry if we found lsn, or NULL otherwise.
  */
-%rename iso9660_find_fs_lsn fs_find_lsn;
-IsoStat_t *iso9660_find_fs_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
+%rename iso9660_fs_find_lsn fs_find_lsn;
+IsoStat_t *iso9660_fs_find_lsn(CdIo_t *p_cdio, lsn_t i_lsn);
 
 
-#if LIBCDIO_VERSION_NUM > 76
 /*!
    Given a directory pointer, find the filesystem entry that contains
    lsn and return information about it.
 
    Returns stat_t of entry if we found lsn, or NULL otherwise.
  */
-%rename iso9660_find_ifs_lsn ifs_find_lsn;
-IsoStat_t *iso9660_find_ifs_lsn(const iso9660_t *p_iso, lsn_t i_lsn);
-#endif
+%rename iso9660_ifs_find_lsn ifs_find_lsn;
+IsoStat_t *iso9660_ifs_find_lsn(iso9660_t *p_iso, lsn_t i_lsn);
 
 
 /*!

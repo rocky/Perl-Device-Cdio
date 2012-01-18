@@ -18,7 +18,7 @@ use Device::Cdio::ISO9660;
 use Device::Cdio::ISO9660::IFS;
 use File::Spec;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 note 'Test ISO9660::IFS routines';
 
 # The test ISO 9660 image
@@ -47,4 +47,8 @@ my @okay_stats = (
     );
 
 is_deeply(\@file_stats, \@okay_stats, 'ISO 9660 file stats');
+
+my $copy_stat = $iso->find_lsn(24);
+is_deeply($copy_stat, $okay_stats[2], "Finding stat for root (24)");
+
 $iso->close();
