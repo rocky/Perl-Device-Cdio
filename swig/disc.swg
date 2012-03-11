@@ -1,5 +1,5 @@
 /* -*- c -*-
-  Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
+  Copyright (C) 2006, 2008, 2011, 2012 Rocky Bernstein <rocky@cpan.org>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -92,11 +92,11 @@ get_disc_mode (CdIo_t *p_cdio)
 }
 %}
 
-
 SV * get_cdtext (CdIo_t *p_cdio, int track);
 %inline %{
 SV * get_cdtext (CdIo_t *p_cdio, int track)
 {
+#if LIBCDIO_VERSION_NUM <= 83
     HV * cdtext_hash;
     char **cdtext; const char *str; int num; unsigned int l=0;
     cdtext = ( char **)cdio_get_cdtext (p_cdio, (track_t) track);
@@ -116,6 +116,9 @@ SV * get_cdtext (CdIo_t *p_cdio, int track)
         return newSV(0);
     } // we could easily return the number of strings, too.
     return newRV_noinc(sv_2mortal((SV*)cdtext_hash));
+#else
+    return newSV(0);
+#endif
 }
 %}
 

@@ -1,5 +1,5 @@
 /* -*- c -*-
-  Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
+  Copyright (C) 2006, 2008, 2011, 2012 Rocky Bernstein <rocky@cpan.org>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -343,14 +343,11 @@ driver_return_code_t cdio_get_last_session (CdIo_t *p_cdio,
 %feature("autodoc",
 "have_driver(driver_id) -> int
 
-Return 1 if we have driver driver_id, 0 if not and -1 
-if driver id is out of range.");
+Return 1 if we have driver driver_id, 0 if not.");
 %inline %{
 int
 have_driver (unsigned int driver_id)
 {
-  if (driver_id < CDIO_MIN_DRIVER || driver_id > CDIO_MAX_DRIVER)
-    return -1;
   if (cdio_have_driver(driver_id)) return 1;
   return 0;
 }
