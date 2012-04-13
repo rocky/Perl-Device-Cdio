@@ -17,9 +17,6 @@ use this library."
 #include <cdio/iso9660.h>
 %}
 
-#include <cdio/cdio.h> 
-#include <cdio/audio.h>
-
 %include "typemaps.i"
 /*%include "cstring.i"*/
 
@@ -67,7 +64,7 @@ is currently using.");
 %inline %{
 const char * cdio_version()
 {
-    return cdio_version_string;
+    return CDIO_VERSION;
 }
 %}
 
