@@ -92,7 +92,6 @@ sing CD reading/control operations for the current device.
 */
 void cdio_destroy(CdIo_t *p_cdio);
 
-#if LIBCDIO_VERSION_NUM > 76
 /* cdio_driver_errmsg first appears in 0.77 code 
 */
 %rename cdio_driver_errmsg driver_errmsg;
@@ -101,35 +100,6 @@ void cdio_destroy(CdIo_t *p_cdio);
   @return the string information about drc
 */
 const char *cdio_driver_errmsg(driver_return_code_t drc);
-#else
-const char *driver_errmsg(driver_return_code_t drc);
-%inline %{
-const char *
-driver_errmsg(driver_return_code_t drc)
-{
-  switch(drc) {
-  case DRIVER_OP_SUCCESS: 
-    return "driver operation was successful";
-  case DRIVER_OP_ERROR:
-    return "driver I/O error";
-  case DRIVER_OP_UNSUPPORTED:
-    return "driver operatation not supported";
-  case DRIVER_OP_UNINIT:
-    return "driver not initialized";
-  case DRIVER_OP_NOT_PERMITTED:
-    return "driver operatation not permitted";
-  case DRIVER_OP_BAD_PARAMETER:
-    return "bad parameter passed";
-  case DRIVER_OP_BAD_POINTER:
-    return "bad pointer to memory area";
-  case DRIVER_OP_NO_DRIVER:
-    return "driver not available";
-  default:
-    return "unknown or bad driver return status";
-  }
-}
-%}
-#endif /* LIBCDIO_VERSION_NUM > 76 */
 /*
 eject_media(cdio)->return_code
 
@@ -373,30 +343,9 @@ char *cdio_is_binfile(const char *bin_name);
 %rename cdio_is_cuefile is_cuefile;
 char *cdio_is_cuefile(const char *cue_name);
 
-#if LIBCDIO_VERSION_NUM <= 76
-/* There is a bug in the 0.76 code when driver_id==DRIVER_UNKNOWN
-   or DRIVER_DEVICE, so here we'll use code from compat.swg.
-*/
-bool is_device(const char *psz_source, 
-	       driver_id_t driver_id=DRIVER_UNKNOWN);
-
-%inline %{
-bool 
-is_device(const char *psz_source, driver_id_t driver_id)
-{
-  if (DRIVER_UNKNOWN == driver_id || DRIVER_DEVICE == driver_id) {
-    char *psz_drive = cdio_get_default_device_driver(&driver_id);
-    /* We don't need the psz_drive, just the driver_id */
-    free(psz_drive); 
-  }
-  return cdio_is_device(psz_source, driver_id);
-}
-%}
-#else 
 %rename cdio_is_device is_device;
 bool cdio_is_device(const char *psz_source, 
 		    driver_id_t driver_id=DRIVER_UNKNOWN);
-#endif /* LIBCDIO_VERSION_NUM <= 76 */
 
 %rename cdio_is_nrg is_nrg;
 bool cdio_is_nrg(const char *nrg_name);

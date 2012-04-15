@@ -653,13 +653,11 @@ uint8_t iso9660_get_dir_len(const iso9660_dir_t *p_idr);
 %newobject iso9660_dir_to_name; // free malloc'd return value
 char * iso9660_dir_to_name (const iso9660_dir_t *p_iso9660_dir);
   
-#if LIBCDIO_VERSION_NUM > 76
 /*!  
   Returns a POSIX mode for a given p_iso_dirent.
 */
 %rename iso9660_get_posix_filemode get_posix_filemode;
 mode_t iso9660_get_posix_filemode(const iso9660_stat_t *p_iso_dirent);
-#endif
 
 /*!
   Return a string containing the preparer id with trailing

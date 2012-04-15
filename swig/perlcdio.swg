@@ -1,5 +1,5 @@
 /* -*- c -*-
-  Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
+  Copyright (C) 2006, 2008, 2011, 2012 Rocky Bernstein <rocky@cpan.org>
   See end for license.
 */
 %define DOCSTRING 
@@ -28,6 +28,7 @@ use this library."
 %include "audio.swg"
 %include "read.swg"
 %include "track.swg"
+%include "cdtext.swg"
 
 /* In the presence of the exception handling, the order is important. 
    The below use %exception.
@@ -150,29 +151,6 @@ Image driver for Nero NRG
 Use when you don't know what kind of driver but the driver must be a
 real CD-ROM driver. See also DRIVER_UNKNOWN which includes image
 drivers.
-
-=back 
-
-Real OS driver numbers come before image-disc drivers. Here are
-constants that can be used in iteration.
-
-=over 4
-
-=item MIN_DRIVER
-
-Smallest image or OS driver number.
-
-=item MIN_DEVICE_DRIVER
-
-Smallest OS device driver number.
-
-=item MAX_DRIVER
-
-Largest image or OS device driver number.
-
-=item MAX_DEVICE_DRIVER
-
-Largest device driver number.
 
 =back 
 

@@ -7,11 +7,14 @@
 /.lwpcookies
 /Build
 /MANIFEST.bak
+/META.json
+/MYMETA.json
 /MYMETA.yml
 /Makefile.PL
 /_build
 /blib
 /cover_db
-/tmp*
-/pod2ht*.tmp
+/how-to-make-a-release.txt
 /pm_to_blib*
+/pod2ht*.tmp
+/tmp*

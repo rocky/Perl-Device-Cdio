@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-#  Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rockycpan.org>
+#  Copyright (C) 2006, 2008, 2011, 2012 Rocky Bernstein <rockycpan.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,14 +19,16 @@ use warnings;
 use Module::Build;
 use ExtUtils::PkgConfig;
 use Config;
-
+use File::Copy;
 
 my %libcdio_pkgcfg = ExtUtils::PkgConfig->find ('libcdio');
 use constant MIN_LIBCDIO_VERSION => 0.82;
 my $lv = $libcdio_pkgcfg{'modversion'};
 if (exists($libcdio_pkgcfg{'modversion'})) {
-    if ($libcdio_pkgcfg{'modversion'} =~ m{\A((?:\d+)(?:\.\d+))}) {
-	if ($1 < MIN_LIBCDIO_VERSION) {
+    $libcdio_pkgcfg{'modversion'} =~ m{\A((?:\d+)(?:\.\d+))};
+    my $libcdio_version = $1;
+    if (defined($libcdio_version)) {
+	if ($libcdio_version < MIN_LIBCDIO_VERSION) {
 	    printf STDERR "
 *** 
 *** You need to have libcdio %s or greater installed. (You have $lv).
@@ -38,12 +40,19 @@ if (exists($libcdio_pkgcfg{'modversion'})) {
 	    print "Good, I found libcdio version $lv installed.\n";
 	    
 	}
+	if ($libcdio_version > 0.83) {
+	    print "libcdio version > 0.83\n";
+	    copy('swig/cdtext_new.swg', 'swig/cdtext.swg');
+	} else {
+	    print "libcdio version <= 0.83\n";
+	    copy 'swig/cdtext_old.swg', 'swig/cdtext.swg';
+	}
     } else {
 	print STDERR "
 *** 
 *** Can't parse libcdio version $lv.
-*** Will continue and keep my fingers crossed for luck.
 ";
+	exit 1;
     }
 } else {
     print STDERR "
