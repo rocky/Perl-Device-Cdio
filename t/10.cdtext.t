@@ -1,8 +1,6 @@
 #!/usr/bin/env perl
 # Unit test for cdtext.
-use Test::More;
-
-plan skip_all => "CD-Text not finished yet";
+use Test::More 'no_plan';
 
 use strict;
 use warnings;
@@ -23,7 +21,7 @@ if ($perlcdio::VERSION_NUM <= 83) {
 }
  
 # Test getting CD-Text
-my $tocpath = File::Spect->catfile(dirname(__FILE__), 'cdtext.toc');
+my $tocpath = File::Spec->catfile(dirname(__FILE__), 'cdtext.toc');
 my $device = Device::Cdio::Device->new($tocpath, $perlcdio::DRIVER_CDRDAO);
 
 if ($perlcdio::VERSION_NUM <= 83) {
@@ -36,14 +34,14 @@ if ($perlcdio::VERSION_NUM <= 83) {
     is($track1text->get_cdtext($perlcdio::CDTEXT_PERFORMER), 'Performer');
     is($track1text->get_cdtext($perlcdio::CDTEXT_TITLE), 'Track Title');
 } else {
-    my $text = $device->get_cdtext();
-    is($text->get_cdtext($perlcdio::CDTEXT_FIELD_PERFORMER, 0), 'Performer');
-    is($text->get_cdtext($perlcdio::CDTEXT_FIELD_TITLE, 0), 'CD Title');
-    # is($text->get_cdtext($perlcdio::CDTEXT_FIELD_DISCID, 0), 'XY12345');
+    my $text = $device->get_track_cdtext(0);
+    is($text->{PERFORMER}, 'Performer');
+    is($text->{TITLE}, 'CD Title');
+    # is($text->get_cdtext($perlcdio::CDTEXT_FIELD_DISCID), 'XY12345');
 
-    print $text->get_cdtext($perlcdio::CDTEXT_FIELD_PERFORMER, 0);
-    is($text->get_cdtext($perlcdio::CDTEXT_FIELD_PERFORMER, 1), 'Performer');
-    is($text->get_cdtext($perlcdio::CDTEXT_FIELD_TITLE, 1), 'Track Title');
+    $text = $device->get_track_cdtext(1);
+    is($text->{PERFORMER}, 'Performer');
+    is($text->{TITLE}, 'Track Title');
 }
 
 
