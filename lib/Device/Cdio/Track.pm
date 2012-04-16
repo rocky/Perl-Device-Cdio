@@ -121,6 +121,11 @@ sub get_copy_permit {
     return perlcdio::get_track_copy_permit($self->{device}, $self->{track});
 }
 
+sub get_cdtext {
+    my($self, @p) = @_;
+    return perlcdio::get_cdtext($self->{cd},$self->{track});
+}
+
 =pod
 
 =head2 get_format
@@ -341,7 +346,7 @@ Rocky Bernstein C<< <rocky at cpan.org> >>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
+Copyright (C) 2006, 2012 Rocky Bernstein <rocky@cpan.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

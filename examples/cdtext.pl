@@ -16,9 +16,11 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# require 'rubygems'; require 'ruby-debug'; Debugger.start
+# use Enbugger; Enbugger->load_debugger('trepan'); Enbugger->stop;
 
 use strict;
+use lib '../blib/lib';
+use lib '../blib/arch';
 use perlcdio;
 use Device::Cdio;
 use Device::Cdio::Device;

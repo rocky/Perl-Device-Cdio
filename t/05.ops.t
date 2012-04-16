@@ -11,13 +11,13 @@ use blib;
 
 use Device::Cdio;
 use Device::Cdio::Device;
-use Test::More tests => 6;
+use Test::More 'no_plan';
 note 'Test running miscellaneous operations';
 
 my @drives = Device::Cdio::get_devices();
 ok ( 1 , 'Device::Cdio::get_devices');
-@drives = Device::Cdio::get_devices_with_cap($perlcdio::FS_MATCH_ALL);
-ok ( 1 , 'Device::Cdio::get_devices_with_cap(perlcdio::FS_MATCH_ALL)');
+# @drives = Device::Cdio::get_devices_with_cap($perlcdio::FS_MATCH_ALL);
+# ok ( 1 , 'Device::Cdio::get_devices_with_cap(perlcdio::FS_MATCH_ALL)');
 my $dev = Device::Cdio::Device->new();
 ok ( 1 , 'Device::Cdio::Device->new()');
 $dev->open();

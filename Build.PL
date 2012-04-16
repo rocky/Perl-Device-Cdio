@@ -22,7 +22,7 @@ use Config;
 use File::Copy;
 
 my %libcdio_pkgcfg = ExtUtils::PkgConfig->find ('libcdio');
-use constant MIN_LIBCDIO_VERSION => 0.82;
+use constant MIN_LIBCDIO_VERSION => 0.83;
 my $lv = $libcdio_pkgcfg{'modversion'};
 if (exists($libcdio_pkgcfg{'modversion'})) {
     $libcdio_pkgcfg{'modversion'} =~ m{\A((?:\d+)(?:\.\d+))};
