@@ -44,6 +44,9 @@ perliso9660_wrap.c
 perlmmc_wrap.c
 README.md
 swig/audio.swg
+swig/cdtext.swg
+swig/cdtext_new.swg
+swig/cdtext_old.swg
 swig/device.swg
 swig/device_const.swg
 swig/disc.swg
