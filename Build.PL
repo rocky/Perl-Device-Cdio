@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-#  Copyright (C) 2006, 2008, 2011, 2012 Rocky Bernstein <rockycpan.org>
+#  Copyright (C) 2006, 2008, 2011-2012, 2014 Rocky Bernstein <rockycpan.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,15 +30,15 @@ if (exists($libcdio_pkgcfg{'modversion'})) {
     if (defined($libcdio_version)) {
 	if ($libcdio_version < MIN_LIBCDIO_VERSION) {
 	    printf STDERR "
-*** 
+***
 *** You need to have libcdio %s or greater installed. (You have $lv).
 *** Get libcdio from http://www.gnu.org/software/libcdio/download.html
 ", MIN_LIBCDIO_VERSION;
 	    die "OS unsupported - or maybe it is. This message is here to appease testing services like CPANTS that look for messages like this";
-	    
+
 	} else {
 	    print "Good, I found libcdio version $lv installed.\n";
-	    
+
 	}
 	if ($libcdio_version > 0.83) {
 	    print "libcdio version > 0.83\n";
@@ -49,14 +49,14 @@ if (exists($libcdio_pkgcfg{'modversion'})) {
 	}
     } else {
 	print STDERR "
-*** 
+***
 *** Can't parse libcdio version $lv.
 ";
 	exit 1;
     }
 } else {
     print STDERR "
-*** 
+***
 *** Can't find libcdio configuration info. Is libcdio installed?
 *** Get libcdio from http://www.gnu.org/software/libcdio/download.html
 ";
@@ -86,7 +86,7 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
                 my $pmfile = File::Spec->catfile($lib,"$basename.pm");
                 if ($self->up_to_date($swigdeps->{$file}, $cfile) &&
                     $self->up_to_date($swigdeps->{$file}, $pmfile)) {
-                    next if $self->up_to_date($file, $cfile) && 
+                    next if $self->up_to_date($file, $cfile) &&
                         $self->up_to_date($cfile, $pmfile);
                 }
                 print "swig: $file -> $cfile\n" if $verb;
@@ -114,9 +114,9 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
                 $basename = basename($file, '.c') if not defined $basename;
                 my $libname = $basename.".".$self->config('dlext');
                 $libname = File::Spec->catfile('blib', 'arch',$libname);
-                next if $self->up_to_date($file,$libname); 
+                next if $self->up_to_date($file,$libname);
                 print "(CC) $file -> $basename.so\n" if $verb;
-                my $obj = $cb->compile(source => $file, 
+                my $obj = $cb->compile(source => $file,
                     ## include_dirs => $self->config('include_dirs'),
                     extra_compiler_flags => $self->config('extra_compiler_flags'));
                 print "CB compiled: $obj\n" if $verb;
@@ -130,18 +130,25 @@ my $class = Module::Build->subclass( class => 'MyModuleBuild',
     !);
 #
 
-my $builder = $class->new( 
+my $builder = $class->new(
     module_name         => 'Device::Cdio',
-    add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*', 'cover_db'], 
+    add_to_cleanup      => [ 'Device-Cdio-*', 'tmp*', 'cover_db'],
     configure_requires  => { 'Module::Build' => 0.38 },
     create_makefile_pl  => 'small',
-    dist_abstract       => 
+    dist_abstract       =>
     'Perl bindings for CD Input and control library (libcdio)',
     dist_author         => 'Rocky Bernstein <rocky@cpan.org>',
     dist_version_from   => 'lib/Device/Cdio.pm',
     license             => 'gpl',
     needs_compiler      => 1,
     release_status      => 'stable',  # or 'testing' which will append TRIAL to tarball
+    meta_merge => {
+	resources => {
+	    bugtracker  => 'https://github.com/rocky/Perl-Device-Cdio/issues',
+	    repository  => 'http://github.com/rocky/Perl-Device-Cdio'
+	}
+    },
+
     requires => {
         'ExtUtils::PkgConfig'     => '1.03',
         'Test::More'              => 0,
@@ -237,7 +244,7 @@ sub try_compile {
 	    my $errno = $? >> 8;
 	    local $! = $errno;
 	    print "
-		
+
 *** The test compile of '$tmp.c' failed: status $?
 *** (the status means: errno = $errno or '$!')
 *** DO NOT PANIC: this just means that *some* you may get some innocuous
@@ -261,7 +268,7 @@ sub try_cflags ($) {
     }
     print "no\n";
     return '';
-	
+
 }
 
 sub check_swig {
@@ -274,7 +281,7 @@ if ($?) {
 *** I don't see SWIG installed. I'll use the SWIG-generated file
 *** that comes with the distribution. If you want SWIG, get it
 *** from http://www.swig.org
-"; 
+";
     print "*** Output was:
 	@swig_version
 " if @swig_version;
@@ -300,7 +307,7 @@ sub check_c_compiler {
     my $ldflags = "$libcdio_pkgcfg{libs} $libiso9660_pkgcfg{libs} -lcdio";
     my $swig_flags='';
 
-if ('cygwin' eq $Config{osname} && 
+if ('cygwin' eq $Config{osname} &&
     $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
     $ldflags .= " -L$1 -lperl";
     # Should we check the 32-ness?

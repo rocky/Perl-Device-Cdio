@@ -2,7 +2,7 @@
   Copyright (C) 2006, 2008, 2011, 2012 Rocky Bernstein <rocky@cpan.org>
   See end for license.
 */
-%define DOCSTRING 
+%define DOCSTRING
 "This is a wrapper for The CD Input and Control library (libcdio) which
 encapsulates CD-ROM reading and control. Python programs wishing to be
 oblivious of the OS- and device-dependent properties of a CD-ROM can
@@ -11,6 +11,7 @@ use this library."
 %module(docstring=DOCSTRING) perlcdio
 %{
 /* Includes the header in the wrapper code */
+#include <cdio/types.h>
 #include <cdio/cdio.h>
 #include <cdio/audio.h>
 #include <cdio/cd_types.h>
@@ -30,7 +31,7 @@ use this library."
 %include "track.swg"
 %include "cdtext.swg"
 
-/* In the presence of the exception handling, the order is important. 
+/* In the presence of the exception handling, the order is important.
    The below use %exception.
 */
 %include "device.swg"
@@ -85,7 +86,7 @@ perlcdio - lower-level wrapper to libcdio, the CD Input and Control library
 This is fairly straight-forward wrapper around the C library libcdio.
 Although this is perfectly usable on its own, it is expected that the
 Object-Oriented interface L<Device::Cdio> is what most people will
-want to use. 
+want to use.
 
 There are various constants that are defined here.
 
@@ -96,7 +97,7 @@ interface is called perlcdio (this file) and is generated via SWIG.
 
 =head1 CONSTANTS
 
-=head2 Driver ID's 
+=head2 Driver ID's
 
 =over 4
 
@@ -112,7 +113,7 @@ Driver for IBM's AIX.
 
 =item DRIVER_BSDI
 
-Driver for BSDI. 
+Driver for BSDI.
 
 =item DRIVER_FREEBSD
 
@@ -120,11 +121,11 @@ Driver for Free BSD
 
 =item DRIVER_LINUX
 
-Driver for GNU/LINUX 
+Driver for GNU/LINUX
 
 =item DRIVER_SOLARIS
 
-Driver for Solaris 
+Driver for Solaris
 
 =item DRIVER_OSX
 
@@ -140,7 +141,7 @@ Image Driver for cdrdao
 
 =item DRIVER_BINCUE
 
-Image driver for CDRWin BIN/CUE 
+Image driver for CDRWin BIN/CUE
 
 =item DRIVER_NRG
 
@@ -152,14 +153,14 @@ Use when you don't know what kind of driver but the driver must be a
 real CD-ROM driver. See also DRIVER_UNKNOWN which includes image
 drivers.
 
-=back 
+=back
 
 
-=head2 Driver Return codes 
+=head2 Driver Return codes
 
-May driver operations return a status code. 
+May driver operations return a status code.
 
-=over 4 
+=over 4
 
 =item DRIVER_OP_SUCCESS
 
@@ -176,11 +177,11 @@ ejecting a CD from an image driver.
 
 =item DRIVER_OP_UNINIT
 
-Source is not initialized for this operation. 
+Source is not initialized for this operation.
 
 =item DRIVER_OP_NOT_PERMITTED
 
-Operation is not permitted 
+Operation is not permitted
 
 =item DRIVER_OP_BAD_PARAMETER
 
@@ -190,7 +191,7 @@ An invalid parameter was passed to the routine
 
 A pointer somehow got corrupted.
 
-=item DRIVER_OP_NO_DRIVER 
+=item DRIVER_OP_NO_DRIVER
 
 No driver has been set.
 
@@ -198,7 +199,7 @@ No driver has been set.
 
 =head2 Device Capabilities
 
-=head3 Miscellaneous 
+=head3 Miscellaneous
 
 =over 4
 
@@ -210,7 +211,7 @@ No driver has been set.
 
 =item DRIVE_CAP_MISC_EJECT
 
-=item DRIVE_CAP_MISC_LOCK	
+=item DRIVE_CAP_MISC_LOCK
 
 =item DRIVE_CAP_MISC_SELECT_SPEED
 
@@ -224,7 +225,7 @@ No driver has been set.
 
 =item DRIVE_CAP_MISC_FILE
 
-=back 
+=back
 
 =head3 Read Capabilities
 
@@ -266,7 +267,7 @@ No driver has been set.
 
 =head2 Writing masks
 
-=over 4 
+=over 4
 
 =item DRIVE_CAP_WRITE_CD_R
 
@@ -278,7 +279,7 @@ No driver has been set.
 
 =item DRIVE_CAP_WRITE_DVD_RAM
 
-=item DRIVE_CAP_WRITE_DVD_RW 
+=item DRIVE_CAP_WRITE_DVD_RW
 
 =item DRIVE_CAP_WRITE_DVD_RPW
 
@@ -286,7 +287,7 @@ No driver has been set.
 
 =item DRIVE_CAP_WRITE_BURN_PROOF
 
-=back 
+=back
 
 =head3 Derived Capabilities
 
@@ -294,15 +295,15 @@ No driver has been set.
 
 =item DRIVE_CAP_WRITE_CD
 
-Has some sort of CD writer ability 
+Has some sort of CD writer ability
 
 =item DRIVE_CAP_WRITE_DVD
 
-Has some sort of DVD writer ability 
+Has some sort of DVD writer ability
 
 =item DRIVE_CAP_WRITE
 
-Has some sort of writer ability 
+Has some sort of writer ability
 
 =back
 
@@ -333,17 +334,17 @@ and deprecated in OSX
 
 =item FS_UFS
 
-Generic Unix file system derived from the Berkeley fast file 
+Generic Unix file system derived from the Berkeley fast file
 system.
 
 =item FS_EXT2
 
 EXT2 was the GNU/Linux native filesystem for early kernels. Newer
-GNU/Linux OS's may use EXT3 which EXT2 with a journal. 
+GNU/Linux OS's may use EXT3 which EXT2 with a journal.
 
 =item FS_ISO_HFS
 
-both HFS & ISO-9660 filesystem 
+both HFS & ISO-9660 filesystem
 
 =item FS_ISO_9660_INTERACTIVE
 
@@ -420,21 +421,21 @@ bitmask which can  be used to specify matching any sort of CD
 
 =head2 Sector size constants
 
-=over 4 
+=over 4
 
-=item CD_FRAMESIZE 
+=item CD_FRAMESIZE
 
-=item CD_FRAMESIZE_RAW 
+=item CD_FRAMESIZE_RAW
 
-Size of a Philip Red book CD-DA block. It is also the maximum CD sector 
+Size of a Philip Red book CD-DA block. It is also the maximum CD sector
 size possible: 2352 bytes.
 
 =item ISO_BLOCKSIZE
 
-Size of an ISO 9660 block. Also the size of the data portion in CD data 
+Size of an ISO 9660 block. Also the size of the data portion in CD data
 reads: 2048 bytes.
 
-=item M2F2_SECTOR_SIZE 
+=item M2F2_SECTOR_SIZE
 
 Mode 2 Form 2 Data size: 2328 bytes.
 
@@ -442,47 +443,47 @@ Mode 2 Form 2 Data size: 2328 bytes.
 
 Mod1 Form 1 Data size: 2336 bytes.
 
-=back 
+=back
 
 =head2 Reading Modes
 
 =over 4
 
-=item READ_MODE_AUDIO 
+=item READ_MODE_AUDIO
 
 audio mode (CD-DA) read. Blocksize is a multiple of
 $perlcdio::CD_FRAMESIZE_RAW (2352) bytes.
 
-=item READ_MODE_M1F1  
+=item READ_MODE_M1F1
 
 Mode 1 Form 1 read. Blocksize is a multiple of $perlcdio::CD_FRAMESIZE
 (2048) bytes.
 
-=item READ_MODE_M1F2  
+=item READ_MODE_M1F2
 
 Mode 1 Form 2 read. Blocksize is a multiple of $perlcdio::M2RAW_SECTIOR_SIZE
 (2336) bytes.
 
-=item READ_MODE_M2F1  
+=item READ_MODE_M2F1
 
 Mode 2 Form 1 read. Blocksize is a multiple of $perlcdio::CD_FRAMESIZE
 (2048) bytes.
 
-=item READ_MODE_M2F2  
+=item READ_MODE_M2F2
 
 Mode 2 Form 1 read. Blocksize is a multiple of (2328) bytes.
 
 =back
 
-=head2 Miscellaneous 
+=head2 Miscellaneous
 
-=over 4 
+=over 4
 
 =item VERSION_NUM
 
 libcdio version that is getting used
 
-=item INVALID_LBA 
+=item INVALID_LBA
 
 Canonical value used for an invalid LBA.
 
@@ -492,18 +493,18 @@ Canonical value used for an invalid LSN.
 
 =item INVALID_TRACK
 
-Canonical value used for an invalid track number. (Valid range 
+Canonical value used for an invalid track number. (Valid range
 is 0 to 99.)
 
 =item LEADOUT_TRACK
 
-Canonical value for the "leadout" or track just after the last track. So 
+Canonical value for the "leadout" or track just after the last track. So
 again this value is outside the range 0 to 99.
 The leadout track is often used to get the last LSN or LBA. The libcdio
 routines also allow the last actual track plus one as a synonym for the
 leadout track.
 
-=back 
+=back
 
 =head1 METHODS
 
@@ -515,7 +516,7 @@ Returns the libcdio version string Device::Cdio is currently linked with.
 
 =head2 this
 
-This seems to be an artifact of SWIG. 
+This seems to be an artifact of SWIG.
 
 =head1 SEE ALSO
 
