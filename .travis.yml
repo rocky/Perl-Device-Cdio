@@ -7,7 +7,7 @@ install:
   # Prerequisites
   - wget ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.94.tar.gz
   - tar -xpf libcdio-0.94.tar.gz
-  - cd libcdio-0.94.tar.gz && ./configure && make && make install
+  - cd libcdio-0.94 && ./configure && make && make install
   - cpanm $PREREQS
 
 after_failure:
