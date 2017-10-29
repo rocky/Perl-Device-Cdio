@@ -11,7 +11,7 @@ Device::Cdio - Module for CD Input and Control library.
 
 =cut
 
-use version; $VERSION = qv('0.3.2git');
+use version; $VERSION = qv('0.3.2');
 
 =pod
 
