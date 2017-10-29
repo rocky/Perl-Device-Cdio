@@ -23,7 +23,7 @@ use Config;
 use File::Copy;
 
 my %libcdio_pkgcfg = ExtUtils::PkgConfig->find ('libcdio');
-use constant MIN_LIBCDIO_VERSION => 0.94;
+use constant MIN_LIBCDIO_VERSION => 0.92;
 my $lv = $libcdio_pkgcfg{'modversion'};
 if (exists($libcdio_pkgcfg{'modversion'})) {
     $libcdio_pkgcfg{'modversion'} =~ m{\A((?:\d+)(?:\.\d+))};
@@ -41,12 +41,9 @@ if (exists($libcdio_pkgcfg{'modversion'})) {
 	    print "Good, I found libcdio version $lv installed.\n";
 
 	}
-	if ($libcdio_version > 0.83) {
-	    print "libcdio version > 0.83\n";
+	if ($libcdio_version >= 0.92) {
+	    print "libcdio version >= 0.92\n";
 	    copy('swig/cdtext_new.swg', 'swig/cdtext.swg');
-	} else {
-	    print "libcdio version <= 0.83\n";
-	    copy 'swig/cdtext_old.swg', 'swig/cdtext.swg';
 	}
     } else {
 	print STDERR "
