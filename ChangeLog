@@ -1,5 +1,53 @@
 2017-10-29  R. Bernstein <rocky@cpan.org>
 
+	* README.md: Get ready for release 0.3.1 Add CI badge
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* t/11.dev.t: Travis 17th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* t/11.dev.t: Travis 16th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* t/05.ops.t: Travis 15th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Travis 14th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Travis 13th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Travis 12th try (probably getting closer)
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* GNUmakefile: Travis 11th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml, GNUmakefile: 10th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* GNUmakefile: Travis 9th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Travis 8th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml, ChangeLog, MANIFEST.SKIP: Travis 6th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
 	* .travis.yml: Travis 6th try
 
 2017-10-29  R. Bernstein <rocky@cpan.org>

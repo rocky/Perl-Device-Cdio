@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rocky/Perl-Device-Cdio.svg?branch=master)](https://travis-ci.org/rocky/Perl-Device-Cdio)
+
 Device::Cdio - Perl bindings for libcdio (CD Input and Control library)
 ============================================================================
 
