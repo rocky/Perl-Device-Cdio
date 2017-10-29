@@ -8,7 +8,7 @@ install:
   - sudo apt-get install swig
   - wget ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.94.tar.gz
   - tar -xpf libcdio-0.94.tar.gz
-  - cd libcdio-0.94 && ./configure && make && sudo make install && cd ..
+  - cd libcdio-0.94 && ./configure && make && sudo make install && cd .. && rm -fr libcdio-0.94
   - cpanm $PREREQS
 
 after_failure:

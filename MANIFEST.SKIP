@@ -1,12 +1,21 @@
 \.bak$
 ^$
-^.git
+# Avoid version control files.
+\B\.git\b
+\B\.gitignore\b
+
 ^Build$
 ^Device-Cdio-v.*gz$
 ^MANIFEST\.SKIP$
 ^MYMETA.yml$
 ^MYMETA\.json$
-^\.gitignore
+
+# Continous integration file via travis
+\B\.travis\.yml$
+
+# Perl Critic
+perlcritic\.rc
+
 ^_build
 ^admin-tools
 ^blib

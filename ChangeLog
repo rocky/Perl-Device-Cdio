@@ -1,7 +1,37 @@
 2017-10-29  R. Bernstein <rocky@cpan.org>
 
-	* : commit 8b4c6ea49078d47f6b9a5f2c74e9722d7d0e9285 Author: R.
-	Bernstein <rocky@cpan.org> Date:   Sat May 24 23:08:53 2014 -0400
+	* .travis.yml: Travis 6th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml, Build.PL: Travis 5th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Travis 4th try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Travis 3rd try
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Get ready for release 0.3.1 Travis 2nd attempt
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml, THANKS: Get ready for elease 0.3.1 Thank Debian/Ubuntu folks.  Try travis
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .gitignore, GNUmakefile, MANIFEST.SKIP, README.md,
+	admin-tools/how-to-make-a-release.txt, admin-tools/testall.sh: Get
+	ready for release 0.3.1 Add targets to make conventional Makefile, but .gitignore it Add
+	build instructions and tools (admin-tools)
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* : Get ready for release 0.3.1 Looks like we need libcdio greater than 0.83 now. 0.94 works *.swg: define extern functions to remove gcc warnings Strip whitespace from ends of lines
 
 2014-05-24  R. Bernstein <rocky@cpan.org>
 
