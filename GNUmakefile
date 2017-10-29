@@ -22,12 +22,16 @@
 GIT2CL ?= git2cl
 
 #: Build everything
-all:
+all: ./Build
 	perl ./Build --makefile_env_macros 1
 
 #: Build program, e.g. compile C programs
-build:
+build: ./Build
 	perl ./Build --makefile_env_macros 1 build
+
+#: Create Perl Build program via Module::Build
+./Build: ./Build.PL
+	perl ./Build.PL
 
 #: create Makefile from Makefile.PL
 Makefile: Makefile.PL
@@ -121,7 +125,7 @@ skipcheck :
 check: test
 
 #: Run all unit tests
-test:
+test: Build
 	perl ./Build --makefile_env_macros 1 test
 
 #: Check code coverage
