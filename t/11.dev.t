@@ -23,6 +23,8 @@ ok ( defined $dev , 'Device::Cdio::Device->new(-driver_id=>$perlcdio::DRIVER_DEV
 my $drive_name = $dev->get_device();
 note('Device->new(DRIVER_DEVICE)((i.e.:',$perlcdio::DRIVER_DEVICE,')) found: ',$drive_name);
 
+plan skip_all => "Doesn't work in CI (yet)" if $ENV{'CI'};
+
 #my @drives = Device::Cdio::get_devices_with_cap(
 #       -capabilities => $perlcdio::FS_AUDIO,
 #       -any=>0);
