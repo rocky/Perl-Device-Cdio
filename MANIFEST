@@ -1,9 +1,17 @@
 Build.PL
+COPYING
 ChangeLog
 ChangeLog.0
 Changes
+GNUmakefile
+MANIFEST
+META.json
+META.yml			# Will be created by "make dist"
+Makefile
+Makefile.PL
+README.md
+THANKS
 configure
-COPYING
 data/cdda.bin
 data/cdda.cue
 data/cdda.toc
@@ -11,6 +19,7 @@ data/copying.iso
 data/isofs-m1.bin
 data/isofs-m1.cue
 examples/.gitignore
+examples/README
 examples/audio.pl
 examples/cd-read.pl
 examples/cdchange.pl
@@ -23,7 +32,6 @@ examples/iso0.pl
 examples/iso1.pl
 examples/iso2.pl
 examples/iso3.pl
-examples/README
 examples/tracks.pl
 lib/Device/Cdio.pm
 lib/Device/Cdio/Device.pm
@@ -35,14 +43,9 @@ lib/Device/Cdio/Util.pm
 lib/perlcdio.pm
 lib/perliso9660.pm
 lib/perlmmc.pm
-Makefile
-Makefile.PL
-MANIFEST
-META.yml			# Will be created by "make dist"
 perlcdio_wrap.c
 perliso9660_wrap.c
 perlmmc_wrap.c
-README.md
 swig/audio.swg
 swig/cdtext.swg
 swig/cdtext_new.swg
@@ -74,5 +77,3 @@ t/10.cdtext.t
 t/10.read.t
 t/11.dev.t
 t/cdtext.toc
-THANKS
-META.json

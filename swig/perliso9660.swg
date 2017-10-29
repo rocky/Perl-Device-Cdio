@@ -97,7 +97,7 @@ typedef iso9660_stat_t IsoStat_t;
     if (!result) goto out;
 
  PPCODE:
-    /* Have perl compute the length of the string using strlen() */
+    /* Have Perl compute the length of the string using strlen() */
     XPUSHs(sv_2mortal(newSVpv(p_statbuf->filename, 0)));
     XPUSHs(sv_2mortal(newSViv(p_statbuf->lsn)));
     XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));

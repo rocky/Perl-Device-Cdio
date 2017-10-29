@@ -28,12 +28,13 @@ my $iso_image_fname=File::Spec->catfile($ISO9660_IMAGE_PATH, "copying.iso");
 my $local_filename="copying";
 
 my $iso = Device::Cdio::ISO9660::IFS->new(-source=>$iso_image_fname);
-  
+
 ok(defined($iso), "Open ISO 9660 image $iso_image_fname") ;
+
 
 my $statbuf = $iso->stat ($local_filename, 1);
 
-my $good_stat = { LSN=>24, 'filename'=>'COPYING.;1', is_dir=>'', 
+my $good_stat = { LSN=>24, 'filename'=>'COPYING.;1', is_dir=>'',
 		  sec_size=>9, size=>18002 };
 
 is_deeply($statbuf, $good_stat, 'CD 9660 file stats');

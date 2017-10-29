@@ -31,6 +31,7 @@ build:
 
 #: Remove automatically generated files
 clean:
+	rm *.o *.so *.c || true
 	perl Build --makefile_env_macros 1 clean
 
 code:

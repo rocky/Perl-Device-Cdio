@@ -1,3 +1,8 @@
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* : commit 8b4c6ea49078d47f6b9a5f2c74e9722d7d0e9285 Author: R.
+	Bernstein <rocky@cpan.org> Date:   Sat May 24 23:08:53 2014 -0400
+
 2014-05-24  R. Bernstein <rocky@cpan.org>
 
 	* .gitignore, Build.PL, MANIFEST, swig/.gitignore,

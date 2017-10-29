@@ -27,7 +27,7 @@
 typedef char ** DeviceList_t;
 %}
 
-%typemap(out) DeviceList_t {   
+%typemap(out) DeviceList_t {
     /* char ** to array SVp*/
     /*
     AV *myav;
@@ -67,16 +67,16 @@ typedef char ** DeviceList_t;
 /*
   close_tray(drive=undef, driver_id=DRIVER_UNKNOWN) -> [status, driver_id]
 
-close media tray in CD drive if there is a routine to do so. 
+close media tray in CD drive if there is a routine to do so.
 */
 %apply driver_id_t *OUTPUT { driver_id_t *p_out_driver_id };
 driver_return_code_t close_tray(const char *psz_drive,
-				driver_id_t p_driver_id, 
+				driver_id_t p_driver_id,
 				driver_id_t *p_out_driver_id);
 %inline %{
-driver_return_code_t 
+driver_return_code_t
 close_tray(const char *psz_drive, driver_id_t p_driver_id,
-	     driver_id_t *p_out_driver_id)  
+	     driver_id_t *p_out_driver_id)
 {
   *p_out_driver_id = p_driver_id;
   return cdio_close_tray(psz_drive, p_out_driver_id);
@@ -92,7 +92,7 @@ sing CD reading/control operations for the current device.
 */
 void cdio_destroy(CdIo_t *p_cdio);
 
-/* cdio_driver_errmsg first appears in 0.77 code 
+/* cdio_driver_errmsg first appears in 0.77 code
 */
 %rename cdio_driver_errmsg driver_errmsg;
 /*!
@@ -103,13 +103,13 @@ const char *cdio_driver_errmsg(driver_return_code_t drc);
 /*
 eject_media(cdio)->return_code
 
-Eject media in CD drive if there is a routine to do so. 
+Eject media in CD drive if there is a routine to do so.
 */
 driver_return_code_t eject_media (CdIo_t *p_cdio);
 %inline %{
-driver_return_code_t 
+ driver_return_code_t
 
-eject_media (CdIo_t *p_cdio) 
+eject_media (CdIo_t *p_cdio)
 {
   /* libcdio routines uses a Cdio_t **p_cdio, so we have to pass in
      something it can clobber.
@@ -123,9 +123,9 @@ eject_media (CdIo_t *p_cdio)
 %rename cdio_eject_media_drive eject_media_drive;
 /*
 eject_media_drive(drive=None)->return_code
-Eject media in CD drive if there is a routine to do so. 
-  
-psz_drive: the name of the device to be acted upon. 
+Eject media in CD drive if there is a routine to do so.
+
+psz_drive: the name of the device to be acted upon.
 The operation status is returned.
 */
 driver_return_code_t cdio_eject_media_drive (const char *psz_drive=NULL);
@@ -139,14 +139,14 @@ get_arg(p_cdio, key)->string
 const char *cdio_get_arg (const CdIo_t *p_cdio, const char key[]);
 
 %newobject cdio_get_default_device; // free malloc'd return value
-%rename cdio_get_default_device get_device; 
+%rename cdio_get_default_device get_device;
 /*
 get_device(cdio)->str
 
 Get the CD device associated with cdio.
-If cdio is NULL (we haven't initialized a specific device driver), 
+If cdio is NULL (we haven't initialized a specific device driver),
 then find a suitable one and return the default device for that.
-    
+
 In some situations of drivers or OS's we can't find a CD device if
 there is no media in it and it is possible for this routine to return
 None even though there may be a hardware CD-ROM.
@@ -159,7 +159,7 @@ get_default_device_driver(driver_id=None)->[device, driver]
 Return a string containing the default CD device if none is specified.
 if p_driver_id is DRIVER_UNKNOWN or DRIVER_DEVICE then find a suitable
 one set the default device for that.
-    
+
 undef is returned as the device if we couldn't get a default device.
 */
 char *get_default_device_driver (driver_id_t p_driver_id,
@@ -173,14 +173,14 @@ get_default_device_driver(driver_id_t driver_id, driver_id_t *p_out_driver_id)
 }
 %}
 
-//%rename cdio_get_devices get_devices; 
+//%rename cdio_get_devices get_devices;
 /*! Return an array of device names. If you want a specific
   devices for a driver, give that device. If you want hardware
   devices, give DRIVER_DEVICE and if you want all possible devices,
   image drivers and hardware drivers give DRIVER_UNKNOWN.
-  
+
   NULL is returned if we couldn't return a list of devices.
-  
+
   In some situations of drivers or OS's we can't find a CD device if
   there is no media in it and it is possible for this routine to return
   NULL even though there may be a hardware CD-ROM.
@@ -201,11 +201,11 @@ DeviceList_t get_devices(driver_id_t driver_id) {
    afterwards. Giving the driver back facilitates this, and speeds
    things up for libcdio as well.
 */
-    
-DeviceList_t get_devices_ret (driver_id_t driver_id, 
+
+DeviceList_t get_devices_ret (driver_id_t driver_id,
 			      driver_id_t *p_out_driver_id);
 %inline %{
-DeviceList_t get_devices_ret (driver_id_t driver_id, 
+DeviceList_t get_devices_ret (driver_id_t driver_id,
 			      driver_id_t *p_out_driver_id) {
   *p_out_driver_id = driver_id;
   return cdio_get_devices_ret (p_out_driver_id);
@@ -214,8 +214,8 @@ DeviceList_t get_devices_ret (driver_id_t driver_id,
 
 /*
 Get an array of device names in search_devices that have at least
-the capabilities listed by the capabities parameter.  
-    
+the capabilities listed by the capabities parameter.
+
 If "b_any" is set false then every capability listed in the
 extended portion of capabilities (i.e. not the basic filesystem)
 must be satisified. If "any" is set true, then if any of the
@@ -230,7 +230,7 @@ found.
 */
 DeviceList_t get_devices_with_cap (unsigned int capabilities, bool b_any);
 %inline %{
-DeviceList_t 
+DeviceList_t
 get_devices_with_cap (unsigned int capabilities, bool b_any) {
   return cdio_get_devices_with_cap (NULL, (cdio_fs_anal_t) capabilities,
 				    b_any);
@@ -250,8 +250,8 @@ DeviceList_t get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
 DeviceList_t
 get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
 			  driver_id_t *p_out_driver_id) {
-  return cdio_get_devices_with_cap_ret (NULL, 
-					(cdio_fs_anal_t) capabilities, b_any, 
+  return cdio_get_devices_with_cap_ret (NULL,
+					(cdio_fs_anal_t) capabilities, b_any,
 					p_out_driver_id);
  }
 %}
@@ -263,16 +263,16 @@ get_devices_with_cap_ret (unsigned int capabilities, bool b_any,
 Get drive capabilities of device.
 
 In some situations of drivers or OS's we can't find a CD device if
-there is no media in it. In this situation capabilities will show up as 
+there is no media in it. In this situation capabilities will show up as
 empty even though there is a hardware CD-ROM.");
-%apply uint32_t *OUTPUT { uint32_t *p_read_cap, 
-			  uint32_t *p_write_cap, 
+%apply uint32_t *OUTPUT { uint32_t *p_read_cap,
+			  uint32_t *p_write_cap,
 			  uint32_t *p_misc_cap };
-void cdio_get_drive_cap (const CdIo_t *p_cdio, 
-			 uint32_t *p_read_cap, 
-			 uint32_t *p_write_cap, 
+void cdio_get_drive_cap (const CdIo_t *p_cdio,
+			 uint32_t *p_read_cap,
+			 uint32_t *p_write_cap,
 			 uint32_t *p_misc_cap);
-  
+
 %rename cdio_get_drive_cap_dev get_drive_cap;
 %feature("autodoc",
 "get_drive_cap_dev()->(read_cap, write_cap, misc_cap)
@@ -280,14 +280,14 @@ void cdio_get_drive_cap (const CdIo_t *p_cdio,
 Get drive capabilities of device.
 
 In some situations of drivers or OS's we can't find a CD device if
-there is no media in it. In this situation capabilities will show up as 
+there is no media in it. In this situation capabilities will show up as
 empty even though there is a hardware CD-ROM.");
 
-void cdio_get_drive_cap_dev(const char *device=NULL, 
-			    uint32_t *p_read_cap, 
-			    uint32_t *p_write_cap, 
+void cdio_get_drive_cap_dev(const char *device=NULL,
+			    uint32_t *p_read_cap,
+			    uint32_t *p_write_cap,
 			    uint32_t *p_misc_cap);
-  
+
 %rename cdio_get_driver_name get_driver_name;
 %feature("autodoc",
 "get_driver_name(cdio)-> string
@@ -301,13 +301,13 @@ const char *cdio_get_driver_name (const CdIo_t *p_cdio);
 "get_driver_id(cdio)-> int
 
 Return the driver id of the driver in use.
-if cdio has not been initialized or is None, 
+if cdio has not been initialized or is None,
 return pycdio.DRIVER_UNKNOWN.");
 driver_id_t cdio_get_driver_id (const CdIo_t *p_cdio);
 
 %rename cdio_get_last_session get_last_session;
 %apply int32_t *OUTPUT { lsn_t *i_last_session };
-driver_return_code_t cdio_get_last_session (CdIo_t *p_cdio, 
+driver_return_code_t cdio_get_last_session (CdIo_t *p_cdio,
 					    lsn_t *i_last_session);
 
 %feature("autodoc",
@@ -322,13 +322,13 @@ have_driver (unsigned int driver_id)
   return 0;
 }
 %}
-  
-%feature("autodoc", 
+
+%feature("autodoc",
 "have_ATAPI(CdIo_t *p_cdio)->bool
 return True if CD-ROM understand ATAPI commands.");
 %inline %{
 /*! True if CD-ROM understand ATAPI commands. */
-bool 
+bool
 have_ATAPI (CdIo_t *p_cdio)
 {
   return cdio_have_atapi(p_cdio) == yep;
@@ -344,7 +344,7 @@ char *cdio_is_binfile(const char *bin_name);
 char *cdio_is_cuefile(const char *cue_name);
 
 %rename cdio_is_device is_device;
-bool cdio_is_device(const char *psz_source, 
+bool cdio_is_device(const char *psz_source,
 		    driver_id_t driver_id=DRIVER_UNKNOWN);
 
 %rename cdio_is_nrg is_nrg;
@@ -367,7 +367,7 @@ return codes are the same as driver_return_code_t");
 int cdio_get_media_changed(CdIo_t *p_cdio);
 
 /* Set up to allow returning hardware info. We'll use a typedef so we
-   can make sure to isolate this. 
+   can make sure to isolate this.
 */
 %inline %{
 typedef char ** HWInfo_t;
@@ -397,17 +397,17 @@ typedef char ** HWInfo_t;
     argvi++;
 }
 
-/* 
+/*
 get_hwinfo(p_cdio)->[vendor, model, release]
 Get the CD-ROM hardware info via a SCSI MMC INQUIRY command.
-An exception is raised if we had an error. 
+An exception is raised if we had an error.
 */
 %apply int *OUTPUT { int *drc };
 const HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc);
 
 %inline %{
 static cdio_hwinfo_t hw_info;
-const 
+const
 HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
 {
   static const char *hwinfo[4] = {
@@ -424,19 +424,21 @@ HWInfo_t get_hwinfo ( const CdIo_t *p_cdio, int *drc)
 %}
 
 #include <cdio/mmc.h>
+%inline %{
+extern int mmc_get_tray_status(const CdIo_t *p_cdio);
+ %}
 %rename mmc_get_tray_status get_tray_status;
-int mmc_get_tray_status(const CdIo_t *p_cdio);
 
 %rename cdio_set_blocksize set_blocksize;
-%feature("autodoc", 
+%feature("autodoc",
 "set_blocksize(cdio, blocksize)->return_status
 
 Set the blocksize for subsequent reads.");
-driver_return_code_t cdio_set_blocksize ( const CdIo_t *p_cdio, 
+driver_return_code_t cdio_set_blocksize ( const CdIo_t *p_cdio,
 					  int i_blocksize );
 
 %rename cdio_set_speed set_speed;
-%feature("autodoc", 
+%feature("autodoc",
 "cdio_set_speed(cdio, speed)->return_status
 Set the drive speed.");
 driver_return_code_t cdio_set_speed ( const CdIo_t *p_cdio, int i_speed );
@@ -451,14 +453,13 @@ driver_return_code_t cdio_set_speed ( const CdIo_t *p_cdio, int i_speed );
 
 Sets up to read from place specified by source, driver_id and
 access mode. This should be called before using any other routine
-except those that act on a CD-ROM drive by name. 
+except those that act on a CD-ROM drive by name.
 
 If None is given as the source, we'll use the default driver device.
 If None is given as the driver_id, we'll find a suitable device driver.
 
-Return the a pointer than can be used in subsequent operations or 
+Return the a pointer than can be used in subsequent operations or
 None on error or no device.");
-CdIo_t *cdio_open_am(const char *psz_source=NULL, 
-		     driver_id_t driver_id=DRIVER_UNKNOWN, 
+CdIo_t *cdio_open_am(const char *psz_source=NULL,
+		     driver_id_t driver_id=DRIVER_UNKNOWN,
 		     const char *psz_access_mode=NULL);
-

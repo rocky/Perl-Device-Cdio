@@ -20,14 +20,14 @@
 /* See <cdio/audio.h> for more extensive documentation. */
 
 %rename cdio_audio_pause audio_pause;
-%feature("autodoc", 
+%feature("autodoc",
 "audio_pause(cdio)->status
 
 Pause playing CD through analog output.");
 driver_return_code_t cdio_audio_pause (CdIo_t *p_cdio);
 
 
-%feature("autodoc", 
+%feature("autodoc",
 "auto_play_lsn(cdio, start_lsn, end_lsn)->status
 
 Playing CD through analog output at the given lsn to the ending lsn");
@@ -46,22 +46,22 @@ driver_return_code_t audio_play_lsn (CdIo_t *p_cdio, lsn_t start_lsn,
 %}
 
 %rename cdio_audio_resume audio_resume;
-%feature("autodoc", 
+%feature("autodoc",
 "audio_resume(cdio)->status
 Resume playing an audio CD.");
 driver_return_code_t cdio_audio_resume (CdIo_t *p_cdio);
 
 
 %rename cdio_audio_stop audio_stop;
-%feature("autodoc", 
+%feature("autodoc",
 "audio_stop(cdio)->status
 Stop playing an audio CD.");
 driver_return_code_t cdio_audio_stop (CdIo_t *p_cdio);
 
 %feature("autodoc",
 "return audio volume levels array");
-    
-    
+
+
 %typemap(out) uint8_t,int {
     $result = sv_newmortal();
     sv_setiv($result,(IV) $1);
@@ -125,6 +125,7 @@ int audio_set_volume_levels(CdIo_t *p_cdio, int vol1, int vol2, int vol3, int vo
 %apply int *OUTPUT { int *drc };
 SV * audio_get_status ( CdIo_t *p_cdio, int *drc);
 %inline %{
+extern uint8_t cdio_from_bcd8(uint8_t p);
 //static cdio_subchannel_t cdio_subchannel;
 SV * audio_get_status ( CdIo_t *p_cdio, int *drc)
 {
@@ -136,7 +137,7 @@ SV * audio_get_status ( CdIo_t *p_cdio, int *drc)
     *drc = rc;
     audio_st = newHV();
     /* unsigned int msf_seconds(msf_t *msf) or
-     * uint8_t cdio_from_bcd8(uint8_t p) 
+     *
      */
     switch(sub.audio_status) {
         case 0x00:
@@ -194,4 +195,3 @@ SV * audio_get_status ( CdIo_t *p_cdio, int *drc)
     return newRV_noinc(sv_2mortal((SV*)audio_st));
 }
 %}
-
