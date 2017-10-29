@@ -1,0 +1,21 @@
+language: perl
+
+env:
+  - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy"
+
+install:
+  # Prerequisites
+  - wget ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.94.tar.gz
+  - tar -xpf libcdio-0.94.tar.gz
+  - cd libcdio-0.94.tar.gz && ./configure && make && make install
+  - cpanm $PREREQS
+
+after_failure:
+  - cat /home/travis/.cpanm/work/*/build.log
+
+perl:
+  - "5.18"
+  - "5.16"
+  - "5.14"
+  - "5.12"
+  - "5.10"
