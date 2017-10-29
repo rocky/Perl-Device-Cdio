@@ -11,8 +11,11 @@ use blib;
 
 use Device::Cdio;
 use Device::Cdio::Device;
-use Test::More 'no_plan';
+use Test::More;
 note 'Test running miscellaneous operations';
+
+plan skip_all => "Doesn't work in CI" if $ENV{'CI'};
+
 
 my @drives = Device::Cdio::get_devices();
 ok ( 1 , 'Device::Cdio::get_devices');
@@ -26,3 +29,4 @@ $dev->have_ATAPI();
 ok ( 1 , 'Device::Cdio::Device::have_ATAPI');
 $dev->get_media_changed();
 ok ( 1 , 'Device::Cdio::Device::get_media_changed');
+done_testing();
