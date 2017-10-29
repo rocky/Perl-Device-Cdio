@@ -23,11 +23,11 @@ GIT2CL ?= git2cl
 
 #: Build everything
 all:
-	perl Build --makefile_env_macros 1
+	perl ./Build --makefile_env_macros 1
 
 #: Build program, e.g. compile C programs
 build:
-	perl Build --makefile_env_macros 1 build
+	perl ./Build --makefile_env_macros 1 build
 
 #: create Makefile from Makefile.PL
 Makefile: Makefile.PL
