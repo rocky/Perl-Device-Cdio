@@ -2,7 +2,7 @@ Update Changes add Date
 
 Check $VERSION in lib/Device/Cdio.pm
 
-CDIO_VERSION=0.3.1 # or whatever it says above
+CDIO_VERSION=0.3.2 # or whatever it says above
 git commit -m"Get ready for release $CDIO_VERSION" . # no push though
 
 make ChangeLog
@@ -26,10 +26,14 @@ make dist
 Login to PAUSE:
   https://pause.perl.org/
 
-Upload a file to CPAN on left-hand-side
+   Upload a file to CPAN on left-hand-side
+   upload /src/external-vcs/Perl-Device-Cdio-${CDIO_VERSION}.tar.gz
 
- upload /src/external-vcs/Perl-Device-Cdio-${CDIO_VERSION}.tar.gz
+gnupload from the automake distribution.
+locate gnupload
+/src/build/autoconf-2.68/build-aux/gnupload --to ftp.gnu.org:libcdio Device-Cdio-v${CDIO_VERSION}.tar.gz
 
 git tag release-${CDIO_VERSION}
 git push --tags
+
 update version in /src/external-vcs/Perl-Device-Cdio/lib/Device/Cdio.pm

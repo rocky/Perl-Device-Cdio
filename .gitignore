@@ -4,6 +4,7 @@
 /*.so
 /*.tar.bz2
 /*.tar.gz
+/*.tar.gz.sig
 /.lwpcookies
 /Build
 /MANIFEST.bak
