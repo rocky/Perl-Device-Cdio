@@ -1,0 +1,35 @@
+Update Changes add Date
+
+Check $VERSION in lib/Device/Cdio.pm
+
+CDIO_VERSION=0.3.1 # or whatever it says above
+git commit -m"Get ready for release $CDIO_VERSION" . # no push though
+
+make ChangeLog
+git commit --amend -m"Get ready for release $CDIO_VERSION" .
+
+./admin-tools/testall.sh
+
+perl ./Build.PL # To get new version in
+
+make test
+make distcheck
+
+git commit .  # should be no changes
+make dist
+git push
+
+Check Travis results.
+
+make dist
+
+Login to PAUSE:
+  https://pause.perl.org/
+
+Upload a file to CPAN on left-hand-side
+
+ upload /src/external-vcs/Perl-Device-Cdio-${CDIO_VERSION}.tar.gz
+
+git tag release-${CDIO_VERSION}
+git push --tags
+update version in /src/external-vcs/Perl-Device-Cdio/lib/Device/Cdio.pm

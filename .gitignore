@@ -1,15 +1,16 @@
+*~
 /*.c
 /*.o
 /*.so
 /*.tar.bz2
 /*.tar.gz
-/*~
 /.lwpcookies
 /Build
 /MANIFEST.bak
 /META.json
 /MYMETA.json
 /MYMETA.yml
+/Makefile
 /Makefile.PL
 /_build
 /blib
@@ -17,5 +18,5 @@
 /how-to-make-a-release.txt
 /pm_to_blib*
 /pod2ht*.tmp
-/tmp*
 /swig/cdtext.swg
+/tmp*

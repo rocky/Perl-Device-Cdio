@@ -29,6 +29,13 @@ all:
 build:
 	perl Build --makefile_env_macros 1 build
 
+#: create Makefile from Makefile.PL
+Makefile: Makefile.PL
+	perl Makefile.PL
+
+#: create Makefile.PL from Build
+Makefile: Build
+
 #: Remove automatically generated files
 clean:
 	rm *.o *.so *.c || true
@@ -47,7 +54,7 @@ diff:
 dist:
 	perl Build --makefile_env_macros 1 dist
 
-distcheck:
+distcheck: Makefile
 	perl Build --makefile_env_macros 1 distcheck
 
 distclean:
