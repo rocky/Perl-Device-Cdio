@@ -4,15 +4,15 @@ env:
   global:
     - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy"
   matrix:
-    - LIBCDIO_VERSION="0.94"
     - LIBCDIO_VERSION="0.92"
+    - LIBCDIO_VERSION="0.94"
 
 install:
   # Prerequisites
   - sudo apt-get install swig
   - wget ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-${LIBCDIO_VERSION}.tar.gz
   - tar -xpf libcdio-${LIBCDIO_VERSION}.tar.gz
-  - cd libcdio-0.94 && ./configure --prefix=/usr && make && sudo make install && cd .. && rm -fr libcdio-${LIBCDIO_VERSION}
+  - cd ${LIBCDIO_VERSION} && ./configure --prefix=/usr && make && sudo make install && cd .. && rm -fr libcdio-${LIBCDIO_VERSION}
   - cpanm -v $PREREQS --notest .
 
 script:
