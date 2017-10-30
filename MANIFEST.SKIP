@@ -6,7 +6,7 @@
 
 # Continous integration files
 \B\.travis\.yml$
-\B\circle\.yml$
+circle\.yml$
 
 # Perl Critic
 perlcritic\.rc
@@ -22,6 +22,7 @@ git2cl$
 \bblib/
 
 ^Build$
+^libcdio-.*\.tar\.gz$
 ^Device-Cdio-v.*gz$
 ^Device-Cdio-v.*gz.sig$
 ^MANIFEST\.SKIP$
