@@ -11,7 +11,7 @@ checkout:
     - cd libcdio-${LIBCDIO_VERSION} && ./configure --prefix=/usr && make && sudo make install && cd .. && rm -fr libcdio-${LIBCDIO_VERSION}
     - sudo apt-get install swig
     - sudo apt-get -y install cpanminus
-    - sudo cpanm -v ExtUtils::PkgConfig Module::Build File::Copy --notest .
+    - sudo cpanm -v ExtUtils::PkgConfig Module::Build File::Copy Test::Pod::Coverage --notest .
 
 # testing starts here
 test:
