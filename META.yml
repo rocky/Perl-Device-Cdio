@@ -16,7 +16,7 @@ name: Device-Cdio
 provides:
   Device::Cdio:
     file: lib/Device/Cdio.pm
-    version: v0.3.1
+    version: v0.3.2
   Device::Cdio::Device:
     file: lib/Device/Cdio/Device.pm
   Device::Cdio::ISO9660:

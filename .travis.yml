@@ -1,15 +1,16 @@
 language: perl
 
 env:
-  - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy"
+  - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy LIBCDIO_VERSION=0.94"
+  - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy LIBCDIO_VERSION=0.92"
 
 install:
   # Prerequisites
   - sudo apt-get install swig
-  - wget ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-0.94.tar.gz
-  - tar -xpf libcdio-0.94.tar.gz
-  - cd libcdio-0.94 && ./configure --prefix=/usr && make && sudo make install && cd .. && rm -fr libcdio-0.94
-  - cpanm $PREREQS
+  - wget ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-${LIBCDIO_VERSION}.tar.gz
+  - tar -xpf libcdio-${LIBCDIO_VERSION}.tar.gz
+  - cd libcdio-0.94 && ./configure --prefix=/usr && make && sudo make install && cd .. && rm -fr libcdio-${LIBCDIO_VERSION}
+  - cpanm -v --installdeps --notest .
 
 script:
 - make check
@@ -18,6 +19,8 @@ after_failure:
   - cat /home/travis/.cpanm/work/*/build.log
 
 perl:
+  - "5.26"
+  - "5.24-shrplib"
   - "5.22"
   - "5.20"
   - "5.18"

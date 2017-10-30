@@ -1,13 +1,11 @@
 Build.PL
 COPYING
 ChangeLog
-ChangeLog.0
 Changes
 GNUmakefile
-MANIFEST
+MANIFEST			This list of files
 META.json
 META.yml			# Will be created by "make dist"
-Makefile
 Makefile.PL
 README.md
 THANKS
