@@ -23,7 +23,7 @@ ok ( defined $dev , 'Device::Cdio::Device->new(-driver_id=>$perlcdio::DRIVER_DEV
 my $drive_name = $dev->get_device();
 note('Device->new(DRIVER_DEVICE)((i.e.:',$perlcdio::DRIVER_DEVICE,')) found: ',$drive_name);
 
-if ($ENV{'CI'}) {
+if ($ENV{'CI'} or $ENV{'CIRCLE_BRANCH'}) {
     done_testing();
 } else {
 
