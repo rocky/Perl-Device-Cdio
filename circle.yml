@@ -14,6 +14,6 @@ checkout:
 # testing starts here
 test:
   override:
-    - perl ./Build.PL
-    - perl ./Build installdeps
-    - GIT2CL=./git2cl make check ChangeLog distmeta distcheck
+    - sudo perl ./Build.PL
+    - sudo perl ./Build installdeps
+    - GIT2CL=./git2cl sudo make check ChangeLog distmeta distcheck
