@@ -17,6 +17,7 @@
 /* See <cdio/device.h> for more extensive documentation. */
 
 %include "device_const.swg"
+#include <cdio/version.h>
 
 /* Set up to allow functions to return device lists of type "char
    *". We'll use a typedef so we can make sure to isolate this. I

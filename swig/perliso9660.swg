@@ -43,7 +43,7 @@ typedef uint8_t iso_extension_mask_t;
 %constant long int RECORD               = ISO_RECORD;
 
 /* When version 0.77 comes out, require it and fix this fix this. */
-#if 0
+#if LIBCDIO_VERSION_NUM >= 77
 %constant long int PROTECTION           = ISO_PROTECTION;
 #else
 %constant long int PROTECTION           = 16;
