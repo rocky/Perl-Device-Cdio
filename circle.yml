@@ -16,4 +16,4 @@ test:
   override:
     - sudo perl ./Build.PL
     - sudo perl ./Build installdeps
-    - GIT2CL=./git2cl sudo make check ChangeLog distmeta distcheck
+    - CI=t GIT2CL=./git2cl sudo make check ChangeLog distmeta distcheck
