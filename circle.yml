@@ -11,6 +11,7 @@ checkout:
     - sudo apt-get -y install cpanminus
     - sudo cpanm -v ExtUtils::PkgConfig Module::Build File::Copy --notest .
 
+# testing starts here
 test:
   override:
     - perl ./Build.PL
