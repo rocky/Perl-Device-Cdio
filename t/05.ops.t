@@ -14,8 +14,7 @@ use Device::Cdio::Device;
 use Test::More;
 note 'Test running miscellaneous operations';
 
-plan skip_all => "Doesn't work in CI" if $ENV{'CI'} or $ENV{'CIRCLE_BRANCH'};
-
+plan skip_all => "Doesn't work in CI" if $ENV{'CI'};
 
 my @drives = Device::Cdio::get_devices();
 ok ( 1 , 'Device::Cdio::get_devices');

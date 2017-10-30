@@ -1,6 +1,72 @@
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* t/05.ops.t, t/11.dev.t: CircleCI is close to working (again)
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* circle.yml: CircleCI is close to working
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* circle.yml: CirclCi test again
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* circle.yml: CirclCi test again
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .circleci.yml, circle.yml: CircleCI test 3
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .circleci.yml, .circleci/circle.yml: CircleCI testing
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .circleci/circle.yml, MANIFEST.SKIP, git2cl, lib/Device/Cdio.pm,
+	lib/Device/Cdio/Device.pm, lib/Device/Cdio/ISO9660/FS.pm,
+	lib/Device/Cdio/ISO9660/IFS.pm, lib/Device/Cdio/Track.pm,
+	swig/audio.swg, swig/device.swg: Spelling mistakes from gregor
+	herrmann
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Fix travis config bug
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Another travis attempt
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: travis cpanm futzing
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Try travis testing on 2 libcdio version
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml: Botched travis env vars
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .travis.yml, MANIFEST, MANIFEST.SKIP, META.yml: Lots of
+	Administrivia: Improve what goes into MANIFEST and MANIFEST.skip. Thanks to manwar .travis.yml:   - Try more versions of Perl   - Try two versions of libcdio 0.92 and 0.94   - Try a more generalized install mechanism for Perl modules
+
 2017-10-29  R. Bernstein <rocky@cpan.org>
 
-	* README.md: Get ready for release 0.3.1 Add CI badge
+	* lib/Device/Cdio.pm: Don't how to get non-numeric git version
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* .gitignore, META.yml, admin-tools/how-to-make-a-release.txt,
+	lib/Device/Cdio.pm: Administrivia - bump version
+
+2017-10-29  R. Bernstein <rocky@cpan.org>
+
+	* ChangeLog, README.md: Get ready for release 0.3.1 Add CI badge
 
 2017-10-29  R. Bernstein <rocky@cpan.org>
 

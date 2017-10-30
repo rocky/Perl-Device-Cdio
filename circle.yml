@@ -1,6 +1,8 @@
 machine:
   environment:
     LIBCDIO_VERSION: 0.94
+    CI: t
+    GIT2CL: ./git2cl
 
 checkout:
   post:
@@ -16,4 +18,4 @@ test:
   override:
     - sudo perl ./Build.PL
     - sudo perl ./Build installdeps
-    - CI=t GIT2CL=./git2cl sudo make check ChangeLog distmeta distcheck
+    - sudo make CI=t GIT2CL=./git2cl check ChangeLog distmeta distcheck

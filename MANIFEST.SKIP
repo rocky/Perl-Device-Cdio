@@ -6,7 +6,7 @@
 
 # Continous integration files
 \B\.travis\.yml$
-\B\.circleci\b
+\B\circle\.yml$
 
 # Perl Critic
 perlcritic\.rc
