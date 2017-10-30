@@ -218,7 +218,7 @@ the capabilities listed by the capabities parameter.
 
 If "b_any" is set false then every capability listed in the
 extended portion of capabilities (i.e. not the basic filesystem)
-must be satisified. If "any" is set true, then if any of the
+must be satisfied. If "any" is set true, then if any of the
 capabilities matches, we call that a success.
 
 To find a CD-drive of any type, use the mask CDIO_FS_MATCH_ALL.

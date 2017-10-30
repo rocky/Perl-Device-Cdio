@@ -159,7 +159,7 @@ SV * audio_get_status ( CdIo_t *p_cdio, int *drc)
             a_s_t = "NO_STATUS";
             break;
         default:
-            a_s_t = "UNKNWON";
+            a_s_t = "UNKNOWN";
     }
     hv_store(audio_st, "format", 6,
             newSVuv(sub.format), 0);

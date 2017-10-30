@@ -479,7 +479,7 @@ Returns a hash reference with the audio-subchannel-mmc status values:
 
     audio_status : value
     status_text  : audio_status as text
-                (INVALID,ERROR,NO_STATUS,UNKNWON,playing,paused,completed)
+                (INVALID,ERROR,NO_STATUS,UNKNOWN,playing,paused,completed)
     track : track number
     index : index in track
     msf time values as ints minutes, seconds,frames :

@@ -37,7 +37,7 @@ library (C<libcdio>) which is written in C. This class handles ISO
 
 An ISO-9660 image is distinct from a CD in a CD-ROM which has ISO-9660
 tracks; the latter contains other CD-like information (e.g. tracks,
-information or assocated with the CD). An ISO-9660 filesystem image on
+information or associated with the CD). An ISO-9660 filesystem image on
 the other hand doesn't and is generally file in some file system,
 sometimes with the file extension ".iso"; perhaps it can be burned
 into a CD with a suitable tool, perhaps is can be "mounted" as a

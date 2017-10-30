@@ -4,11 +4,15 @@
 \B\.git\b
 .gitignore\b
 
-# Continous integration file via travis
+# Continous integration files
 \B\.travis\.yml$
+\B\.circleci\b
 
 # Perl Critic
 perlcritic\.rc
+
+# Changelog
+git2cl$
 
 \bChangeLog.0$
 

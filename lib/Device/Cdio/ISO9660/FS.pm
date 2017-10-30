@@ -38,7 +38,7 @@ Note that working with a CD in a CD-ROM which has tracks in the
 ISO-9660 format is distinct working with a I<file> in a filesystem
 which contains an ISO-9660 image. See also
 L<Device::Cdio::ISO9660::IFS> for working with an ISO 9660 image
-stored as a file in a fileystem.
+stored as a file in a filesystem.
 
 =head2 CALLING ROUTINES
 

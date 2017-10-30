@@ -1,0 +1,18 @@
+machine:
+  environment:
+    LIBCDIO_VERSION: 0.94
+
+checkout:
+  post:
+    - wget ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-${LIBCDIO_VERSION}.tar.gz
+    - tar -xpf libcdio-${LIBCDIO_VERSION}.tar.gz
+    - cd libcdio-${LIBCDIO_VERSION} && ./configure --prefix=/usr && make && sudo make install && cd .. && rm -fr libcdio-${LIBCDIO_VERSION}
+    - sudo apt-get install swig
+    - sudo apt-get -y install cpanminus
+    - sudo cpanm -v ExtUtils::PkgConfig Module::Build File::Copy --notest .
+
+test:
+  override:
+    - perl ./Build.PL
+    - perl ./Build installdeps
+    - GIT2CL=./git2cl make check ChangeLog distmeta distcheck
