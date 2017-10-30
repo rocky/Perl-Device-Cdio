@@ -1,8 +1,8 @@
 language: perl
 
 env:
-  - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy LIBCDIO_VERSION=0.94"
-  - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy LIBCDIO_VERSION=0.92"
+  - export LIBCDIO_VERSION=0.94"
+  - export LIBCDIO_VERSION=0.92"
 
 install:
   # Prerequisites
