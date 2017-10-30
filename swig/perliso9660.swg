@@ -41,14 +41,7 @@ typedef uint8_t iso_extension_mask_t;
 %constant long int DIRECTORY            = ISO_DIRECTORY;
 %constant long int ASSOCIATED           = ISO_ASSOCIATED;
 %constant long int RECORD               = ISO_RECORD;
-
-/* When version 0.77 comes out, require it and fix this fix this. */
-#if 0
 %constant long int PROTECTION           = ISO_PROTECTION;
-#else
-%constant long int PROTECTION           = 16;
-#endif
-
 %constant long int DRESERVED1           = ISO_DRESERVED1;
 %constant long int DRESERVED2           = ISO_DRESERVED2;
 %constant long int MULTIEXTENT          = ISO_MULTIEXTENT;
@@ -1391,7 +1384,7 @@ Rocky Bernstein C<< <rocky at cpan.org> >>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006, 2008, 2011 Rocky Bernstein <rocky@cpan.org>
+Copyright (C) 2006, 2008, 2011, 2017 Rocky Bernstein <rocky@cpan.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

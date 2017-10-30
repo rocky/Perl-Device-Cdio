@@ -2,6 +2,8 @@ Update Changes add Date
 
 Check $VERSION in lib/Device/Cdio.pm
 
+FIXME: DEAL with multiple versions all over the place in .pms. Look at last indexer failed report
+
 CDIO_VERSION=0.3.2 # or whatever it says above
 git commit -m"Get ready for release $CDIO_VERSION" . # no push though
 
