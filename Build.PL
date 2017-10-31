@@ -145,7 +145,6 @@ my $builder = $class->new(
 
     requires => {
         'ExtUtils::PkgConfig'     => '1.03',
-        'Date::Time'              => 0,
         'Test::More'              => 0,
         'version'                 => 0,
         'ExtUtils::CBuilder'      => '0.28',

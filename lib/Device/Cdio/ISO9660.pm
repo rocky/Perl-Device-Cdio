@@ -392,7 +392,7 @@ libcdio including the a manual and the API via doxygen.
 
 =head1 AUTHORS
 
-Rocky Bernstein C<< <rocky at cpan.org> >>.
+Rocky Bernstein
 
 =head1 COPYRIGHT
 
@@ -409,6 +409,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see L<The GNU General Public
+License|http://www.gnu.org/licenses/#GPL>.
 
 =cut
