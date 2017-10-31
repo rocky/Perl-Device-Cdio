@@ -1,4 +1,4 @@
-[![Travis Build Status](https://travis-ci.org/rocky/Perl-Device-Cdio.svg?branch=master)] [![CircleCi Build Status](https://circleci.com/gh/rocky/Perl-Device-Cdio.svg?style=shield&circle-token=:circle-token)]
+![Travis Build Status](https://travis-ci.org/rocky/Perl-Device-Cdio.svg?branch=master) ![CircleCi Build Status](https://circleci.com/gh/rocky/Perl-Device-Cdio.svg?style=shield&circle-token=:circle-token)
 
 Device::Cdio - Perl bindings for libcdio (CD Input and Control library)
 ============================================================================
