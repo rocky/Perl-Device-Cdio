@@ -12,7 +12,7 @@ Device::Cdio::ISO9660::FS - Class for ISO 9660 CD reading
 
 =head1 SYNOPSIS
 
-This encapsulates ISO 9660 Filesystem aspects of CD Tracks. 
+This encapsulates ISO 9660 Filesystem aspects of CD Tracks.
 As such this is a This library
 however needs to be used in conjunction with Device::Cdio::ISO9660.
 
@@ -25,7 +25,7 @@ however needs to be used in conjunction with Device::Cdio::ISO9660.
         my $buf = $cd->read_data_blocks ($statbuf->{LSN} + $i);
         die if !defined($buf);
     }
-    
+
     print $buf;
 
 =head1 DESCRIPTION
@@ -58,7 +58,7 @@ In the documentation below and elsewhere in this package the parameter
 name that can be used in this style of call is given in the parameter
 list. For example, for "close_tray" the documentation below reads:
 
-   close_tray(drive=undef, driver_id=$perlcdio::DRIVER_UNKNOWN) 
+   close_tray(drive=undef, driver_id=$perlcdio::DRIVER_UNKNOWN)
     -> ($drc, $driver_id)
 
 So the parameter names are "drive", and "driver_id". Neither parameter
@@ -93,7 +93,7 @@ use Device::Cdio::Util qw( _check_arg_count _extra_args _rearrange );
 @ISA = qw(Exporter Device::Cdio::Device);
 @EXPORT_OK  = qw( close open );
 
-=pod 
+=pod
 
 =head2 find_lsn
 
@@ -134,15 +134,15 @@ Each item of @iso_stat is a hash reference which contains
 
 =over 4
 
-=item LSN 
+=item LSN
 
 the Logical sector number (an integer)
 
-=item size 
+=item size
 
 the total size of the file in bytes
 
-=item  sec_size 
+=item  sec_size
 
 the number of sectors allocated
 
@@ -154,7 +154,7 @@ the file name of the statbuf entry
 
 if the file has XA attributes; 0 if not
 
-=item is_dir 
+=item is_dir
 
 1 if a directory; 0 if a not;
 
@@ -162,7 +162,7 @@ if the file has XA attributes; 0 if not
 
 FIXME: If you look at iso9660.h you'll see more fields, such as for
 Rock-Ridge specific fields or XA specific fields. Eventually these
-will be added. Volunteers? 
+will be added. Volunteers?
 
 =cut
 
@@ -185,8 +185,8 @@ sub readdir {
     my @result = ();
     while (@values) {
 	push @result, Device::Cdio::ISO9660::stat_array_to_href(@values);
-	splice(@values, 0, 5);
-    }	    
+	splice(@values, 0, 14);
+    }
     return @result;
 }
 
@@ -225,7 +225,7 @@ Descriptor (PVD) and perhaps a Supplemental Volume Descriptor if
 sub read_superblock {
     my($self,@p) = @_;
     my($iso_mask) = _rearrange(['ISO_MASK'], @p);
-    
+
     $iso_mask = $perliso9660::EXTENSION_NONE if !defined($iso_mask);
 
     return perliso9660::fs_read_superblock($self->{cd}, $iso_mask);
@@ -246,15 +246,15 @@ Each item of @iso_stat is a hash reference which contains
 
 =over 4
 
-=item LSN 
+=item LSN
 
 the Logical sector number (an integer)
 
-=item size 
+=item size
 
 the total size of the file in bytes
 
-=item  sec_size 
+=item  sec_size
 
 the number of sectors allocated
 
@@ -266,7 +266,7 @@ the file name of the statbuf entry
 
 if the file has XA attributes; 0 if not
 
-=item is_dir 
+=item is_dir
 
 1 if a directory; 0 if a not;
 
@@ -276,9 +276,9 @@ if the file has XA attributes; 0 if not
 
 sub stat {
     my($self, @p) = @_;
-    my($path, $translate, @args) = 
+    my($path, $translate, @args) =
 	_rearrange(['PATH', 'TRANSLATE'], @p);
-    
+
     return undef if _extra_args(@args);
     $translate = 0 if !defined($translate);
 
@@ -314,10 +314,10 @@ L<Device::Cdio::Device>. See
 L<Device::Cdio::ISO9660::IFS> for working with ISO 9660
 images.
 
-L<perliso9660> is the lower-level interface to C<libiso9660>, 
+L<perliso9660> is the lower-level interface to C<libiso9660>,
 the ISO 9660 library of C<libcdio>.
 
-L<http://www.gnu.org/software/libcdio/doxygen/iso9660_8h.html> is 
+L<http://www.gnu.org/software/libcdio/doxygen/iso9660_8h.html> is
 documentation via doxygen of C<libiso9660>.
 doxygen.
 

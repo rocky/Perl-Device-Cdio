@@ -41,4 +41,5 @@ git2cl$
 ^perl.*\.so
 ^t/\.gitignore
 tmp\d+$
+tmp\b
 ~$

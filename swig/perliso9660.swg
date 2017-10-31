@@ -96,7 +96,16 @@ typedef iso9660_stat_t IsoStat_t;
     XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));
     XPUSHs(sv_2mortal(newSViv(p_statbuf->secsize)));
     XPUSHs(sv_2mortal(newSViv(p_statbuf->type)));
-    argvi += 7;
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_sec)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_min)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_hour)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_mday)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_mon)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_year)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_wday)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_yday)));
+    XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_isdst)));
+    argvi += 16;
     free (p_statbuf);
  out: ;
 }
@@ -110,11 +119,6 @@ typedef iso9660_stat_t IsoStat_t;
     if (!result) goto out;
 
  PPCODE:
-    /* Figure out how many items in the array */
-    _CDIO_LIST_FOREACH (p_entnode, p_entlist) {
-      num +=5;
-    }
-
     /* For each element in the array of strings, create a new
      * mortalscalar, and stuff it into the above array. */
     _CDIO_LIST_FOREACH (p_entnode, p_entlist) {
@@ -126,6 +130,16 @@ typedef iso9660_stat_t IsoStat_t;
       XPUSHs(sv_2mortal(newSViv(p_statbuf->size)));
       XPUSHs(sv_2mortal(newSViv(p_statbuf->secsize)));
       XPUSHs(sv_2mortal(newSViv(p_statbuf->type)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_sec)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_min)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_hour)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_mday)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_mon)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_year)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_wday)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_yday)));
+      XPUSHs(sv_2mortal(newSViv(p_statbuf->tm.tm_isdst)));
+      num += 14;
     }
     _cdio_list_free (p_entlist, true);
     argvi += num + 2;

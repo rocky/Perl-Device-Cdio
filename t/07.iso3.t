@@ -35,7 +35,19 @@ ok(defined($iso), "Open ISO 9660 image $iso_image_fname") ;
 my $statbuf = $iso->stat ($local_filename, 1);
 
 my $good_stat = { LSN=>24, 'filename'=>'COPYING.;1', is_dir=>'',
-		  sec_size=>9, size=>18002 };
+                  sec_size=>9, size=>18002,
+                  tm => {
+		      hour  => 16,
+		      isdst =>  0,
+		      mday  =>  5,
+		      min   => 46,
+		      mon   =>  1,
+		      sec   => 30,
+		      wday  =>  4,
+		      yday  =>  4,
+		      year  => 2006,
+		    },
+                };
 
 is_deeply($statbuf, $good_stat, 'CD 9660 file stats');
 
