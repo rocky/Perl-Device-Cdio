@@ -22,6 +22,9 @@ use POSIX;
 use Test::More tests => 3;
 note 'Test ISO9660::IFS routines';
 
+# Use Canonic timezone in date testing
+$ENV{'TZ'} = 'UTC';
+
 # The test CD image
 my $ISO9660_IMAGE_PATH="../data";
 my $iso_image_fname=File::Spec->catfile($ISO9660_IMAGE_PATH, "copying.iso");
@@ -37,7 +40,7 @@ my $statbuf = $iso->stat ($local_filename, 1);
 my $good_stat = { LSN=>24, 'filename'=>'COPYING.;1', is_dir=>'',
                   sec_size=>9, size=>18002,
                   tm => {
-		      hour  => 16,
+		      hour  => 21,
 		      isdst =>  0,
 		      mday  =>  5,
 		      min   => 46,
