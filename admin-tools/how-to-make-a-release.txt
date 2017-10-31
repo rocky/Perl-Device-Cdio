@@ -21,7 +21,7 @@ git commit .  # should be no changes
 make dist
 git push
 
-Check Travis results.
+Check CircleCI and Travis results.
 
 make dist
 
