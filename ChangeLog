@@ -1,5 +1,23 @@
 2017-10-30  R. Bernstein <rocky@cpan.org>
 
+	* circle.yml: Add Test::Pod::Coverage to CircleCI
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* admin-tools/how-to-make-a-release.txt, swig/perliso9660.swg: 
+	Simplify code (we require >= 0.92)
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* MANIFEST.SKIP: CI Administrivia
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* ChangeLog, MANIFEST.SKIP, META.yml, circle.yml, t/05.ops.t,
+	t/11.dev.t: CircleCI env vars (again)
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
 	* t/05.ops.t, t/11.dev.t: CircleCI is close to working (again)
 
 2017-10-30  R. Bernstein <rocky@cpan.org>

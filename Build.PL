@@ -41,10 +41,6 @@ if (exists($libcdio_pkgcfg{'modversion'})) {
 	    print "Good, I found libcdio version $lv installed.\n";
 
 	}
-	if ($libcdio_version >= 0.92) {
-	    print "libcdio version >= 0.92\n";
-	    copy('swig/cdtext_new.swg', 'swig/cdtext.swg');
-	}
     } else {
 	print STDERR "
 ***
@@ -149,6 +145,7 @@ my $builder = $class->new(
 
     requires => {
         'ExtUtils::PkgConfig'     => '1.03',
+        'Date::Time'              => 0,
         'Test::More'              => 0,
         'version'                 => 0,
         'ExtUtils::CBuilder'      => '0.28',
