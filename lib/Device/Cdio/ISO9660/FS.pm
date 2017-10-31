@@ -323,11 +323,11 @@ doxygen.
 
 =head1 AUTHORS
 
-Rocky Bernstein C<< <rocky at cpan.org> >>.
+Rocky Bernstein
 
 =head1 COPYRIGHT
 
-Copyright (C) 2006, 2007, 2008 Rocky Bernstein <rocky@cpan.org>
+Copyright (C) 2006, 2007, 2008, 2017 Rocky Bernstein <rocky@cpan.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -340,6 +340,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see L<The GNU General Public
+License|http://www.gnu.org/licenses/#GPL>.
 
 =cut
