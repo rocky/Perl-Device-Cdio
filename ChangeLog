@@ -1,3 +1,50 @@
+2017-11-01  R. Bernstein <rocky@cpan.org>
+
+	* META.yml, admin-tools/how-to-make-a-release.txt,
+	lib/Device/Cdio.pm: Get ready for release 0.4.0
+
+2017-10-31  rocky <rb@dustyfeet.com>
+
+	* README.md: add CircleCI badge
+
+2017-10-31  rocky <rb@dustyfeet.com>
+
+	* README.md: add CircleCI badge
+
+2017-10-31  rocky <rb@dustyfeet.com>
+
+	* README.md, admin-tools/how-to-make-a-release.txt: add CircleCI
+	badge
+
+2017-10-31  rocky <rb@dustyfeet.com>
+
+	* lib/Device/Cdio.pm, lib/Device/Cdio/ISO9660/FS.pm,
+	lib/Device/Cdio/ISO9660/IFS.pm, lib/Device/Cdio/Track.pm,
+	lib/Device/Cdio/Util.pm: Regularize docs
+
+2017-10-31  rocky <rb@dustyfeet.com>
+
+	* Build.PL, lib/Device/Cdio/Device.pm, lib/Device/Cdio/ISO9660.pm,
+	swig/audio.swg: Add {cdio_,}audio_play_track_index. Go over docs
+
+2017-10-31  R. Bernstein <rocky@cpan.org>
+
+	* t/07.iso1.t, t/07.iso2.t, t/07.iso3.t: Set timezioe UTC in
+	tests...  So we have repatable time checks across CI testing
+
+2017-10-31  R. Bernstein <rocky@cpan.org>
+
+	* MANIFEST.SKIP, examples/iso1.pl, lib/Device/Cdio/ISO9660.pm,
+	lib/Device/Cdio/ISO9660/FS.pm, lib/Device/Cdio/ISO9660/IFS.pm,
+	swig/perliso9660.swg, t/07.iso1.t, t/07.iso2.t, t/07.iso3.t: ISO9660
+	stat hash ref now returns time
+
+2017-10-30  R. Bernstein <rocky@cpan.org>
+
+	* .gitignore, Build.PL, ChangeLog, MANIFEST, swig/cdtext.swg,
+	swig/cdtext_new.swg, swig/cdtext_old.swg: Simplify: No longer have
+	cdtext_{old,new}
+
 2017-10-30  R. Bernstein <rocky@cpan.org>
 
 	* circle.yml: Add Test::Pod::Coverage to CircleCI

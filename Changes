@@ -1,5 +1,15 @@
 Revision history for Device-Cdio
 
+0.4.0  Nov 1, 2017
+
+- ISO filesystem stat now returns all of the time.h fields,
+  e.g. mon, day, hour, min, sec, year, yday, wday, is_dst
+- Add {cdio_,}audio_play_track_index.
+- Update docs and spelling corrections from Debian release
+- Simplify swig code, we now require >= 0.92
+- Lots of admnistrivia: improve MANIFEST and MANIFEST.SKIP
+- regularize versions
+
 0.3.1  Oct 29, 2017
 
 - Adjust to make work on libcdio 0.92

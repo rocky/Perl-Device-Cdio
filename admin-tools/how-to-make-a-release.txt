@@ -1,10 +1,11 @@
 Update Changes add Date
 
-Check $VERSION in lib/Device/Cdio.pm
+Check $VERSION in lib/Device/Cdio.pm and decide what the release version should be.
 
-FIXME: DEAL with multiple versions all over the place in .pms. Look at last indexer failed report
+CDIO_VERSION=0.4.0 # based on what is in lib/Device
 
-CDIO_VERSION=0.3.2 # or whatever it says above
+perl-reversion -set $CDIO_VERSION  # perl-version is in cpan Perl::Version
+
 git commit -m"Get ready for release $CDIO_VERSION" . # no push though
 
 make ChangeLog
