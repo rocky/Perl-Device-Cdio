@@ -3,6 +3,8 @@ language: perl
 env:
   global:
     - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy"
+    - DOWNLOAD_LOC="http://rocky.github.io/libcdio-1.1.0rc1.tar.bz2"
+    - DOWNLOAD_LOC="ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-${LIBCDIO_VERSION}.tar.gz"
   matrix:
     - LIBCDIO_VERSION="0.92"
     - LIBCDIO_VERSION="0.94"
@@ -10,7 +12,7 @@ env:
 install:
   # Prerequisites
   - sudo apt-get install swig
-  - wget ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-${LIBCDIO_VERSION}.tar.gz
+  - wget $DLOWNLOAD_LOC
   - tar -xpf libcdio-${LIBCDIO_VERSION}.tar.gz
   - cd libcdio-${LIBCDIO_VERSION} && ./configure --prefix=/usr && make && sudo make install && cd .. && rm -fr libcdio-${LIBCDIO_VERSION}
   - cpanm -v $PREREQS --notest .
