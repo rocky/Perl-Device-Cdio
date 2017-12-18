@@ -6,8 +6,7 @@ env:
     - DOWNLOAD_LOC="http://rocky.github.io/libcdio-1.1.0rc1.tar.bz2"
     - DOWNLOAD_LOC="ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-${LIBCDIO_VERSION}.tar.gz"
   matrix:
-    - LIBCDIO_VERSION="0.92"
-    - LIBCDIO_VERSION="0.94"
+    - LIBCDIO_VERSION="1.1.0"
 
 install:
   # Prerequisites
