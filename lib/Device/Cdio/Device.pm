@@ -458,7 +458,7 @@ sub audio_set_volume {
 =head2 get_disk_cdtext, get_track_cdtext
 
     $hash = $dev->get_disk_cdtext;
-    $hash = $dev->get_track_cdtext(track);
+    $hash = $dev->get_track_cdtext(track, field);
 
 Returns a hash reference hash->{cdtext_field}="text"
 if found any cdtext on disk;
@@ -467,13 +467,14 @@ if found any cdtext on disk;
 
 sub get_disk_cdtext {
     my($self,@p) = @_;
-    return perlcdio::get_cdtext($self->{cd},0);
+    $self->{cdtext} =  perlcdio::get_cdtext($self->{cd});
+    return $self->{cdtext};
 }
 
 sub get_track_cdtext {
-    my($self,$t, @p) = @_;
+    my($self,$t, $f, @p) = @_;
     $t = 1 if !defined $t;
-    return perlcdio::get_cdtext($self->{cd},$t);
+    return perlcdio::cdtext_get_const($self->{cdtext}, $f, $t);
 }
 
 =pod

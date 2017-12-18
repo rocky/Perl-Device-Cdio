@@ -179,7 +179,6 @@ const char *cdtext_genre2str (cdtext_genre_t i);
 cdtext_t *cdtext_init (void);
 void cdtext_destroy (cdtext_t *p_cdtext);
 char *cdtext_get (const cdtext_t *p_cdtext, cdtext_field_t key, track_t track);
-const char *cdtext_get_const (const cdtext_t *p_cdtext, cdtext_field_t key, track_t track);
 cdtext_lang_t cdtext_get_language (const cdtext_t *p_cdtext);
 bool cdtext_select_language(cdtext_t *p_cdtext, cdtext_lang_t lang);
 cdtext_lang_t *cdtext_list_languages (const cdtext_t *p_cdtext);
@@ -187,3 +186,10 @@ void cdtext_set (cdtext_t *p_cdtext, cdtext_field_t key, const uint8_t *value, t
 
 %rename cdio_get_cdtext get_cdtext;
 cdtext_t *cdio_get_cdtext (CdIo_t *p_cdio);
+
+%rename cdio_cdtext_get cdtext_get;
+char *cdio_cdtext_get (const cdtext_t *p_cdtext, cdtext_field_t key,
+			track_t track);
+
+const char *cdtext_get_const (const cdtext_t *p_cdtext, cdtext_field_t key,
+			     track_t track);

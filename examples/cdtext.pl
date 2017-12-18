@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 # Program to show cdtext, similar to examples/cdtext.c
 #
-#  Copyright (C) 2012 Rocky Bernstein <rocky@gnu.org>
+#  Copyright (C) 2012, 2017 Rocky Bernstein <rocky@gnu.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ use Device::Cdio::Device;
 sub print_cdtext_track_info($)
 {
     my $cdtext_ref = shift;
-    foreach my $field (sort keys %{$cdtext_ref}) { 
+    foreach my $field (sort keys %{$cdtext_ref}) {
 	  printf "\t%s: %s\n", $field, $cdtext_ref->{$field};
     }
 }
@@ -54,24 +54,12 @@ my $i_tracks = $d->get_num_tracks();
 my $first_track = $d->get_first_track;
 
 my $text;
-print "+++$perlcdio::VERSION_NUM\n";
-if ($perlcdio::VERSION_NUM <= 82) {
-    $text = $d->track(0)->cdtext();
-} else {
-    $text = $d->get_track_cdtext(0);
-}
+$perlcdio::VERSION_NUM >= 10100 or die "Your verion of libcdio is too old\n";
+$d->get_disk_cdtext();
 
-print "CD-Text for Disc:\n";
-print_cdtext_track_info($text);
 my $i;
 my $last_track = $d->get_last_track();
 for ($i=$first_track->{track}; $i <= $last_track->{track}; $i++) {
-    if ($perlcdio::VERSION_NUM <= 82) {
-	$text = $d->track($i)->cdtext();
-    } else {
-	$text = $d->get_track_cdtext($i);
-    }
-    print "CD-Text for Track $i\n";
-    print_cdtext_track_info($text);
+    $text = $d->get_track_cdtext($i, $perlcdio::CDTEXT_FIELD_TITLE);
+    printf "CD-Text TITLE for Track $i %s\n",  $text;
 }
-
