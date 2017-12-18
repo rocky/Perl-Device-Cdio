@@ -4,6 +4,8 @@ env:
   global:
     - PREREQS="ExtUtils::PkgConfig Module::Build File::Copy"
     - DOWNLOAD_LOC="ftp://ftp.gnu.org/pub/gnu/libcdio/libcdio-1.1.0.tar.gz"
+  matrix:
+    - LIBCDIO_VERSION="1.1.0"
 
 install:
   # Prerequisites
