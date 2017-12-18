@@ -1,6 +1,6 @@
 /* -*- c -*-
   Copyright (C) 2009, Thomas Vander Stichele <thomas at apestaart dot org>
-  Copyright (C) 2012, Rocky Bernstein  rocky@cpan.org
+  Copyright (C) 2012, 2017 Rocky Bernstein  rocky@cpan.org
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -184,12 +184,12 @@ bool cdtext_select_language(cdtext_t *p_cdtext, cdtext_lang_t lang);
 cdtext_lang_t *cdtext_list_languages (const cdtext_t *p_cdtext);
 void cdtext_set (cdtext_t *p_cdtext, cdtext_field_t key, const uint8_t *value, track_t track, const char *charset);
 
-%rename cdio_get_cdtext get_cdtext;
 cdtext_t *cdio_get_cdtext (CdIo_t *p_cdio);
 
 %rename cdio_cdtext_get cdtext_get;
 char *cdio_cdtext_get (const cdtext_t *p_cdtext, cdtext_field_t key,
 			track_t track);
 
+%rename get_track_cdtext cdtext_get_const;
 const char *cdtext_get_const (const cdtext_t *p_cdtext, cdtext_field_t key,
 			     track_t track);

@@ -54,12 +54,21 @@ my $i_tracks = $d->get_num_tracks();
 my $first_track = $d->get_first_track;
 
 my $text;
-$perlcdio::VERSION_NUM >= 10100 or die "Your verion of libcdio is too old\n";
-$d->get_disk_cdtext();
+$perlcdio::VERSION_NUM >= 10100 or die "Your version of libcdio is too old\n";
+my $cdtext = $d->get_disc_cdtext();
 
-my $i;
+my $langs =  $d->cdtext_list_languages ($cdtext);
+if ($langs) {
+    foreach my $lang (@$langs) {
+	printf "Detected language: %s\n", $Device::Cdio::CDTEXT_LANGUAGE_byname{$lang};
+    }
+}
+
+$text = $d->cdtext_field_for_disc($perlcdio::CDTEXT_FIELD_TITLE);
+printf "CD-Text title for Disc: %s\n", $text;
+
 my $last_track = $d->get_last_track();
-for ($i=$first_track->{track}; $i <= $last_track->{track}; $i++) {
-    $text = $d->get_track_cdtext($i, $perlcdio::CDTEXT_FIELD_TITLE);
-    printf "CD-Text TITLE for Track $i %s\n",  $text;
+for (my $i=$first_track->{track}; $i <= $last_track->{track}; $i++) {
+    $text = $d->cdtext_field_for_track($perlcdio::CDTEXT_FIELD_TITLE, $i);
+    printf "CD-Text TITLE for Track $i: %s\n",  $text;
 }

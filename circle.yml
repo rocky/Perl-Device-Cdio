@@ -1,6 +1,6 @@
 machine:
   environment:
-    LIBCDIO_VERSION: 0.94
+    LIBCDIO_VERSION: 1.1.0
     CI: t
     GIT2CL: ./git2cl
 

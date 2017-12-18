@@ -12,7 +12,7 @@ use File::Basename;
 use Device::Cdio::Device;
 use perlcdio;
 
-plan skip_all => "FIXME: CD-TEXT need updating for new interface";
+# plan skip_all => "FIXME: CD-TEXT need updating for new interface";
 
 no warnings;
 is(perlcdio::cdtext_field2str($perlcdio::CDTEXT_FIELD_PERFORMER),
@@ -23,23 +23,28 @@ my $tocpath = File::Spec->catfile(dirname(__FILE__), 'cdtext.toc');
 my $device = Device::Cdio::Device->new($tocpath, $perlcdio::DRIVER_CDRDAO);
 ok($device, "Able to find CDRDAO driver for cdtext.toc");
 
-if ($perlcdio::VERSION_NUM <= 83) {
-    my $disctext = $device->get_track(0);
-    ok($disctext, "Able to get disc CD-Text track");
-    # is($disctext->get_cdtext($perlcdio::CDTEXT_PERFORMER), 'Performer');
-    # is($disctext->get_cdtext($perlcdio::CDTEXT_TITLE), 'CD Title');
-    # is($disctext->get_cdtext($perlcdio::CDTEXT_DISCID), 'XY12345');
-
-    # my $track1text = $device->get_track(1)->get_cdtext();
-    # is($track1text->get_cdtext($perlcdio::CDTEXT_PERFORMER), 'Performer');
-    # is($track1text->get_cdtext($perlcdio::CDTEXT_TITLE), 'Track Title');
-} else {
-    my $text = $device->get_track_cdtext(0);
-    is($text->{PERFORMER}, 'Performer');
-    is($text->{TITLE}, 'CD Title');
-    # is($text->get_cdtext($perlcdio::CDTEXT_FIELD_DISCID), 'XY12345');
-
-    $text = $device->get_track_cdtext(1);
-    is($text->{PERFORMER}, 'Performer');
-    is($text->{TITLE}, 'Track Title');
+my $cdtext = $device->get_disc_cdtext();
+my $langs =  $device->cdtext_list_languages ($cdtext);
+if ($langs) {
+    foreach my $lang (@$langs) {
+	printf "Detected language: %s\n", $Device::Cdio::CDTEXT_LANGUAGE_byname{$lang};
+    }
 }
+
+# my $i_tracks = $device->get_num_tracks();
+# my $first_track = $device->get_first_track;
+# my $last_track = $device->get_last_track();
+# for (my $i=$first_track->{track}; $i <= $last_track->{track}; $i++) {
+#     $text = $device->cdtext_field_for_track($perlcdio::CDTEXT_FIELD_TITLE, $i);
+#     printf "CD-Text TITLE for Track $i: %s\n",  $text;
+# }
+
+# is($text->{PERFORMER}, 'Performer');
+my $text = $device->cdtext_field_for_disc($perlcdio::CDTEXT_FIELD_TITLE);
+is($text, 'CD Title');
+# # is($text->get_cdtext($perlcdio::CDTEXT_FIELD_DISCID), 'XY12345');
+# is($text->{PERFORMER}, 'Performer');
+$text = $device->cdtext_field_for_track($perlcdio::CDTEXT_FIELD_TITLE, 1);
+is($text, 'Track Title');
+$device->close();
+done_testing();
