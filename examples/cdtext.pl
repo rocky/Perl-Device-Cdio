@@ -25,11 +25,19 @@ use perlcdio;
 use Device::Cdio;
 use Device::Cdio::Device;
 
-sub print_cdtext_track_info($)
+sub print_cdtext_track_info($$)
 {
-    my $cdtext_ref = shift;
+    my ($cdtext_ref, $t) = @_;
+
+    if ($t != 0) {
+	printf("Track #%2d\n", $t);
+    } else {
+	printf "CD-Text title for Disc\n";
+    }
+
     foreach my $field (sort keys %{$cdtext_ref}) {
-	  printf "\t%s: %s\n", $field, $cdtext_ref->{$field};
+	printf "\t%s: %s\n", $Device::Cdio::CDTEXT_FIELD_by_id{$field},
+	    $cdtext_ref->{$field} if defined($cdtext_ref->{$field});
     }
 }
 
@@ -38,8 +46,10 @@ my $d;
 if ($ARGV[0]) {
     $drive_name = $ARGV[0];
     $d = Device::Cdio::Device->new($drive_name);
-    print "Problem opening CD-ROM: $drive_name\n";
-    exit 1;
+    if (!$d) {
+	print "Problem opening CD-ROM: $drive_name\n";
+	exit 1;
+    }
 } else {
     $d = Device::Cdio::Device->new(undef, $perlcdio::DRIVER_UNKNOWN);
     if ($d) {
@@ -53,22 +63,21 @@ if ($ARGV[0]) {
 my $i_tracks = $d->get_num_tracks();
 my $first_track = $d->get_first_track;
 
-my $text;
 $perlcdio::VERSION_NUM >= 10100 or die "Your version of libcdio is too old\n";
-my $cdtext = $d->get_disc_cdtext();
 
-my $langs =  $d->cdtext_list_languages ($cdtext);
+my $langs =  $d->cdtext_list_languages();
 if ($langs) {
     foreach my $lang (@$langs) {
-	printf "Detected language: %s\n", $Device::Cdio::CDTEXT_LANGUAGE_byname{$lang};
+	printf "Detected language: %s\n", $Device::Cdio::CDTEXT_LANGUAGE_by_id{$lang};
     }
 }
 
-$text = $d->cdtext_field_for_disc($perlcdio::CDTEXT_FIELD_TITLE);
-printf "CD-Text title for Disc: %s\n", $text;
+my $text = $d->get_disc_cdtext();
+print_cdtext_track_info($text, 0);
+
 
 my $last_track = $d->get_last_track();
-for (my $i=$first_track->{track}; $i <= $last_track->{track}; $i++) {
-    $text = $d->cdtext_field_for_track($perlcdio::CDTEXT_FIELD_TITLE, $i);
-    printf "CD-Text TITLE for Track $i: %s\n",  $text;
+for (my $t=$first_track->{track}; $t <= $last_track->{track}; $t++) {
+    my $text = $d->get_track_cdtext($t);
+    print_cdtext_track_info($text, $t);
 }

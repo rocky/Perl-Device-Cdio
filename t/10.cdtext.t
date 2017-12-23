@@ -23,8 +23,7 @@ my $tocpath = File::Spec->catfile(dirname(__FILE__), 'cdtext.toc');
 my $device = Device::Cdio::Device->new($tocpath, $perlcdio::DRIVER_CDRDAO);
 ok($device, "Able to find CDRDAO driver for cdtext.toc");
 
-my $cdtext = $device->get_disc_cdtext();
-my $langs =  $device->cdtext_list_languages ($cdtext);
+my $langs =  $device->cdtext_list_languages ();
 if ($langs) {
     foreach my $lang (@$langs) {
 	printf "Detected language: %s\n", $Device::Cdio::CDTEXT_LANGUAGE_byname{$lang};

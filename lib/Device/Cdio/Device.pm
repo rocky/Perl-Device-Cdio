@@ -50,7 +50,10 @@ $Device::Cdio::Device::VERSION   = $Device::Cdio::VERSION;
     'INVALID'    => $perlcdio::CDTEXT_FIELD_INVALID,
     );
 
-%Device::Cdio::CDTEXT_FIELD_byname = reverse %Device::Cdio::CDTEXT_FIELD;
+$Device::Cdio::CDTEXT_MIN_CDTEXT_FIELD  = $perlcdio::MIN_CDTEXT_FIELD;
+$Device::Cdio::CDTEXT_MAX_CDTEXT_FIELDS = $perlcdio::MAX_CDTEXT_FIELDS;
+
+%Device::Cdio::CDTEXT_FIELD_by_id = reverse %Device::Cdio::CDTEXT_FIELD;
 
 
 %Device::Cdio::CDTEXT_GENRE = (
@@ -86,7 +89,7 @@ $Device::Cdio::Device::VERSION   = $Device::Cdio::VERSION;
     );
 
 
-%Device::Cdio::CDTEXT_GENRE_byname = reverse %Device::Cdio::CDTEXT_GENRE;
+%Device::Cdio::CDTEXT_GENRE_by_id = reverse %Device::Cdio::CDTEXT_GENRE;
 
 %Device::Cdio::CDTEXT_LANGUAGE = (
     'UNKNOWN'       => $perlcdio::CDTEXT_LANGUAGE_UNKNOWN,
@@ -192,7 +195,7 @@ $Device::Cdio::Device::VERSION   = $Device::Cdio::VERSION;
     'AMHARIC'       => $perlcdio::CDTEXT_LANGUAGE_AMHARIC,
     );
 
-%Device::Cdio::CDTEXT_LANGUAGE_byname = reverse %Device::Cdio::CDTEXT_LANGUAGE;
+%Device::Cdio::CDTEXT_LANGUAGE_by_id = reverse %Device::Cdio::CDTEXT_LANGUAGE;
 
 
 =pod
@@ -626,7 +629,7 @@ if found any cdtext on disk;
 
 =cut
 
-sub get_disc_cdtext {
+sub cdtext_init {
     my($self,@p) = @_;
     $self->{cdtext} =  perlcdio::cdio_get_cdtext($self->{cd});
     return $self->{cdtext};
@@ -656,15 +659,29 @@ sub cdtext_field_for_disc {
 sub cdtext_list_languages {
     my($self, @p) = @_;
     my $cdtext = defined $p[0] ? $p[0] : $self->{cdtext};
+    if (!$cdtext) {
+	$cdtext = $self->cdtext_init();
+    }
     return perlcdio::cdtext_list_languages($cdtext);
 }
 
 sub get_track_cdtext {
-    my($self, $f, $t, @p) = @_;
+    my($self, $t, @p) = @_;
     $t = 0 if !defined $t;
+    my $cdtext_fields = {};
     my $cdtext = defined $p[0] ? $p[0] : $self->{cdtext};
-    return perlcdio::cdtext_get_const($self->{cdtext}, $f, $t);
+    for (my $field=$perlcdio::MIN_CDTEXT_FIELD;
+	 $field <= $perlcdio::MAX_CDTEXT_FIELDS; $field++) {
+	$cdtext_fields->{$field} = perlcdio::cdtext_get_const($cdtext, $field, $t);
+    }
+    return $cdtext_fields;
 }
+
+sub get_disc_cdtext {
+    my($self, @p) = @_;
+    return get_track_cdtext($self, 0, @p);
+}
+
 
 =head2 cdtext_destroy
 
