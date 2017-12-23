@@ -665,6 +665,17 @@ sub cdtext_list_languages {
     return perlcdio::cdtext_list_languages($cdtext);
 }
 
+sub cdtext_select_language {
+    my($self, $lang, @p) = @_;
+    my $cdtext = defined $p[0] ? $p[0] : $self->{cdtext};
+    return if !exists $Device::Cdio::CDTEXT_LANGUAGE{$lang};
+    my $l = $Device::Cdio::CDTEXT_LANGUAGE{$lang};
+    if (!$cdtext) {
+	$cdtext = $self->cdtext_init();
+    }
+    return perlcdio::cdtext_select_language($cdtext, $l);
+}
+
 sub get_track_cdtext {
     my($self, $t, @p) = @_;
     $t = 0 if !defined $t;

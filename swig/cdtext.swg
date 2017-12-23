@@ -176,11 +176,20 @@ typedef int cdtext_genre_t;
 const char *cdtext_field2str (cdtext_field_t i);
 const char *cdtext_lang2str (cdtext_lang_t i);
 const char *cdtext_genre2str (cdtext_genre_t i);
+
+%rename cdio_cdtext_init cdtext_init;
 cdtext_t *cdtext_init (void);
+
+%rename cdio_cdtext_data_init cdtext_get;
+int cdtext_data_init(cdtext_t *p_cdtext, uint8_t *wdata, size_t i_data);
+
 void cdtext_destroy (cdtext_t *p_cdtext);
 char *cdtext_get (const cdtext_t *p_cdtext, cdtext_field_t key, track_t track);
 cdtext_lang_t cdtext_get_language (const cdtext_t *p_cdtext);
+
+%rename cdio_cdtext_select_language cdtext_select_language;
 bool cdtext_select_language(cdtext_t *p_cdtext, cdtext_lang_t lang);
+
 cdtext_lang_t *cdtext_list_languages (const cdtext_t *p_cdtext);
 void cdtext_set (cdtext_t *p_cdtext, cdtext_field_t key, const uint8_t *value, track_t track, const char *charset);
 

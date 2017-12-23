@@ -62,22 +62,22 @@ if ($ARGV[0]) {
 
 my $i_tracks = $d->get_num_tracks();
 my $first_track = $d->get_first_track;
+my $last_track = $d->get_last_track();
 
 $perlcdio::VERSION_NUM >= 10100 or die "Your version of libcdio is too old\n";
 
 my $langs =  $d->cdtext_list_languages();
 if ($langs) {
     foreach my $lang (@$langs) {
-	printf "Detected language: %s\n", $Device::Cdio::CDTEXT_LANGUAGE_by_id{$lang};
+	if ($lang != $perlcdio::CDTEXT_LANGUAGE_UNKNOWN) {
+	    printf "Language: %s\n", $Device::Cdio::CDTEXT_LANGUAGE_by_id{$lang};
+	    my $text = $d->get_disc_cdtext();
+	    print_cdtext_track_info($text, 0);
+
+	    for (my $track=$first_track->{track}; $track <= $last_track->{track}; $track++) {
+		my $text = $d->get_track_cdtext($track);
+		print_cdtext_track_info($text, $track);
+	    }
+	}
     }
-}
-
-my $text = $d->get_disc_cdtext();
-print_cdtext_track_info($text, 0);
-
-
-my $last_track = $d->get_last_track();
-for (my $t=$first_track->{track}; $t <= $last_track->{track}; $t++) {
-    my $text = $d->get_track_cdtext($t);
-    print_cdtext_track_info($text, $t);
 }
