@@ -177,11 +177,25 @@ const char *cdtext_field2str (cdtext_field_t i);
 const char *cdtext_lang2str (cdtext_lang_t i);
 const char *cdtext_genre2str (cdtext_genre_t i);
 
+%inline %{
+typedef uint8_t cdtext_data_bytes_t[9220];
+%}
+
+%typemap(in) cdtext_data_bytes_t {
+  /* SVpv to uint8_t * */
+  cdtext_data_bytes_t wdata = {0,};
+  STRLEN len;
+  char *ptr;
+  ptr = SvPV($input, len);
+  memcpy(wdata, ptr, len);
+  $1=wdata;
+}
+
+
 %rename cdio_cdtext_init cdtext_init;
 cdtext_t *cdtext_init (void);
 
-%rename cdio_cdtext_data_init cdtext_get;
-int cdtext_data_init(cdtext_t *p_cdtext, uint8_t *wdata, size_t i_data);
+int cdtext_data_init(cdtext_t *p_cdtext, cdtext_data_bytes_t wdata, size_t i_data);
 
 void cdtext_destroy (cdtext_t *p_cdtext);
 char *cdtext_get (const cdtext_t *p_cdtext, cdtext_field_t key, track_t track);

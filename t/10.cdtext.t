@@ -19,31 +19,21 @@ is(perlcdio::cdtext_field2str($perlcdio::CDTEXT_FIELD_PERFORMER),
    "PERFORMER");
 
 # Test getting CD-Text
-my $tocpath = File::Spec->catfile(dirname(__FILE__), 'cdtext.toc');
+my $tocpath = File::Spec->catfile(dirname(__FILE__), '..', 'data', 'cdtext-test.toc');
 my $device = Device::Cdio::Device->new($tocpath, $perlcdio::DRIVER_CDRDAO);
 ok($device, "Able to find CDRDAO driver for cdtext.toc");
 
 my $langs =  $device->cdtext_list_languages ();
-if ($langs) {
-    foreach my $lang (@$langs) {
-	printf "Detected language: %s\n", $Device::Cdio::CDTEXT_LANGUAGE_byname{$lang};
-    }
-}
+is(scalar(@$langs), 4, "Retrieving CD-Text languages");
+is($langs->[0], $perlcdio::CDTEXT_LANGUAGE_ENGLISH, "First Language is English");
 
-# my $i_tracks = $device->get_num_tracks();
-# my $first_track = $device->get_first_track;
-# my $last_track = $device->get_last_track();
-# for (my $i=$first_track->{track}; $i <= $last_track->{track}; $i++) {
-#     $text = $device->cdtext_field_for_track($perlcdio::CDTEXT_FIELD_TITLE, $i);
-#     printf "CD-Text TITLE for Track $i: %s\n",  $text;
-# }
-
-# is($text->{PERFORMER}, 'Performer');
-my $text = $device->cdtext_field_for_disc($perlcdio::CDTEXT_FIELD_TITLE);
-is($text, 'CD Title');
-# # is($text->get_cdtext($perlcdio::CDTEXT_FIELD_DISCID), 'XY12345');
-# is($text->{PERFORMER}, 'Performer');
+my $text = $device->get_disc_cdtext();
+is($text->{$perlcdio::CDTEXT_FIELD_PERFORMER}, 'Performer');
+is($text->{$perlcdio::CDTEXT_FIELD_DISCID}, 'XY12345');
 $text = $device->cdtext_field_for_track($perlcdio::CDTEXT_FIELD_TITLE, 1);
 is($text, 'Track Title');
+my $text = $device->cdtext_field_for_disc($perlcdio::CDTEXT_FIELD_TITLE);
+is($text, 'CD Title');
+
 $device->close();
 done_testing();

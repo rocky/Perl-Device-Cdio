@@ -635,6 +635,11 @@ sub cdtext_init {
     return $self->{cdtext};
 }
 
+sub cdtext_data_init {
+    my($cdt, $cdt_data, $cdt_size, @p) = @_;
+    return perlcdio::cdtext_data_init($cdt, $cdt_data, $cdt_size);
+}
+
 =head2 get_disk_cdtext_field_for_track
 
     $str = $dev->get_cdtext_field_for_track($field, $track=0, $cdtext=$self->{cdtext});
