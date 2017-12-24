@@ -24,6 +24,7 @@ examples/audio.pl
 examples/cd-read.pl
 examples/cdchange.pl
 examples/cdtext.pl
+examples/cdtext-raw.pl
 examples/checkcd.pl
 examples/device.pl
 examples/drives.pl
