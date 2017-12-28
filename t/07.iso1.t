@@ -4,6 +4,7 @@
 
 use strict;
 use warnings;
+
 use Config;
 
 BEGIN {
@@ -27,9 +28,7 @@ $ENV{'TZ'} = 'UTC';
 # The test ISO 9660 image
 my $ISO9660_IMAGE_PATH="../data";
 my $iso_image_fname=File::Spec->catfile($ISO9660_IMAGE_PATH, "copying.iso");
-
 my $iso = Device::Cdio::ISO9660::IFS->new(-source=>$iso_image_fname);
-
 ok(defined($iso), "Open ISO 9660 image $iso_image_fname") ;
 
 ok($iso->get_application_id() eq
@@ -41,7 +40,6 @@ ok($iso->get_volume_id() eq "CDROM", "get_volume_id() eq 'CDROM'");
 
 my $path = '/';
 my @file_stats = $iso->readdir($path);
-
 
 my @okay_stats = (
     { LSN=>23, 'filename'=>'.', is_dir=>1, sec_size=>1, size=>2048,

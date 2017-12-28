@@ -4,6 +4,7 @@
 
 use strict;
 use warnings;
+
 use Config;
 
 BEGIN {
@@ -19,6 +20,7 @@ use Device::Cdio::ISO9660::FS;
 use File::Spec;
 
 use POSIX;
+
 use Test::More tests => 5;
 note 'Test ISO9660::IFS routines';
 
@@ -50,15 +52,12 @@ my $good_stat = { LSN=>26, 'filename'=>$local_filename, is_dir=>'',
                 };
 
 my $stat_href = $cd->find_lsn(26);
-
 is_deeply($stat_href, $good_stat, 'CD 9660 file stats: find_lsn(26)');
 
 my $statbuf = $cd->stat (File::Spec->catfile("/", $local_filename));
-
 is_deeply($statbuf, $good_stat, "CD 9660 file stats: stat('$local_filename)'");
 
 my @iso_stat = $cd->readdir ("/");
-
 my @good_stat = ( { LSN=>23, 'filename'=>'.', is_dir=>1,
 		  sec_size=>1, size=>2048,
 		  tm => {
@@ -115,7 +114,6 @@ my @good_stat = ( { LSN=>23, 'filename'=>'.', is_dir=>1,
 		      year  => 2003,
 		    },
 		  }, );
-
 is_deeply(\@iso_stat, \@good_stat, "Read directory: readdir('/')");
 
 # Get file
