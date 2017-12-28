@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 BEGIN {
-    push @INC, ('../blib/lib', '../blib/arch');
+    push @INC, ( '../blib/lib', '../blib/arch' );
 }
 
 use Test::More;
