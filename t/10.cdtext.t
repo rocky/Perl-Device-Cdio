@@ -12,8 +12,6 @@ use File::Basename;
 use Device::Cdio::Device;
 use perlcdio;
 
-# plan skip_all => "FIXME: CD-TEXT need updating for new interface";
-
 no warnings;
 is(perlcdio::cdtext_field2str($perlcdio::CDTEXT_FIELD_PERFORMER),
    "PERFORMER");
