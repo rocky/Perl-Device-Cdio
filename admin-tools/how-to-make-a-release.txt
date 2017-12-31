@@ -2,7 +2,7 @@ Update Changes add Date
 
 Check $VERSION in lib/Device/Cdio.pm and decide what the release version should be.
 
-CDIO_VERSION=0.4.0 # based on what is in lib/Device
+CDIO_VERSION=2.0.0 # based on what is in lib/Device
 
 perl-reversion -set $CDIO_VERSION  # perl-version is in cpan Perl::Version
 
