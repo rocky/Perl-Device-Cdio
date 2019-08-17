@@ -9,7 +9,7 @@ use Config;
 BEGIN {
     chdir 't' if -d 't';
     use lib '../lib';
-    eval "use blib";  # if we fail keep going - maybe we have installed Cdio
+    eval "use blib";    # if we fail keep going - maybe we have installed Cdio
 }
 
 use Device::Cdio;
@@ -26,50 +26,52 @@ note 'Test ISO9660::IFS routines';
 $ENV{'TZ'} = 'UTC';
 
 # The test CD image
-my $ISO9660_IMAGE_PATH="../data";
-my $iso_image_fname=File::Spec->catfile($ISO9660_IMAGE_PATH, "copying.iso");
-my $local_filename="copying";
+my $ISO9660_IMAGE_PATH = "../data";
+my $iso_image_fname = File::Spec->catfile( $ISO9660_IMAGE_PATH, "copying.iso" );
+my $local_filename  = "copying";
 
-my $iso = Device::Cdio::ISO9660::IFS->new(-source=>$iso_image_fname);
+my $iso = Device::Cdio::ISO9660::IFS->new( -source => $iso_image_fname );
 
-ok(defined($iso), "Open ISO 9660 image $iso_image_fname") ;
+ok( defined($iso), "Open ISO 9660 image $iso_image_fname" );
 
+my $statbuf = $iso->stat( $local_filename, 1 );
 
-my $statbuf = $iso->stat ($local_filename, 1);
+my $good_stat = {
+    LSN        => 24,
+    'filename' => 'COPYING.;1',
+    is_dir     => '',
+    sec_size   => 9,
+    size       => 18002,
+    tm         => {
+        hour  => 21,
+        isdst => 0,
+        mday  => 5,
+        min   => 46,
+        mon   => 1,
+        sec   => 30,
+        wday  => 4,
+        yday  => 4,
+        year  => 2006,
+    },
+};
 
-my $good_stat = { LSN=>24, 'filename'=>'COPYING.;1', is_dir=>'',
-                  sec_size=>9, size=>18002,
-                  tm => {
-		      hour  => 21,
-		      isdst =>  0,
-		      mday  =>  5,
-		      min   => 46,
-		      mon   =>  1,
-		      sec   => 30,
-		      wday  =>  4,
-		      yday  =>  4,
-		      year  => 2006,
-		    },
-                };
-
-is_deeply($statbuf, $good_stat, 'CD 9660 file stats');
+is_deeply( $statbuf, $good_stat, 'CD 9660 file stats' );
 
 # Get file
-my $buf ='';
-my $blocks = POSIX::ceil($statbuf->{size} / $perlcdio::ISO_BLOCKSIZE);
-for (my $i = 0; $i < $blocks; $i++) {
+my $buf    = '';
+my $blocks = POSIX::ceil( $statbuf->{size} / $perlcdio::ISO_BLOCKSIZE );
+for ( my $i = 0 ; $i < $blocks ; $i++ ) {
     my $lsn = $statbuf->{LSN} + $i;
-    $buf .= $iso->seek_read ($lsn);
+    $buf .= $iso->seek_read($lsn);
 
-    if (!defined($buf)) {
-	printf "Error reading ISO 9660 file %s at LSN %d\n",
-	$local_filename, $lsn;
-	exit 4;
+    if ( !defined($buf) ) {
+        printf "Error reading ISO 9660 file %s at LSN %d\n",
+          $local_filename, $lsn;
+        exit 4;
     }
 }
 
-my $file_contents=
-"		    GNU GENERAL PUBLIC LICENSE
+my $file_contents = "		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
  Copyright (C) 1989, 1991 Free Software Foundation, Inc.
@@ -411,8 +413,8 @@ library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License
 ";
 
-my $len=$statbuf->{size};
-ok(substr($file_contents, 0, $len) eq substr($file_contents, 0, $len),
-          'File contents comparison') ;
+my $len = $statbuf->{size};
+ok( substr( $file_contents, 0, $len ) eq substr( $file_contents, 0, $len ),
+    'File contents comparison' );
 
 $iso->close();

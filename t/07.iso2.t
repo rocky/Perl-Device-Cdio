@@ -4,12 +4,13 @@
 
 use strict;
 use warnings;
+
 use Config;
 
 BEGIN {
     chdir 't' if -d 't';
     use lib '../lib';
-    eval "use blib";  # if we fail keep going - maybe we have installed Cdio
+    eval "use blib";    # if we fail keep going - maybe we have installed Cdio
 }
 
 use Device::Cdio;
@@ -19,6 +20,7 @@ use Device::Cdio::ISO9660::FS;
 use File::Spec;
 
 use POSIX;
+
 use Test::More tests => 5;
 note 'Test ISO9660::IFS routines';
 
@@ -26,114 +28,132 @@ note 'Test ISO9660::IFS routines';
 $ENV{'TZ'} = 'UTC';
 
 # The test CD image
-my $CD_IMAGE_PATH="../data";
-my $cd_image_fname=File::Spec->catfile($CD_IMAGE_PATH, "isofs-m1.cue");
-my $local_filename='COPYING';
+my $CD_IMAGE_PATH  = "../data";
+my $cd_image_fname = File::Spec->catfile( $CD_IMAGE_PATH, "isofs-m1.cue" );
+my $local_filename = 'COPYING';
 
-my $cd = Device::Cdio::ISO9660::FS->new(-source=>$cd_image_fname);
+my $cd = Device::Cdio::ISO9660::FS->new( -source => $cd_image_fname );
 
-ok(defined($cd), "Open CD image $cd_image_fname") ;
+ok( defined($cd), "Open CD image $cd_image_fname" );
 
-my $good_stat = { LSN=>26, 'filename'=>$local_filename, is_dir=>'',
-		  sec_size=>9, size=>17992,
-		  tm => {
-		      hour  => 12,
-		      isdst =>  0,
-		      mday  => 29,
-		      min   => 39,
-		      mon   =>  7,
-		      sec   => 53,
-		      wday  =>  1,
-		      yday  =>  209,
-		      year  => 2002,
-		    },
-                };
+my $good_stat = {
+    LSN        => 26,
+    'filename' => $local_filename,
+    is_dir     => '',
+    sec_size   => 9,
+    size       => 17992,
+    tm         => {
+        hour  => 12,
+        isdst => 0,
+        mday  => 29,
+        min   => 39,
+        mon   => 7,
+        sec   => 53,
+        wday  => 1,
+        yday  => 209,
+        year  => 2002,
+    },
+};
 
 my $stat_href = $cd->find_lsn(26);
+is_deeply( $stat_href, $good_stat, 'CD 9660 file stats: find_lsn(26)' );
 
-is_deeply($stat_href, $good_stat, 'CD 9660 file stats: find_lsn(26)');
+my $statbuf = $cd->stat( File::Spec->catfile( "/", $local_filename ) );
+is_deeply( $statbuf, $good_stat,
+    "CD 9660 file stats: stat('$local_filename)'" );
 
-my $statbuf = $cd->stat (File::Spec->catfile("/", $local_filename));
-
-is_deeply($statbuf, $good_stat, "CD 9660 file stats: stat('$local_filename)'");
-
-my @iso_stat = $cd->readdir ("/");
-
-my @good_stat = ( { LSN=>23, 'filename'=>'.', is_dir=>1,
-		  sec_size=>1, size=>2048,
-		  tm => {
-		      hour  => 11,
-		      isdst =>  0,
-		      mday  => 20,
-		      min   => 26,
-		      mon   =>  4,
-		      sec   => 46,
-		      wday  =>  0,
-		      yday  => 109,
-		      year  => 2003,
-		    },
-		  },
-		  { LSN=>23, 'filename'=>'..', is_dir=>1,
-		    sec_size=>1, size=>2048,
-		    tm => {
-		      hour  => 11,
-		      isdst =>  0,
-		      mday  => 20,
-		      min   => 26,
-		      mon   =>  4,
-		      sec   => 46,
-		      wday  =>  0,
-		      yday  => 109,
-		      year  => 2003,
-		    },
-		  },
-		  { LSN=>26, 'filename'=>'COPYING', is_dir=>'',
-		    sec_size=>9, size=>17992,
-		    tm => {
-		      hour  => 12,
-		      isdst =>  0,
-		      mday  => 29,
-		      min   => 39,
-		      mon   =>  7,
-		      sec   => 53,
-		      wday  =>  1,
-		      yday  => 209,
-		      year  => 2002,
-		    },
-		  },
-		  { LSN=>24, 'filename'=>'doc', is_dir=>1,
-		    sec_size=>1, size=>2048,
-		    tm => {
-		      hour  => 16,
-		      isdst =>  0,
-		      mday  => 20,
-		      min   => 18,
-		      mon   =>  4,
-		      sec   => 53,
-		      wday  =>  0,
-		      yday  => 109,
-		      year  => 2003,
-		    },
-		  }, );
-
-is_deeply(\@iso_stat, \@good_stat, "Read directory: readdir('/')");
+my @iso_stat  = $cd->readdir("/");
+my @good_stat = (
+    {
+        LSN        => 23,
+        'filename' => '.',
+        is_dir     => 1,
+        sec_size   => 1,
+        size       => 2048,
+        tm         => {
+            hour  => 11,
+            isdst => 0,
+            mday  => 20,
+            min   => 26,
+            mon   => 4,
+            sec   => 46,
+            wday  => 0,
+            yday  => 109,
+            year  => 2003,
+        },
+    },
+    {
+        LSN        => 23,
+        'filename' => '..',
+        is_dir     => 1,
+        sec_size   => 1,
+        size       => 2048,
+        tm         => {
+            hour  => 11,
+            isdst => 0,
+            mday  => 20,
+            min   => 26,
+            mon   => 4,
+            sec   => 46,
+            wday  => 0,
+            yday  => 109,
+            year  => 2003,
+        },
+    },
+    {
+        LSN        => 26,
+        'filename' => 'COPYING',
+        is_dir     => '',
+        sec_size   => 9,
+        size       => 17992,
+        tm         => {
+            hour  => 12,
+            isdst => 0,
+            mday  => 29,
+            min   => 39,
+            mon   => 7,
+            sec   => 53,
+            wday  => 1,
+            yday  => 209,
+            year  => 2002,
+        },
+    },
+    {
+        LSN        => 24,
+        'filename' => 'doc',
+        is_dir     => 1,
+        sec_size   => 1,
+        size       => 2048,
+        tm         => {
+            hour  => 16,
+            isdst => 0,
+            mday  => 20,
+            min   => 18,
+            mon   => 4,
+            sec   => 53,
+            wday  => 0,
+            yday  => 109,
+            year  => 2003,
+        },
+    },
+);
+is_deeply( \@iso_stat, \@good_stat, "Read directory: readdir('/')" );
 
 # Get file
-my $buf ='';
-my $blocks = POSIX::ceil($statbuf->{size} / $perlcdio::ISO_BLOCKSIZE);
-for (my $i = 0; $i < $blocks; $i++) {
+my $buf    = '';
+my $blocks = POSIX::ceil( $statbuf->{size} / $perlcdio::ISO_BLOCKSIZE );
+for ( my $i = 0 ; $i < $blocks ; $i++ ) {
     my $lsn = $statbuf->{LSN} + $i;
-    $buf .= $cd->read_data_blocks ($lsn);
+    $buf .= $cd->read_data_blocks($lsn);
 
-    if (!defined($buf)) {
-	printf "Error reading ISO 9660 file %s at LSN %d\n",
-	$local_filename, $lsn;
-	exit 4;
+    if ( !defined($buf) ) {
+        printf "Error reading ISO 9660 file %s at LSN %d\n",
+          $local_filename, $lsn;
+        exit 4;
     }
 }
 
-my $file_contents=
-"		    GNU GENERAL PUBLIC LICENSE
+my $file_contents = "		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
  Copyright (C) 1989, 1991 Free Software Foundation, Inc.
@@ -475,8 +495,8 @@ library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License
 ";
 
-my $len=$statbuf->{size};
-ok(substr($file_contents, 0, $len) eq substr($file_contents, 0, $len),
-          'File contents comparison') ;
+my $len = $statbuf->{size};
+ok( substr( $file_contents, 0, $len ) eq substr( $file_contents, 0, $len ),
+    'File contents comparison' );
 
 $cd->close();
